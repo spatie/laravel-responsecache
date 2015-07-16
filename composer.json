@@ -3,7 +3,11 @@
     "description": "Greatly speed up a Laravel application by caching the entire response",
     "keywords": [
         "spatie",
-        "laravel-responsecache"
+        "laravel-responsecache",
+        "laravel",
+        "cache",
+        "response",
+        "performance"
     ],
     "homepage": "https://github.com/spatie/laravel-responsecache",
     "license": "MIT",
@@ -24,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Skeleton\\": "src"
+            "Spatie\\ResponseCache\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Skeleton\\Test\\": "tests"
+            "Spatie\\ResponseCache\\Test\\": "tests"
         }
     },
     "scripts": {

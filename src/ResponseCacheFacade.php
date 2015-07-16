@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Skeleton;
+namespace Spatie\ResponseCache;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -16,6 +16,6 @@ class SkeletonFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'skeleton';
+        return 'laravel-responsecache';
     }
 }
