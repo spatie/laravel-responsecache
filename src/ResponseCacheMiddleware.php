@@ -25,13 +25,15 @@ class ResponseCacheMiddleware
     public function handle(Request $request, Closure $next)
     {
         if ($this->responseCache->hasCached($request)) {
-            return $this->responseCache->getCacheResponseFor($request);
+            echo 'cached';
+             die($this->responseCache->getCachedResponseFor($request));
+
         }
 
         $response = $next($request);
 
         if ($this->responseCache->shouldCache($request)) {
-            $this->responseCache->cache($request);
+            $this->responseCache->cacheResponse($request, $response);
         }
 
         return $response;
