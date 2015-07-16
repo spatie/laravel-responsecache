@@ -1,11 +1,9 @@
 <?php
 
-namespace Spatie\Skeleton\Test;
+namespace Spatie\ResponseCache\Test;
 
-class ExampleTest extends \PHPUnit_Framework_TestCase
+class ResponseSerializer extends TestCase
 {
-
-
     /**
      * Test that true does in fact equal true
      */

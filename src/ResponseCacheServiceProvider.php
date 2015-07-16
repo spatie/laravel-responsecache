@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Support\ServiceProvider;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCacheServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,8 @@ class ResponseCacheServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/config/laravel-responsecache.php' => config_path('laravel-responsecache.php'),
         ], 'config');
+
+        $this->app->bind(CacheProfile::class, config('laravel-responsecache.cacheProfile'));
     }
 
     /**

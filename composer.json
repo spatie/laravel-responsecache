@@ -24,7 +24,9 @@
         "illuminate/cache": "^5.1",
         "illuminate/config": "^5.1",
         "illuminate/console": "^5.1",
-        "illuminate/support": "^5.1"
+        "illuminate/http": "^5.1",
+        "illuminate/support": "^5.1",
+        "nesbot/carbon": "~1.19"
     },
     "require-dev": {
         "phpunit/phpunit" : "^4",

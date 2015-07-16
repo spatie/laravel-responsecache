@@ -4,26 +4,35 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCache
 {
     /**
      * @var ResponseCacher
      */
-    private $cache;
+    protected $cache;
+
     /**
      * @var ResponseHasher
      */
-    private $hasher;
+    protected $hasher;
+
+    /**
+     * @var CacheProfile
+     */
+    protected $cacheProfile;
 
     /**
      * @param ResponseCacheRepository $cache
-     * @param ResponseHasher          $hasher
+     * @param ResponseHasher $hasher
+     * @param CacheProfile $cacheProfile
      */
-    public function __construct(ResponseCacheRepository $cache, ResponseHasher $hasher)
+    public function __construct(ResponseCacheRepository $cache, ResponseHasher $hasher, CacheProfile $cacheProfile)
     {
         $this->cache = $cache;
         $this->hasher = $hasher;
+        $this->cacheProfile = $cacheProfile;
     }
 
     /**
@@ -35,7 +44,7 @@ class ResponseCache
      */
     public function shouldCache(Request $request)
     {
-        return true;
+        return $this->cacheProfile->shouldCache($request);
     }
 
     /**
@@ -46,9 +55,12 @@ class ResponseCache
      */
     public function cacheResponse(Request $request, Response $response)
     {
-        $response = $this->addCachedHeader($response);
 
-        $this->cache->put($this->hasher->getHashFor($request), $response, 5);
+        if (config('laravel-responsecache.addCacheTimeHeader')) {
+            $response = $this->addCachedHeader($response);
+        }
+
+        $this->cache->put($this->hasher->getHashFor($request), $response, $this->cacheProfile->cacheRequestUntil($request));
     }
 
     /**
