@@ -14,7 +14,6 @@ class ResponseCacheServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/config/laravel-responsecache.php' => config_path('laravel-responsecache.php'),
         ], 'config');
-
     }
 
     /**

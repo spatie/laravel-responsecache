@@ -1,8 +1,9 @@
 <?php
+
 namespace Spatie\ResponseCache;
+
 use Closure;
 use Illuminate\Http\Request;
-use Route;
 
 class ResponseCacheMiddleware
 {
@@ -17,17 +18,15 @@ class ResponseCacheMiddleware
     }
 
     /**
-     *
      * @param Request $request
      * @param Closure $next
+     *
      * @return Request
      */
     public function handle(Request $request, Closure $next)
     {
         if ($this->responseCache->hasCached($request)) {
-            echo 'cached';
-             die($this->responseCache->getCachedResponseFor($request));
-
+            return $this->responseCache->getCachedResponseFor($request);
         }
 
         $response = $next($request);

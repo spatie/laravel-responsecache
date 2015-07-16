@@ -1,11 +1,28 @@
 <?php
 return [
-    /*
+
+    /**
+     *  This class will determinate if a request should be cached. The
+     *  default class will cache all GET-requests.
      *
+     *  You can provide your own class given that it implements the
+     *  CacheRequestFilter interface.
      */
+    'CacheRequestFilter' => Spatie\ResponseCache\CacheRequestFilters\CacheAllGetRequests::class,
 
+    /**
+     * When using the default CacheRequestFilter this setting controls the
+     * number of minutes responses must be cached. You may  also pass a
+     * PHP DateTime instance representing the expiration time of the
+     * cached item.
+     *
+     * Setting this value to zero will cache responses indefinitely.
+     */
+    'expiresAt' => 0,
 
     /*
-     * The amount of minutes a cached response should be kept
+     * This setting determines if a http header named "Laravel-reponsecache"
+     * with the cache time should be added to a cached response.
      */
+    'addCacheTimeHeader' => true
 ];

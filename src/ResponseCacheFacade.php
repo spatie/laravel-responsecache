@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \Spatie\Skeleton\SkeletonClass
  */
-class SkeletonFacade extends Facade
+class ResponseCacheFacade extends Facade
 {
     /**
      * Get the registered name of the component.
