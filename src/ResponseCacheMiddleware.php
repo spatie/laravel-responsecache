@@ -7,7 +7,16 @@ use Route;
 class ResponseCacheMiddleware
 {
     /**
-     * Set the current page based on the page route parameter before the route's action is executed.
+     * @var ResponseCache
+     */
+    protected $responseCache;
+
+    public function __construct(ResponseCache $responseCache)
+    {
+        $this->responseCache = $responseCache;
+    }
+
+    /**
      *
      * @param Request $request
      * @param Closure $next
@@ -15,7 +24,16 @@ class ResponseCacheMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        echo 'bla bla';
-        return $next($request);
+        if ($this->responseCache->hasCached($request)) {
+            return $this->responseCache->getCacheResponseFor($request);
+        }
+
+        $response = $next($request);
+
+        if ($this->responseCache->shouldCache($request)) {
+            $this->responseCache->cache($request);
+        }
+
+        return $response;
     }
 }
