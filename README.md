@@ -88,7 +88,7 @@ return [
 
 ###Basic usage
 
-By default the package will cache all `get`-requests for five minutes. 
+By default the package will cache all successful `get`-requests for five minutes. 
 Logged in users will each have their own separate cache. If this behaviour is what you
  need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
