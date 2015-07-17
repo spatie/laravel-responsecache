@@ -16,7 +16,7 @@ interface CacheProfile
     public function shouldCache(Request $request);
 
     /**
-     * Return the time when the cache must be invalided.
+     * Return the time when the cache must be invalidated.
      *
      * @param \Illuminate\Http\Request $request
      *

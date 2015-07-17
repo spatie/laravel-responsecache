@@ -18,7 +18,7 @@ return [
     'cacheLifetimeInMinutes' => 5,
 
     /*
-     * This setting determines if a http header named "Laravel-reponsecache"
+     * This setting determines if a http header named "Laravel-responsecache"
      * with the cache time should be added to a cached response. This
      * can be handy when debugging.
      */
