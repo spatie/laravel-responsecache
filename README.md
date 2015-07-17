@@ -65,9 +65,16 @@ return [
 
 ###Basic usage
 
-By default the package will cache all `get`-request for five minutes. Logged in users will each have their own seperate cache. If you just want this behaviour, you're done: installing the `ResponseCacheServerProvider` was enough.
+By default the package will cache all `get`-requests for five minutes. Logged in users will each have their own seperate cache. If y this behaviour is what you need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
-###Ignoring a request
+
+###Flushing the cache
+The package uses the default Laravel cache provider, so the cache can be flushed with:
+```
+Cache::flush
+```
+
+###Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware. This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
 So You could exempt a logout route from the cache.
@@ -90,12 +97,6 @@ class UserController extends Controller
 
     }
 }
-```
-
-###Flushing the cache
-The package uses the default Laravel cache provider, so the cache can be flushed with:
-```
-Cache::flush
 ```
 
 
