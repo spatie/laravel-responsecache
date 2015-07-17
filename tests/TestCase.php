@@ -6,6 +6,7 @@ use File;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Route;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class TestCase extends Orchestra
 {
@@ -31,6 +32,13 @@ abstract class TestCase extends Orchestra
     {
         return [
             \Spatie\ResponseCache\ResponseCacheServiceProvider::class,
+        ];
+    }
+
+    protected function getPackageAliases($app)
+    {
+        return [
+            'ResponseCache' => \Spatie\ResponseCache\ResponseCacheFacade::class,
         ];
     }
 
@@ -65,7 +73,15 @@ abstract class TestCase extends Orchestra
             $table->timestamps();
         });
 
-        User::create(['name' => 'test', 'email' => 'test@spatie.be', 'password' => 'password']);
+        foreach (range(1, 10) as $index) {
+            User::create(
+                [
+                    'name' => "user{$index}",
+                    'email' => "user{$index}@spatie.be",
+                    'password' => "password{$index}",
+                ]
+            );
+        }
     }
 
     /**
@@ -74,7 +90,23 @@ abstract class TestCase extends Orchestra
     protected function setUpRoutes($app)
     {
         Route::any('/', function () {
-           return 'hello';
+           return 'home of '.(auth()->check() ? auth()->user()->id : 'anonymous');
+        });
+
+        Route::any('login/{id}', function ($id) {
+           auth()->login(User::find($id));
+
+            return redirect('/');
+        });
+
+        Route::any('logout', function () {
+            auth()->logout();
+
+            return redirect('/');
+        });
+
+        Route::any('/random', function () {
+            return str_random();
         });
 
         Route::any('/redirect', function () {
@@ -95,13 +127,23 @@ abstract class TestCase extends Orchestra
         File::makeDirectory($directory);
     }
 
-    protected function assertCachedResponse(\Symfony\Component\HttpFoundation\Response $response)
+    protected function assertCachedResponse(Response $response)
     {
         self::assertThat($response->headers->has('laravel-reponsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
     }
 
-    protected function assertRegularResponse(\Symfony\Component\HttpFoundation\Response $response)
+    protected function assertRegularResponse(Response $response)
     {
         self::assertThat($response->headers->has('laravel-reponsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
+    }
+
+    protected function assertSameResponse(Response $firstResponse, Response $secondResponse)
+    {
+        self::assertThat($firstResponse->getContent() == $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
+    }
+
+    protected function assertDifferentResponse(Response $firstResponse, Response $secondResponse)
+    {
+        self::assertThat($firstResponse->getContent() != $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
     }
 }
