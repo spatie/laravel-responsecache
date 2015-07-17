@@ -24,9 +24,9 @@ class ResponseCache
     protected $cacheProfile;
 
     /**
-     * @param ResponseCacheRepository $cache
-     * @param RequestHasher           $hasher
-     * @param CacheProfile            $cacheProfile
+     * @param \Spatie\ResponseCache\ResponseCacheRepository    $cache
+     * @param \Spatie\ResponseCache\RequestHasher              $hasher
+     * @param \Spatie\ResponseCache\CacheProfiles\CacheProfile $cacheProfile
      */
     public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
     {
@@ -38,24 +38,29 @@ class ResponseCache
     /**
      * Determine if the given request should be cached.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request                   $request
+     * @param \Symfony\Component\HttpFoundation\Response $response
      *
      * @return bool
      */
-    public function shouldCache(Request $request)
+    public function shouldCache(Request $request, Response $response)
     {
         if ($request->attributes->has('laravel-cacheresponse.doNotCache')) {
             return false;
         }
 
-        return $this->cacheProfile->shouldCache($request);
+        if (! $this->cacheProfile->shouldCacheRequest($request)) {
+            return false;
+        }
+
+        return $this->cacheProfile->shouldCacheResponse($response);
     }
 
     /**
      * Store the given response in the cache.
      *
-     * @param Request  $request
-     * @param Response $response
+     * @param \Illuminate\Http\Request                   $request
+     * @param \Symfony\Component\HttpFoundation\Response $response
      */
     public function cacheResponse(Request $request, Response $response)
     {

@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\Test;
 
 use ResponseCache;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class IntegrationTest extends TestCase
 {
@@ -37,6 +38,20 @@ class IntegrationTest extends TestCase
         $this->assertCachedResponse($secondResponse);
 
         $this->assertSameResponse($firstResponse, $secondResponse);
+    }
+
+    /**
+     * @test
+     */
+    public function it_will_not_cache_errors()
+    {
+        $this->setExpectedException(NotFoundHttpException::class);
+
+        $firstResponse = $this->call('GET', '/notfound');
+        $secondResponse = $this->call('GET', '/notfound');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertRegularResponse($secondResponse);
     }
 
     /**

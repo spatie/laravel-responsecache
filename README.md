@@ -88,7 +88,9 @@ return [
 
 ###Basic usage
 
-By default the package will cache all `get`-requests for five minutes. Logged in users will each have their own separate cache. If this behaviour is what you need, you're done: installing the `ResponseCacheServerProvider` was enough.
+By default the package will cache all `get`-requests for five minutes. 
+Logged in users will each have their own separate cache. If this behaviour is what you
+ need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
 
 ###Flushing the cache
@@ -99,7 +101,8 @@ ResponseCache::flush();
 This will flush everything from the cache store specified in the config-file.
 
 ###Preventing a request from being cached
-Requests can be ignored by using the `doNotCacheResponse`-middleware. This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
+Requests can be ignored by using the `doNotCacheResponse`-middleware. 
+This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
 Using the middleware are route could be exempt from being cached.
 
@@ -123,7 +126,8 @@ class UserController extends Controller
 
 
 ###Creating a custom cache profile
-To determine which requests should be cached, and for how long, a cache profile class is used. The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllGetRequests`. 
+To determine which requests should be cached, and for how long, a cache profile class is used. 
+The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllGetRequests`. 
 
 You can create your own cache profile class by implementing the `
 Spatie\ResponseCache\CacheProfiles\CacheProfile`-interface. Let's take a look at the interface:
@@ -138,12 +142,21 @@ interface CacheProfile
      *
      * @return bool
      */
-    public function shouldCache(Request $request);
+    public function shouldCacheRequest(Request $request);
+
+    /**
+     * Determine if the given response should be cached.
+     *
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     *
+     * @return bool
+     */
+    public function shouldCacheResponse(Response $response);
 
     /**
      * Return the time when the cache must be invalidated.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \DateTime
      */
@@ -155,17 +168,13 @@ interface CacheProfile
      * For example: if you want a different cache per user you could return the id of
      * the logged in user.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return string
      */
     public function cacheNameSuffix(Request $request);
 }
 ```
-
-
-
-
 
 ## Changelog
 

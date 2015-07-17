@@ -32,7 +32,7 @@ class ResponseCacheMiddleware
 
         $response = $next($request);
 
-        if ($this->responseCache->shouldCache($request)) {
+        if ($this->responseCache->shouldCache($request, $response)) {
             $this->responseCache->cacheResponse($request, $response);
         }
 

@@ -4,12 +4,12 @@ return [
 
     /**
      *  The given class will determinate if a request should be cached. The
-     *  default class will cache all GET-requests.
+     *  default class will cache all successful GET-requests.
      *
      *  You can provide your own class given that it implements the
      *  CacheProfile interface.
      */
-    'cacheProfile' => Spatie\ResponseCache\CacheProfiles\CacheAllGetRequests::class,
+    'cacheProfile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
     /**
      * When using the default CacheRequestFilter this setting controls the
@@ -30,4 +30,9 @@ return [
      * configured in app/config/cache.php
      */
      'cacheStore' => env('CACHE_DRIVER', 'file'),
+
+    /*
+     * Determine if errors should be cache. Responses with an e
+     */
+    'cacheErrors' => false,
 ];

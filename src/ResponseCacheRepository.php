@@ -33,9 +33,9 @@ class ResponseCacheRepository
     }
 
     /**
-     * @param string                    $key
+     * @param string                                     $key
      * @param \Symfony\Component\HttpFoundation\Response $response
-     * @param \DateTime|int             $minutes
+     * @param \DateTime|int                              $minutes
      */
     public function put($key, $response, $minutes)
     {
