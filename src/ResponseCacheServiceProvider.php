@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache;
 
+use Illuminate\Contracts\Console\Application;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponseMiddleware;
@@ -18,7 +19,7 @@ class ResponseCacheServiceProvider extends ServiceProvider
             __DIR__.'/../resources/config/laravel-responsecache.php' => config_path('laravel-responsecache.php'),
         ], 'config');
 
-        $this->app->bind(CacheProfile::class, function ($app) {
+        $this->app->bind(CacheProfile::class, function (Application $app) {
             return $app->make(config('laravel-responsecache.cacheProfile'));
         });
     }
