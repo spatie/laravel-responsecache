@@ -23,6 +23,7 @@ Next, you must install the service provider:
 
 ```php
 // config/app.php
+
 'providers' => [
     ...
     Spatie\ReponseCache\ReponseCacheServiceProvider::class,
@@ -103,7 +104,7 @@ Requests can be ignored by using the `doNotCacheResponse`-middleware. This middl
 Using the middleware are route could be exempt from being cached.
 
 ```php
-//in a routes file
+// app/Http/routes.php
 
 Route::get('/auth/logout', ['middleware' => 'doNotCacheResponse', 'uses' => 'AuthController@getLogout']);
 ```
