@@ -25,8 +25,8 @@ class ResponseCache
 
     /**
      * @param ResponseCacheRepository $cache
-     * @param RequestHasher $hasher
-     * @param CacheProfile $cacheProfile
+     * @param RequestHasher           $hasher
+     * @param CacheProfile            $cacheProfile
      */
     public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
     {
@@ -55,7 +55,6 @@ class ResponseCache
      */
     public function cacheResponse(Request $request, Response $response)
     {
-
         if (config('laravel-responsecache.addCacheTimeHeader')) {
             $response = $this->addCachedHeader($response);
         }

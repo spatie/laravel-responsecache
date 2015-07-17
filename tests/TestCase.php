@@ -8,7 +8,6 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
-
     public function setUp()
     {
         parent::setUp();
@@ -16,7 +15,6 @@ abstract class TestCase extends Orchestra
         $this->initializeDirectory($this->getTempDirectory());
 
         $this->setUpDatabase($this->app);
-
     }
 
     /**
@@ -62,14 +60,13 @@ abstract class TestCase extends Orchestra
             $table->timestamps();
         });
 
-        User::create(['name' => 'test', 'email' => 'test@spatie.be', 'password'=>'password']);
+        User::create(['name' => 'test', 'email' => 'test@spatie.be', 'password' => 'password']);
     }
 
     public function getTempDirectory($suffix = '')
     {
         return __DIR__.'/temp'.($suffix == '' ? '' : '/'.$suffix);
     }
-
 
     protected function initializeDirectory($directory)
     {

@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\RequestHasher;
 
-class RequestHasherTest extends TestCase {
-
+class ResponseHasherTest extends TestCase
+{
     /**
      * @var \Spatie\ResponseCache\RequestHasher
      */

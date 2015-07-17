@@ -5,7 +5,6 @@ namespace Spatie\ResponseCache\Test;
 use Illuminate\Http\Response;
 use Spatie\ResponseCache\ResponseSerializer;
 
-
 class ResponseSerializerTest extends TestCase
 {
     /**
@@ -30,7 +29,7 @@ class ResponseSerializerTest extends TestCase
         $this->responseSerializer = new ResponseSerializer();
 
         $this->content = '<html>This is a reponse</html>';
-        
+
         $this->statusCode = 500;
     }
 
