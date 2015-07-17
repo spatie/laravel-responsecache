@@ -98,6 +98,7 @@ This will flush everything from the cache store specified in the config-file.
 Requests can be ignored by using the `doNotCacheResponse`-middleware. This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
 Using the middleware are route could be exempt from being cached.
+
 ```php
 //in a routes file
 
@@ -105,6 +106,7 @@ Route::get('/auth/logout', ['middleware' => 'doNotCacheResponse', 'uses' => 'Aut
 ```
 
 Alternatively you can add the middleware to a controller:
+
 ```php
 class UserController extends Controller
 {
