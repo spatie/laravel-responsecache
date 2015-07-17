@@ -33,9 +33,8 @@ This package also comes with a facade.
 
 'aliases' => [
 	...
-            'ResponseCache' => Spatie\ResponseCache\ResponseCacheFacade::class,
-    ...
-]
+   'ResponseCache' => Spatie\ResponseCache\ResponseCacheFacade::class,
+];
 ```
 
 You can publish the config-file with:
