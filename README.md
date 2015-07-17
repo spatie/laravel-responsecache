@@ -10,7 +10,7 @@ This package is still in development, a stable 1.0.0 version will be released so
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-responsecache.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-responsecache)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 
-This package can cache an entire response. It can for instance cache all get-requests for a certain amount of time. This could potentially speed up the response quite considirably.
+This package can cache an entire response. It can for instance cache all get-requests for a certain amount of time. This could potentially speed up the response quite considerably.
 
 ## Installation
 
@@ -26,7 +26,7 @@ Next, you must install the service provider:
 
 'providers' => [
     ...
-    Spatie\ReponseCache\ReponseCacheServiceProvider::class,
+    Spatie\ResponseCache\ResponseCacheServiceProvider::class,
 ];
 ```
 
@@ -36,17 +36,17 @@ This package also comes with a facade.
 // config/app.php
 
 'aliases' => [
-	...
+    ...
    'ResponseCache' => Spatie\ResponseCache\ResponseCacheFacade::class,
 ];
 ```
 
-You can publish the config-file with:
+You can publish the config file with:
 ```bash
 php artisan vendor:publish --provider="Spatie\ResponseCache\ResponseCacheServiceProvider"
 ```
 
-This is the contents of the published config file:
+This is the content of the published config file:
 
 ```php
 return [
@@ -67,7 +67,7 @@ return [
     'cacheLifetimeInMinutes' => 5,
 
     /*
-     * This setting determines if a http header named "Laravel-reponsecache"
+     * This setting determines if a http header named "Laravel-responsecache"
      * with the cache time should be added to a cached response. This
      * can be handy when debugging.
      */
@@ -88,7 +88,7 @@ return [
 
 ###Basic usage
 
-By default the package will cache all `get`-requests for five minutes. Logged in users will each have their own seperate cache. If y this behaviour is what you need, you're done: installing the `ResponseCacheServerProvider` was enough.
+By default the package will cache all `get`-requests for five minutes. Logged in users will each have their own separate cache. If this behaviour is what you need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
 
 ###Flushing the cache
@@ -141,7 +141,7 @@ interface CacheProfile
     public function shouldCache(Request $request);
 
     /**
-     * Return the time when the cache must be invalided.
+     * Return the time when the cache must be invalidated.
      *
      * @param \Illuminate\Http\Request  $request
      *
