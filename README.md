@@ -1,3 +1,6 @@
+#Use with caution
+This package is still in development, a stable 1.0.0 version will be released soon.
+
 # Speed up a Laravel application by caching the entire response
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
