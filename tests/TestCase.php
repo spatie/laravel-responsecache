@@ -112,6 +112,10 @@ abstract class TestCase extends Orchestra
         Route::any('/redirect', function () {
             return redirect('/');
         });
+
+        Route::any('/uncacheable', ['middleware' => 'doNotCacheResponse', function () {
+            return 'uncacheable '.str_random();
+        }]);
     }
 
     public function getTempDirectory($suffix = '')

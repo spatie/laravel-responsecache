@@ -96,4 +96,18 @@ class IntegrationTest extends TestCase
         $this->assertDifferentResponse($firstUserFirstCall, $secondUserSecondCall);
         $this->assertDifferentResponse($firstUserSecondCall, $secondUserSecondCall);
     }
+
+    /**
+     * @test
+     */
+    public function it_will_not_cache_routes_with_the_doNotCacheResponse_middleware()
+    {
+        $firstResponse = $this->call('GET', '/uncacheable');
+        $secondResponse = $this->call('GET', '/uncacheable');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertRegularResponse($secondResponse);
+
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
+    }
 }
