@@ -26,6 +26,18 @@ Next, you must install the service provider:
 ];
 ```
 
+This package also comes with a facade.
+
+```php
+// config/app.php
+
+'aliases' => [
+	...
+            'ResponseCache' => Spatie\ResponseCache\ResponseCacheFacade::class,
+    ...
+]
+```
+
 You can publish the config-file with:
 ```bash
 php artisan vendor:publish --provider="Spatie\ResponseCache\ResponseCacheServiceProvider"
@@ -56,8 +68,16 @@ return [
      * with the cache time should be added to a cached response. This
      * can be handy when debugging.
      */
-    'addCacheTimeHeader' => true
+    'addCacheTimeHeader' => true,
+
+    /*
+     * Here you may define the cache store that should be used to store
+     * requests. This can be the name of any store that is
+     * configured in app/config/cache.php
+     */
+     'cacheStore' => env('CACHE_DRIVER', 'file'),
 ];
+
 
 ```
 
@@ -69,10 +89,11 @@ By default the package will cache all `get`-requests for five minutes. Logged in
 
 
 ###Flushing the cache
-The package uses the default Laravel cache provider, so the cache can be flushed with:
+The entire cache can be flushed with:
+```php
+ResponseCache::flush();
 ```
-Cache::flush
-```
+This will flush everything from the cache store specified in the config-file.
 
 ###Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware. This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).

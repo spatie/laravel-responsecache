@@ -18,7 +18,7 @@ interface CacheProfile
     /**
      * Return the time when the cache must be invalided.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \DateTime
      */
@@ -30,7 +30,7 @@ interface CacheProfile
      * For example: if you want a different cache per user you could return the id of
      * the logged in user.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return string
      */

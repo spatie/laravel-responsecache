@@ -91,6 +91,14 @@ class ResponseCache
     }
 
     /**
+     *  Flush the cache.
+     */
+    protected function flush()
+    {
+        $this->cache->flush();
+    }
+
+    /**
      * Add a header with the cache date on the response.
      *
      * @param Response $response
