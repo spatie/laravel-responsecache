@@ -51,9 +51,7 @@ class BaseCacheProfile
      */
     public function isRunningInConsole()
     {
-        if ($this->app->environment('testing')) {
-            return false;
-        }
+        if ($this->app->environment('testing')) return false;
 
         return $this->app->runningInConsole();
     }
