@@ -108,10 +108,8 @@ Alternatively you can add the middleware to a controller:
 ```php
 class UserController extends Controller
 {
-
     public function __construct()
     {
-
         $this->middleware('doNotCacheResponse', ['only' => ['fooAction', 'barAction']]);
 
     }
