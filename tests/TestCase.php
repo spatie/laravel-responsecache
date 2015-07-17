@@ -5,6 +5,7 @@ namespace Spatie\ResponseCache\Test;
 use File;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Route;
 
 abstract class TestCase extends Orchestra
 {
@@ -72,7 +73,7 @@ abstract class TestCase extends Orchestra
      */
     protected function setUpRoutes($app)
     {
-        get('/', function () {
+        Route::any('/', function () {
            return 'hello';
         });
     }

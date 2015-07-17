@@ -12,9 +12,18 @@ class ResponseCacheTest extends TestCase
     /**
      * @test
      */
-    public function it_can_cache_a_request()
+    public function it_will_cache_a_get_request()
     {
         $this->assertRegularResponse($this->call('GET', '/'));
         $this->assertCachedResponse($this->call('GET', '/'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_will_not_cache_a_post_request()
+    {
+        $this->assertRegularResponse($this->call('POST', '/'));
+        $this->assertRegularResponse($this->call('POST', '/'));
     }
 }
