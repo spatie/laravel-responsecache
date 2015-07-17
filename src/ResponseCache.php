@@ -14,7 +14,7 @@ class ResponseCache
     protected $cache;
 
     /**
-     * @var ResponseHasher
+     * @var RequestHasher
      */
     protected $hasher;
 
@@ -25,10 +25,10 @@ class ResponseCache
 
     /**
      * @param ResponseCacheRepository $cache
-     * @param ResponseHasher $hasher
+     * @param RequestHasher $hasher
      * @param CacheProfile $cacheProfile
      */
-    public function __construct(ResponseCacheRepository $cache, ResponseHasher $hasher, CacheProfile $cacheProfile)
+    public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
     {
         $this->cache = $cache;
         $this->hasher = $hasher;

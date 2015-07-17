@@ -38,6 +38,6 @@ class ResponseCacheRepository
 
     public function get($key)
     {
-        return $this->responseSerializer->deserialize($this->cache->get($key));
+        return $this->responseSerializer->unserialize($this->cache->get($key));
     }
 }

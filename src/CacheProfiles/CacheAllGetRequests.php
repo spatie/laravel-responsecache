@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\ResponseCache\RequestHandlers;
+namespace Spatie\ResponseCache\CacheProfiles;
 
 use Illuminate\Http\Request;
 

@@ -15,7 +15,7 @@ class ResponseSerializer
         return serialize(compact('content', 'statusCode', 'headers'));
     }
 
-    public function deserialize($serializedResponse)
+    public function unserialize($serializedResponse)
     {
         $responseProperties = unserialize($serializedResponse);
 

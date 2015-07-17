@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\ResponseCache\CacheProfile;
+namespace Spatie\ResponseCache\CacheProfiles;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;

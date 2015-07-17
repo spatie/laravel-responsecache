@@ -5,7 +5,7 @@ namespace Spatie\ResponseCache;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
-class ResponseHasher
+class RequestHasher
 {
     /**
      * @var CacheProfile
