@@ -12,7 +12,7 @@ class CacheAllGetRequests extends BaseCacheProfile implements CacheProfile
      * @param \Illuminate\Http\Request $request
      * @return bool
      */
-    public function shouldBeCached(Request $request)
+    public function shouldCache(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
             return false;
@@ -21,7 +21,7 @@ class CacheAllGetRequests extends BaseCacheProfile implements CacheProfile
         if ($this->app->runningInConsole()) {
             return false;
         }
-
+        
         return $request->isMethod('get');
     }
 

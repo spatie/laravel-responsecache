@@ -13,7 +13,7 @@ interface CacheProfile
      * @param Request $request
      * @return bool
      */
-    public function shouldBeCached(Request $request);
+    public function shouldCache(Request $request);
 
     /**
      * Return the time when the cache must be invalided.

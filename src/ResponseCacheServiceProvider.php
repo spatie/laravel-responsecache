@@ -16,7 +16,9 @@ class ResponseCacheServiceProvider extends ServiceProvider
             __DIR__.'/../resources/config/laravel-responsecache.php' => config_path('laravel-responsecache.php'),
         ], 'config');
 
-        $this->app->bind(CacheProfile::class, config('laravel-responsecache.cacheProfile'));
+        $this->app->bind(CacheProfile::class, function($app) {
+            return $app->make(config('laravel-responsecache.cacheProfile'));
+        });
     }
 
     /**
@@ -24,6 +26,6 @@ class ResponseCacheServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../resources/config/laravel-responsecache.php', 'laravel-responsecache.php');
+        $this->mergeConfigFrom(__DIR__.'/../resources/config/laravel-responsecache.php', 'laravel-responsecache');
     }
 }

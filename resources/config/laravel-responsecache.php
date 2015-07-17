@@ -8,7 +8,7 @@ return [
      *  You can provide your own class given that it implements the
      *  RequestFilter interface.
      */
-    'requestProfile' => Spatie\ResponseCache\RequestProfiles\CacheAllGetRequests::class,
+    'cacheProfile' => Spatie\ResponseCache\CacheProfiles\CacheAllGetRequests::class,
 
     /**
      * When using the default CacheRequestFilter this setting controls the

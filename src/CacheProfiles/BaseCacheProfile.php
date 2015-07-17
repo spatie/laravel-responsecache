@@ -25,7 +25,7 @@ class BaseCacheProfile
      */
     public function cacheRequestUntil(Request $request)
     {
-        return Carbon::now()->addMinutes($this->app->config('laravel-responsecache.cacheLifetimeInMinutes'));
+        return Carbon::now()->addMinutes($this->app['config']->get('laravel-responsecache.cacheLifetimeInMinutes'));
     }
 
     /**
