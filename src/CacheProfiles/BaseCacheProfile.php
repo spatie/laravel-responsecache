@@ -41,4 +41,18 @@ class BaseCacheProfile
 
         return '';
     }
+
+    /**
+     * Determine if the app is running in the console.
+     *
+     * To allow testing this will return false the environment is testing.
+     *
+     * @return bool
+     */
+    public function isRunningInConsole()
+    {
+        if ($this->app->environment('testing')) return false;
+
+        return $this->app->runningInConsole();
+    }
 }

@@ -93,7 +93,7 @@ class ResponseCache
     /**
      *  Flush the cache.
      */
-    protected function flush()
+    public function flush()
     {
         $this->cache->flush();
     }

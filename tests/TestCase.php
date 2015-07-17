@@ -12,9 +12,13 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
 
+        $this->app['laravel-responsecache']->flush();
+
         $this->initializeDirectory($this->getTempDirectory());
 
         $this->setUpDatabase($this->app);
+
+        $this->setUpRoutes($this->app);
     }
 
     /**
@@ -63,6 +67,16 @@ abstract class TestCase extends Orchestra
         User::create(['name' => 'test', 'email' => 'test@spatie.be', 'password' => 'password']);
     }
 
+    /**
+     * @param \Illuminate\Foundation\Application $app
+     */
+    protected function setUpRoutes($app)
+    {
+        get('/', function() {
+           return 'hello';
+        });
+    }
+
     public function getTempDirectory($suffix = '')
     {
         return __DIR__.'/temp'.($suffix == '' ? '' : '/'.$suffix);
@@ -74,5 +88,13 @@ abstract class TestCase extends Orchestra
             File::deleteDirectory($directory);
         }
         File::makeDirectory($directory);
+    }
+
+    protected function assertCachedResponse(\Illuminate\Http\Response $response) {
+        self::assertThat($response->headers->has('laravel-reponsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
+    }
+
+    protected function assertRegularResponse(\Illuminate\Http\Response $response) {
+        self::assertThat($response->headers->has('laravel-reponsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
     }
 }

@@ -19,7 +19,7 @@ class CacheAllGetRequests extends BaseCacheProfile implements CacheProfile
             return false;
         }
 
-        if ($this->app->runningInConsole()) {
+        if ($this->isRunningInConsole()) {
             return false;
         }
 
