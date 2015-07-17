@@ -102,7 +102,8 @@ This will flush everything from the cache store specified in the config-file.
 
 ###Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware. 
-This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
+This middleware [can be assigned to routes and controllers]
+(http://laravel.com/docs/master/controllers#controller-middleware).
 
 Using the middleware are route could be exempt from being cached.
 
@@ -127,7 +128,7 @@ class UserController extends Controller
 
 ###Creating a custom cache profile
 To determine which requests should be cached, and for how long, a cache profile class is used. 
-The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllGetRequests`. 
+The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests`. 
 
 You can create your own cache profile class by implementing the `
 Spatie\ResponseCache\CacheProfiles\CacheProfile`-interface. Let's take a look at the interface:
