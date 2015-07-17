@@ -2,7 +2,7 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\ResponseSerializer;
 
 class ResponseSerializerTest extends TestCase

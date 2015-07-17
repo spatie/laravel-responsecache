@@ -2,14 +2,14 @@
 
 namespace Spatie\ResponseCache;
 
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResponseSerializer
 {
     /**
      * Serialize a response.
      *
-     * @param \Illuminate\Http\Response $response
+     * @param \Symfony\Component\HttpFoundation\Response $response
      *
      * @return string
      */
@@ -27,7 +27,7 @@ class ResponseSerializer
      *
      * @param $serializedResponse
      *
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function unserialize($serializedResponse)
     {

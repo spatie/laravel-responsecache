@@ -76,6 +76,10 @@ abstract class TestCase extends Orchestra
         Route::any('/', function () {
            return 'hello';
         });
+
+        Route::any('/redirect', function () {
+            return redirect('/');
+        });
     }
 
     public function getTempDirectory($suffix = '')
@@ -91,12 +95,12 @@ abstract class TestCase extends Orchestra
         File::makeDirectory($directory);
     }
 
-    protected function assertCachedResponse(\Illuminate\Http\Response $response)
+    protected function assertCachedResponse(\Symfony\Component\HttpFoundation\Response $response)
     {
         self::assertThat($response->headers->has('laravel-reponsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
     }
 
-    protected function assertRegularResponse(\Illuminate\Http\Response $response)
+    protected function assertRegularResponse(\Symfony\Component\HttpFoundation\Response $response)
     {
         self::assertThat($response->headers->has('laravel-reponsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
     }

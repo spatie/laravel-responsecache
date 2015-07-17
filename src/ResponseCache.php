@@ -3,7 +3,7 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCache
@@ -83,7 +83,7 @@ class ResponseCache
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getCachedResponseFor(Request $request)
     {
@@ -101,9 +101,9 @@ class ResponseCache
     /**
      * Add a header with the cache date on the response.
      *
-     * @param \Illuminate\Http\Response $response
+     * @param \Symfony\Component\HttpFoundation\Response $response
      *
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function addCachedHeader(Response $response)
     {

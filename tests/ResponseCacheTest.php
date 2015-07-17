@@ -21,6 +21,15 @@ class ResponseCacheTest extends TestCase
     /**
      * @test
      */
+    public function it_will_cache_redirects()
+    {
+        $this->assertRegularResponse($this->call('GET', '/redirect'));
+        $this->assertCachedResponse($this->call('GET', '/redirect'));
+    }
+
+    /**
+     * @test
+     */
     public function it_will_not_cache_a_post_request()
     {
         $this->assertRegularResponse($this->call('POST', '/'));
