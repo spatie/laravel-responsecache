@@ -2,8 +2,7 @@
 
 namespace Spatie\ResponseCache;
 
-use Illuminate\Cache\Repository;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Config\Repository as Repository;
 use Illuminate\Contracts\Foundation\Application;
 
 class ResponseCacheRepository
@@ -25,9 +24,9 @@ class ResponseCacheRepository
 
     /**
      * @param \Illuminate\Contracts\Foundation\Application $app
-     * @param \Spatie\ResponseCache\ResponseSerializer $responseSerializer
+     * @param \Spatie\ResponseCache\ResponseSerializer     $responseSerializer
      */
-    public function __construct(Application $app, ResponseSerializer $responseSerializer, ConfigRepository $config)
+    public function __construct(Application $app, ResponseSerializer $responseSerializer, Repository $config)
     {
         $this->cache = $app['cache']->store($config->get('laravel-responsecache.cacheStore'));
         $this->responseSerializer = $responseSerializer;

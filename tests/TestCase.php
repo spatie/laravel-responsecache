@@ -72,7 +72,7 @@ abstract class TestCase extends Orchestra
      */
     protected function setUpRoutes($app)
     {
-        get('/', function() {
+        get('/', function () {
            return 'hello';
         });
     }
@@ -90,11 +90,13 @@ abstract class TestCase extends Orchestra
         File::makeDirectory($directory);
     }
 
-    protected function assertCachedResponse(\Illuminate\Http\Response $response) {
+    protected function assertCachedResponse(\Illuminate\Http\Response $response)
+    {
         self::assertThat($response->headers->has('laravel-reponsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
     }
 
-    protected function assertRegularResponse(\Illuminate\Http\Response $response) {
+    protected function assertRegularResponse(\Illuminate\Http\Response $response)
+    {
         self::assertThat($response->headers->has('laravel-reponsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
     }
 }

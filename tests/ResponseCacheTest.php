@@ -2,8 +2,6 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Illuminate\Http\Request;
-
 class ResponseCacheTest extends TestCase
 {
     public function setUp()

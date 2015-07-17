@@ -10,6 +10,7 @@ class ResponseSerializer
      * Serialize a response.
      *
      * @param \Illuminate\Http\Response $response
+     *
      * @return string
      */
     public function serialize(Response $response)
@@ -25,6 +26,7 @@ class ResponseSerializer
      * Unserialize a response.
      *
      * @param $serializedResponse
+     *
      * @return \Illuminate\Http\Response
      */
     public function unserialize($serializedResponse)
