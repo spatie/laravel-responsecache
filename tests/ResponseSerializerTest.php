@@ -42,6 +42,8 @@ class ResponseSerializerTest extends TestCase
 
         $serializedResponse = $this->responseSerializer->serialize($testResponse);
 
+        $this->assertTrue(is_string($serializedResponse));
+
         $unserializedResponse = $this->responseSerializer->unserialize($serializedResponse);
 
         $this->assertInstanceOf(Response::class, $unserializedResponse);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\ResponseCache;
+namespace Spatie\ResponseCache\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;

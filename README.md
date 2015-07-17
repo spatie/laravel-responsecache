@@ -1,7 +1,4 @@
-WORK IN PROGRESS DO NOT USE (YET)
-
-
-# Greatly speed up a Laravel application by caching the entire response
+# Speed up a Laravel application by caching the entire response
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -10,14 +7,58 @@ WORK IN PROGRESS DO NOT USE (YET)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-responsecache.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-responsecache)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
+This package can cache an entire response. 
 
-## Install
+## Installation
 
 You can install the package via composer:
 ``` bash
 $ composer require spatie/laravel-responsecache
+```
+
+Next, you must install the service provider:
+
+```php
+// config/app.php
+'providers' => [
+    ...
+    Spatie\ReponseCache\ReponseCacheServiceProvider::class,
+];
+```
+
+You can publish the config-file with:
+```bash
+php artisan vendor:publish --provider="Spatie\ResponseCache\ResponseCacheServiceProvider"
+```
+
+This is the contents of the published config file:
+
+```php
+return [
+
+    /**
+     *  The given class will determinate if a request should be cached. The
+     *  default class will cache all GET-requests.
+     *
+     *  You can provide your own class given that it implements the
+     *  CacheProfile interface.
+     */
+    'cacheProfile' => Spatie\ResponseCache\CacheProfiles\CacheAllGetRequests::class,
+
+    /**
+     * When using the default CacheRequestFilter this setting controls the
+     * number of minutes responses must be cached.
+     */
+    'cacheLifetimeInMinutes' => 5,
+
+    /*
+     * This setting determines if a http header named "Laravel-reponsecache"
+     * with the cache time should be added to a cached response. This
+     * can be handy when debugging.
+     */
+    'addCacheTimeHeader' => true
+];
+
 ```
 
 ## Usage
@@ -27,7 +68,7 @@ $skeleton = new Spatie\Skeleton();
 echo $skeleton->echoPhrase('Hello, Spatie!');
 ```
 
-## Change log
+## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
