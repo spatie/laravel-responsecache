@@ -21,8 +21,6 @@ class ResponseCacheServiceProvider extends ServiceProvider
         $this->app->bind(CacheProfile::class, function ($app) {
             return $app->make(config('laravel-responsecache.cacheProfile'));
         });
-
-
     }
 
     /**
