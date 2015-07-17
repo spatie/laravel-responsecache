@@ -69,7 +69,7 @@ class ResponseCache
     /**
      * Determine if the given request has been cached.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return bool
      */
@@ -81,9 +81,9 @@ class ResponseCache
     /**
      * Get the cached response for the given request.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      *
-     * @return mixed
+     * @return \Illuminate\Http\Response
      */
     public function getCachedResponseFor(Request $request)
     {
@@ -101,9 +101,9 @@ class ResponseCache
     /**
      * Add a header with the cache date on the response.
      *
-     * @param Response $response
+     * @param \Illuminate\Http\Response $response
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     protected function addCachedHeader(Response $response)
     {

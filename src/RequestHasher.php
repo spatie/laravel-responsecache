@@ -8,7 +8,7 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 class RequestHasher
 {
     /**
-     * @var CacheProfile
+     * @var \Spatie\ResponseCache\CacheProfiles\CacheProfile
      */
     protected $cacheProfile;
 
@@ -20,7 +20,7 @@ class RequestHasher
     /**
      * Get a hash value for the given request.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return string
      */

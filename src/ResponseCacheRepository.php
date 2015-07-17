@@ -9,12 +9,12 @@ use Illuminate\Contracts\Foundation\Application;
 class ResponseCacheRepository
 {
     /**
-     * @var Repository
+     * @var \Illuminate\Cache\Repository
      */
     protected $cache;
 
     /**
-     * @var ResponseSerializer
+     * @var \Spatie\ResponseCache\ResponseSerializer
      */
     protected $responseSerializer;
 
@@ -29,8 +29,6 @@ class ResponseCacheRepository
      */
     public function __construct(Application $app, ResponseSerializer $responseSerializer, ConfigRepository $config)
     {
-
-        //dd($cache->getStore($config->get('laravel-responsecache.cacheStore')));
         $this->cache = $app['cache']->store($config->get('laravel-responsecache.cacheStore'));
         $this->responseSerializer = $responseSerializer;
     }
