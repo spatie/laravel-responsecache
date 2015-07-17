@@ -14,7 +14,7 @@ class DoNotCacheResponseMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $request->attributes->add(['laravel-cacheresponse.doNotCache' => true]);
 

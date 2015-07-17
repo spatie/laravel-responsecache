@@ -4,11 +4,12 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Spatie\ResponseCache\ResponseCache;
 
 class ResponseCacheMiddleware
 {
     /**
-     * @var ResponseCache
+     * @var \Spatie\ResponseCache\ResponseCache
      */
     protected $responseCache;
 
@@ -18,8 +19,8 @@ class ResponseCacheMiddleware
     }
 
     /**
-     * @param Request $request
-     * @param Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      *
      * @return Request
      */
