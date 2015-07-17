@@ -58,7 +58,7 @@ return [
      *  You can provide your own class given that it implements the
      *  CacheProfile interface.
      */
-    'cacheProfile' => Spatie\ResponseCache\CacheProfiles\CacheAllGetRequests::class,
+    'cacheProfile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
     /**
      * When using the default CacheRequestFilter this setting controls the
