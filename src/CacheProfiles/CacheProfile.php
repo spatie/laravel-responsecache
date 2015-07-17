@@ -9,7 +9,7 @@ interface CacheProfile
     /**
      * Determine if the given request should be cached.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return bool
      */
@@ -18,16 +18,19 @@ interface CacheProfile
     /**
      * Return the time when the cache must be invalided.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request  $request
      *
      * @return \DateTime
      */
     public function cacheRequestUntil(Request $request);
 
     /**
-     * Set a string to add to differentiate this request from others.
+     * Return a string to differentiate this request from others.
      *
-     * @param Request $request
+     * For example: if you want a different cache per user you could return the id of
+     * the logged in user.
+     *
+     * @param \Illuminate\Http\Request  $request
      *
      * @return string
      */

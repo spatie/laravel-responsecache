@@ -67,6 +67,82 @@ return [
 
 By default the package will cache all `get`-request for five minutes. Logged in users will each have their own seperate cache. If you just want this behaviour, you're done: installing the `ResponseCacheServerProvider` was enough.
 
+###Ignoring a request
+Requests can be ignored by using the `doNotCacheResponse`-middleware. This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
+
+So You could exempt a logout route from the cache.
+
+```php
+//in a routes file
+
+Route::get('/auth/logout', ['middleware' => 'doNotCacheResponse', 'uses' => 'AuthController@getLogout']);
+```
+
+Alternatively you can do add the middleware to a controller:
+```php
+class UserController extends Controller
+{
+
+    public function __construct()
+    {
+
+        $this->middleware('doNotCacheResponse', ['only' => ['fooAction', 'barAction']]);
+
+    }
+}
+```
+
+###Flushing the cache
+The package uses the default Laravel cache provider, so the cache can be flushed with:
+```
+Cache::flush
+```
+
+
+###Creating a custom cache profile
+To determine which requests should be cached, and for how long, a cache profile class is used. The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllGetRequests`. 
+
+You can create your own cache profile class by implementing the `
+Spatie\ResponseCache\CacheProfiles\CacheProfile`-interface. Let's take a look at the interface:
+
+```php
+interface CacheProfile
+{
+    /**
+     * Determine if the given request should be cached.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return bool
+     */
+    public function shouldCache(Request $request);
+
+    /**
+     * Return the time when the cache must be invalided.
+     *
+     * @param \Illuminate\Http\Request  $request
+     *
+     * @return \DateTime
+     */
+    public function cacheRequestUntil(Request $request);
+
+    /**
+     * Return a string to differentiate this request from others.
+     *
+     * For example: if you want a different cache per user you could return the id of
+     * the logged in user.
+     *
+     * @param \Illuminate\Http\Request  $request
+     *
+     * @return string
+     */
+    public function cacheNameSuffix(Request $request);
+}
+```
+
+
+
+
 
 ## Changelog
 

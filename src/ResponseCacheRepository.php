@@ -17,7 +17,7 @@ class ResponseCacheRepository
     protected $responseSerializer;
 
     /**
-     * @param Repository         $cache
+     * @param \Illuminate\Contracts\Cache\Repository $cache
      * @param ResponseSerializer $responseSerializer
      */
     public function __construct(Repository $cache, ResponseSerializer $responseSerializer)

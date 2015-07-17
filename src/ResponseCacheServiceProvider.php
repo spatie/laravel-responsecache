@@ -2,7 +2,7 @@
 
 namespace Spatie\ResponseCache;
 
-use Illuminate\Contracts\Console\Application;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponseMiddleware;
