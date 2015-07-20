@@ -78,8 +78,6 @@ return [
      */
     'cacheStore' => env('RESPONSE_CACHE_DRIVER', 'file'),
 ];
-
-
 ```
 
 ## Usage
