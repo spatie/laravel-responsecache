@@ -5,6 +5,7 @@ namespace Spatie\ResponseCache;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
+use Spatie\ResponseCache\Commands\ClearCommand;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponseMiddleware;
 use Spatie\ResponseCache\Middlewares\ResponseCacheMiddleware;
 
@@ -24,6 +25,10 @@ class ResponseCacheServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('laravel-responsecache', ResponseCache::class);
+
+        $this->app['command.responsecache:clear'] = $this->app->make(ClearCommand::class);
+
+        $this->commands(['command.responsecache:clear']);
     }
 
     /**
