@@ -46,8 +46,8 @@ php artisan vendor:publish --provider="Spatie\ResponseCache\ResponseCacheService
 This is the contents of the published config file:
 
 ```php
-
 return [
+
     /**
      *  The given class will determinate if a request should be cached. The
      *  default class will cache all successful GET-requests.
