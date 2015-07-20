@@ -125,4 +125,20 @@ class IntegrationTest extends TestCase
 
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
+
+    /**
+     * @test
+     */
+    public function it_will_not_cache_request_when_the_package_is_not_enable()
+    {
+        $this->app['config']->set('laravel-responsecache.enabled', false);
+
+        $firstResponse = $this->call('GET', '/random');
+        $secondResponse = $this->call('GET', '/random');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertRegularResponse($secondResponse);
+
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
+    }
 }

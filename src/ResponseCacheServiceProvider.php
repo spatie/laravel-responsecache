@@ -33,7 +33,7 @@ class ResponseCacheServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../resources/config/laravel-responsecache.php', 'laravel-responsecache');
 
-        $this->app[\Illuminate\Contracts\Http\Kernel::class]->pushMiddleware(ResponseCacheMiddleware::class);
+        $this->app[\Illuminate\Contracts\Http\Kernel::class]->prependMiddleware(ResponseCacheMiddleware::class);
         $this->app[\Illuminate\Routing\Router::class]->middleware('doNotCacheResponse', DoNotCacheResponseMiddleware::class);
     }
 }

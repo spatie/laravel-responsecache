@@ -4,7 +4,6 @@ namespace Spatie\ResponseCache\Test\CacheProfiles;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use ResponseCache;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Spatie\ResponseCache\Test\TestCase;
 use Spatie\ResponseCache\Test\User;
