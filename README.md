@@ -61,7 +61,7 @@ return [
      * When using the default CacheRequestFilter this setting controls the
      * number of minutes responses must be cached.
      */
-    'cacheLifetimeInMinutes' => 60 * 24,
+    'cacheLifetimeInMinutes' => 60 * 24 * 7,
 
     /*
      * This setting determines if a http header named "Laravel-responsecache"
@@ -83,7 +83,7 @@ return [
 
 ###Basic usage
 
-By default the package will cache all successful `get`-requests for a day.
+By default the package will cache all successful `get`-requests for a week.
 Logged in users will each have their own separate cache. If this behaviour is what you
  need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
