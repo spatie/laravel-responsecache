@@ -96,9 +96,9 @@ ResponseCache::flush();
 This will flush everything from the cache store specified in the config-file.
 
 The same can be accomplished by issuing this artisan command:
-```bash`
+```bash
 $ php artisan responsecache:flush
-``
+``` 
 
 ###Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware. 
