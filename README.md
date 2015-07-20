@@ -47,6 +47,7 @@ This is the contents of the published config file:
 
 ```php
 return [
+    /**
      *  The given class will determinate if a request should be cached. The
      *  default class will cache all successful GET-requests.
      *
@@ -98,7 +99,7 @@ This will flush everything from the cache store specified in the config-file.
 The same can be accomplished by issuing this artisan command:
 ```bash
 $ php artisan responsecache:flush
-``` 
+```
 
 ###Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware. 
