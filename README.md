@@ -46,14 +46,12 @@ You can publish the config file with:
 php artisan vendor:publish --provider="Spatie\ResponseCache\ResponseCacheServiceProvider"
 ```
 
-This is the content of the published config file:
+This is the contents of the published config file:
 
 ```php
 return [
-
-    /**
      *  The given class will determinate if a request should be cached. The
-     *  default class will cache all GET-requests.
+     *  default class will cache all successful GET-requests.
      *
      *  You can provide your own class given that it implements the
      *  CacheProfile interface.
@@ -64,7 +62,7 @@ return [
      * When using the default CacheRequestFilter this setting controls the
      * number of minutes responses must be cached.
      */
-    'cacheLifetimeInMinutes' => 5,
+    'cacheLifetimeInMinutes' => 60 * 24,
 
     /*
      * This setting determines if a http header named "Laravel-responsecache"
@@ -78,7 +76,7 @@ return [
      * requests. This can be the name of any store that is
      * configured in app/config/cache.php
      */
-     'cacheStore' => env('CACHE_DRIVER', 'file'),
+    'cacheStore' => env('RESPONSE_CACHE_DRIVER', 'file'),
 ];
 
 
