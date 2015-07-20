@@ -15,7 +15,7 @@ return [
      * When using the default CacheRequestFilter this setting controls the
      * number of minutes responses must be cached.
      */
-    'cacheLifetimeInMinutes' => 5,
+    'cacheLifetimeInMinutes' => 60 * 24,
 
     /*
      * This setting determines if a http header named "Laravel-responsecache"
@@ -30,9 +30,4 @@ return [
      * configured in app/config/cache.php
      */
      'cacheStore' => env('CACHE_DRIVER', 'file'),
-
-    /*
-     * Determine if errors should be cache. Responses with an e
-     */
-    'cacheErrors' => false,
 ];
