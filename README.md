@@ -1,4 +1,4 @@
-# Speed up a Laravel app by caching the entire response
+# Speed up an app by caching the entire response
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -7,7 +7,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-responsecache.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-responsecache)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 
-This package can cache an entire response. It can for instance cache all get-requests for a certain amount of time. This could potentially speed up the response quite considerably.
+This Laravel 5.1 package can cache an entire response. It can for instance cache all get-requests for a certain amount of time. This could potentially speed up the response quite considerably.
 
 ## Installation
 
