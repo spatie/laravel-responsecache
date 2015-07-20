@@ -2,6 +2,11 @@
 
 All Notable changes to `laravel-responsecache` will be documented in this file
 
+## 1.1.1 - 2015-07-20
+
+### Fixed
+- Default cachetime
+
 ## 1.1.0 - 2015-07-20
 
 ### Added
