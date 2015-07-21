@@ -189,9 +189,11 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 $ composer test
 ```
 
-## Laravel 4
-This package is tied to Laravel 5.1. If you need this functionality in Laravel 4
-take a look at [Flatten](https://github.com/Anahkiasen/flatten) by [Maxime Fabre](https://twitter.com/Anahkiasen)
+## Alternatives
+- [Barry Vd. Heuvel](https://twitter.com/barryvdh) made [a package that caches responses by leveraging HttpCache](https://github.com/barryvdh/laravel-httpcache).
+
+- spatie/laravel-responsecache is tied to Laravel 5.1. If you need this functionality in Laravel 4
+take a look at [Flatten](https://github.com/Anahkiasen/flatten) by [Maxime Fabre](https://twitter.com/Anahkiasen).
 
 ## Contributing
 
