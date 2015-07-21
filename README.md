@@ -184,7 +184,7 @@ interface CacheProfile
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Testing
-
+You can run the tests with:
 ``` bash
 $ composer test
 ```
