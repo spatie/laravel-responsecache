@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 
-class BaseCacheProfile
+abstract class BaseCacheProfile
 {
     /**
      * @var \Illuminate\Contracts\Foundation\Application
