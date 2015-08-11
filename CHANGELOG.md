@@ -2,6 +2,11 @@
 
 All Notable changes to `laravel-responsecache` will be documented in this file
 
+## 1.1.3 - 2015-08-11
+
+### Fixed
+- Fixed an issue where the cache header could not be set
+
 ## 1.1.2 - 2015-07-22
 
 ### Fixed
