@@ -141,4 +141,21 @@ class IntegrationTest extends TestCase
 
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
+
+    /**
+     * @test
+     */
+    public function it_will_not_serve_cached_requests_when_it_is_disabled_in_the_config_file()
+    {
+        $firstResponse = $this->call('GET', '/random');
+
+        $this->app['config']->set('laravel-responsecache.enabled', false);
+
+        $secondResponse = $this->call('GET', '/random');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertRegularResponse($secondResponse);
+
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
+    }
 }

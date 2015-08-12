@@ -84,6 +84,10 @@ class ResponseCache
      */
     public function hasCached(Request $request)
     {
+        if (!config('laravel-responsecache.enabled')) {
+            return false;
+        }
+
         return $this->cache->has($this->hasher->getHashFor($request));
     }
 

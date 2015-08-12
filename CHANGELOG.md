@@ -2,6 +2,11 @@
 
 All Notable changes to `laravel-responsecache` will be documented in this file
 
+## 1.1.4 - 2015-08-12
+
+### Fixed
+- Fixed an issue where cached request were still served even if the package was disabled via the config file
+
 ## 1.1.3 - 2015-08-11
 
 ### Fixed
