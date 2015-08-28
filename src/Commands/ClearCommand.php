@@ -51,11 +51,11 @@ class ClearCommand extends Command
     {
         $storeName = $this->config->get('laravel-responsecache.cacheStore');
 
-        $this->laravel['events']->fire('cache:clearing', [$storeName]);
+        $this->laravel['events']->fire('responsecache:clearing', [$storeName]);
 
         $this->cache->store($storeName)->flush();
 
-        $this->laravel['events']->fire('cache:cleared', [$storeName]);
+        $this->laravel['events']->fire('responsecache:cleared', [$storeName]);
 
         $this->info('Response cache cleared!');
     }
