@@ -2,6 +2,11 @@
 
 All Notable changes to `laravel-responsecache` will be documented in this file
 
+## 1.1.5 - 2015-08-28
+
+### Fixed
+- Fixed an issue where the cache middleware could'nt correctly determine the currently authenticated user
+
 ## 1.1.4 - 2015-08-12
 
 ### Fixed
