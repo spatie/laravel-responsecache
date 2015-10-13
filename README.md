@@ -99,7 +99,7 @@ This will flush everything from the cache store specified in the config-file.
 
 The same can be accomplished by issuing this artisan command:
 ```bash
-$ php artisan responsecache:flush
+$ php artisan responsecache:clear
 ```
 
 ###Preventing a request from being cached
