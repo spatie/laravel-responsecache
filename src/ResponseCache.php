@@ -9,7 +9,7 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 class ResponseCache
 {
     /**
-     * @var ResponseCacher
+     * @var ResponseCache
      */
     protected $cache;
 
