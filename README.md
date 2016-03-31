@@ -51,6 +51,12 @@ This is the contents of the published config file:
 return [
 
     /**
+     *  This is the master switch to enable of disable the response cache. If set to
+     *  false no responses will be cached.
+     */
+    'enabled' => env('RESPONSE_CACHE_ENABLED', true),
+
+    /**
      *  The given class will determinate if a request should be cached. The
      *  default class will cache all successful GET-requests.
      *
