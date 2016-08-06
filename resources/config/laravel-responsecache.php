@@ -1,13 +1,13 @@
 <?php
 
 return [
-    /**
+    /*
      *  This is the master switch to enable of disable the response cache. If set to
      *  false no responses will be cached.
      */
     'enabled' => env('RESPONSE_CACHE_ENABLED', true),
 
-    /**
+    /*
      *  The given class will determinate if a request should be cached. The
      *  default class will cache all successful GET-requests.
      *
@@ -16,7 +16,7 @@ return [
      */
     'cacheProfile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
-    /**
+    /*
      * When using the default CacheRequestFilter this setting controls the
      * number of minutes responses must be cached.
      */
