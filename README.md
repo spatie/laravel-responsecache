@@ -7,7 +7,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-responsecache.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-responsecache)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 
-This Laravel 5.1 package can cache an entire response. By default it will cache all sucessful get-requests for a week. This could potentially speed up the response quite considerably.
+This Laravel 5 package can cache an entire response. By default it will cache all sucessful get-requests for a week. This could potentially speed up the response quite considerably.
 
 Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
