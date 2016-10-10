@@ -2,8 +2,11 @@
 
 All Notable changes to `laravel-responsecache` will be documented in this file
 
+## 1.1.7 - 2016-10-10
+- added usage of `RESPONSE_CACHE_LIFETIME` env var to config file
+
 ## 1.1.6 - 2016-08-07
-- debug headers will not be sent when `APP_DEBUG` is set to false.
+- debug headers will not be sent when `APP_DEBUG` is set to false
 
 ## 1.1.5 - 2015-08-28
 
