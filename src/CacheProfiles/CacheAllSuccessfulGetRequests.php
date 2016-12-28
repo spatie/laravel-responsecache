@@ -36,6 +36,7 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile implements CachePro
      */
     public function shouldCacheResponse(Response $response)
     {
-        return $response->isSuccessful() || $response->isRedirection();
+        return ($response->isSuccessful() || $response->isRedirection())
+            && $response->getStatusCode() !== 304;
     }
 }
