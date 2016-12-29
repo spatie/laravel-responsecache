@@ -3,17 +3,17 @@
 namespace Spatie\ResponseCache\CacheProfiles;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
 
 abstract class BaseCacheProfile
 {
     /**
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @var Illuminate\Contracts\Container\Container
      */
     protected $app;
 
-    public function __construct(Application $app)
+    public function __construct(Container $app)
     {
         $this->app = $app;
     }
