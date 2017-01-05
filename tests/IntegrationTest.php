@@ -87,7 +87,7 @@ class IntegrationTest extends TestCase
     /**
      * @test
      */
-    public function it_will_cache_responses_for_each_logged_in_user_seperately()
+    public function it_will_cache_responses_for_each_logged_in_user_separately()
     {
         $this->call('GET', '/login/1');
         $firstUserFirstCall = $this->call('GET', '/');
