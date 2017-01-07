@@ -39,7 +39,9 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_cache_errors()
     {
-        $this->setExpectedException(NotFoundHttpException::class);
+        if (starts_with($this->app->version(), "5.1")) {
+            $this->markTestSkipped("This test only works in modern versions of Laravel");
+        }
 
         $firstResponse = $this->call('GET', '/notfound');
         $secondResponse = $this->call('GET', '/notfound');
