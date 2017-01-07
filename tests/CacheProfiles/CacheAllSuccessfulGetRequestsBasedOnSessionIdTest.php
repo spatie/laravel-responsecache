@@ -2,13 +2,9 @@
 
 namespace Spatie\ResponseCache\Test\CacheProfiles;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequestsBasedOnSessionId;
 use Spatie\ResponseCache\Test\TestCase;
-use Spatie\ResponseCache\Test\User;
-use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequestsBasedOnSessionIdTest extends TestCase
 {
