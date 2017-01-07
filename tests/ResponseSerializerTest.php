@@ -7,19 +7,13 @@ use Spatie\ResponseCache\ResponseSerializer;
 
 class ResponseSerializerTest extends TestCase
 {
-    /**
-     * @var \Spatie\ResponseCache\ResponseSerializer
-     */
+    /** @var \Spatie\ResponseCache\ResponseSerializer */
     protected $responseSerializer;
 
-    /**
-     * @var string
-     */
+    /**  @var string */
     protected $content;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $statusCode;
 
     public function setUp()
@@ -33,9 +27,7 @@ class ResponseSerializerTest extends TestCase
         $this->statusCode = 500;
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_serialize_and_unserialize_a_reponse()
     {
         $testResponse = Response::create($this->content, $this->statusCode, ['testHeader' => 'testValue']);

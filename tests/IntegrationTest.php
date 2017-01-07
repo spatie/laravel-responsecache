@@ -12,9 +12,7 @@ class IntegrationTest extends TestCase
         parent::setUp();
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_cache_a_get_request()
     {
         $firstResponse = $this->call('GET', '/random');
@@ -26,9 +24,7 @@ class IntegrationTest extends TestCase
         $this->assertSameResponse($firstResponse, $secondResponse);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_cache_redirects()
     {
         $firstResponse = $this->call('GET', '/redirect');
@@ -40,9 +36,7 @@ class IntegrationTest extends TestCase
         $this->assertSameResponse($firstResponse, $secondResponse);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_not_cache_errors()
     {
         $this->setExpectedException(NotFoundHttpException::class);
@@ -54,9 +48,7 @@ class IntegrationTest extends TestCase
         $this->assertRegularResponse($secondResponse);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_not_cache_a_post_request()
     {
         $firstResponse = $this->call('POST', '/random');
@@ -68,9 +60,7 @@ class IntegrationTest extends TestCase
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_flush_the_cached_requests()
     {
         $firstResponse = $this->call('GET', '/random');
@@ -84,9 +74,7 @@ class IntegrationTest extends TestCase
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_cache_responses_for_each_logged_in_user_separately()
     {
         $this->call('GET', '/login/1');
@@ -112,9 +100,7 @@ class IntegrationTest extends TestCase
         $this->assertDifferentResponse($firstUserSecondCall, $secondUserSecondCall);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_not_cache_routes_with_the_doNotCacheResponse_middleware()
     {
         $firstResponse = $this->call('GET', '/uncacheable');
@@ -126,9 +112,7 @@ class IntegrationTest extends TestCase
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_not_cache_request_when_the_package_is_not_enable()
     {
         $this->app['config']->set('laravel-responsecache.enabled', false);
@@ -142,9 +126,7 @@ class IntegrationTest extends TestCase
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_not_serve_cached_requests_when_it_is_disabled_in_the_config_file()
     {
         $firstResponse = $this->call('GET', '/random');
