@@ -1,6 +1,6 @@
 # Changelog
 
-All Notable changes to `laravel-responsecache` will be documented in this file
+All notable changes to `laravel-responsecache` will be documented in this file
 
 ## 1.1.7 - 2016-10-10
 - added usage of `RESPONSE_CACHE_LIFETIME` env var to config file
