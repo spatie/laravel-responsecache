@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
+## 2.0.0 - 2017-01-24
+- added support for Laravel 5.4
+- dropped support for all older Laravel versions
+
 ## 1.1.7 - 2016-10-10
 - added usage of `RESPONSE_CACHE_LIFETIME` env var to config file
 
