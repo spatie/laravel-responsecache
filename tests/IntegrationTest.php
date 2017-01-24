@@ -7,6 +7,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class IntegrationTest extends TestCase
 {
+    use \Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
+
     public function setUp()
     {
         parent::setUp();
@@ -15,8 +17,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_cache_a_get_request()
     {
-        $firstResponse = $this->call('GET', '/random');
-        $secondResponse = $this->call('GET', '/random');
+        $firstResponse = $this->call('get', '/random');
+        $secondResponse = $this->call('get', '/random');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertCachedResponse($secondResponse);
