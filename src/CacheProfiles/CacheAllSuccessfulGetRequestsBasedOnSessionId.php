@@ -3,7 +3,6 @@
 namespace Spatie\ResponseCache\CacheProfiles;
 
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequestsBasedOnSessionId extends CacheAllSuccessfulGetRequests
 {
