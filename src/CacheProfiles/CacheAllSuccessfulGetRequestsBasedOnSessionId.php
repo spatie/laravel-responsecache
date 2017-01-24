@@ -14,7 +14,11 @@ class CacheAllSuccessfulGetRequestsBasedOnSessionId extends CacheAllSuccessfulGe
      */
     public function cacheNameSuffix(Request $request)
     {
-        return $this->app->session->all();
+        if(empty($this->app->session->all())) {
+            return 'empty';
+        } else {
+            return $this->app->session->getId();
+        }
     }
 
 
