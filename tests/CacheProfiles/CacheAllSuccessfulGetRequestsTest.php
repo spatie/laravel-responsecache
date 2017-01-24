@@ -12,9 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequestsTest extends TestCase
 {
-    /**
-     * @var \Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests
-     */
+    /** @var \Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests */
     protected $cacheProfile;
 
     public function setUp()
@@ -24,17 +22,13 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
         $this->cacheProfile = app(CacheAllSuccessfulGetRequests::class);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_determine_that_get_requests_should_be_cached()
     {
         $this->assertTrue($this->cacheProfile->shouldCacheRequest($this->createRequest('get')));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_determine_that_all_non_get_request_should_not_be_cached()
     {
         $this->assertFalse($this->cacheProfile->shouldCacheRequest($this->createRequest('post')));
@@ -42,9 +36,7 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
         $this->assertFalse($this->cacheProfile->shouldCacheRequest($this->createRequest('delete')));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_determine_that_a_successful_response_should_be_cached()
     {
         foreach (range(200, 399) as $statusCode) {
@@ -52,9 +44,7 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_determine_that_an_error_should_not_be_cached()
     {
         foreach (range(400, 599) as $statusCode) {
@@ -62,9 +52,7 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_use_the_id_of_the_logged_in_user_to_differentiate_caches()
     {
         $this->assertEquals('', $this->cacheProfile->cacheNameSuffix($this->createRequest('get')));
@@ -75,9 +63,7 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
         });
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_determine_to_cache_reponses_for_a_certain_amount_of_time()
     {
         /** @var $expirationDate Carbon  */

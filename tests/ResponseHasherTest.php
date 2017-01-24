@@ -31,9 +31,7 @@ class ResponseHasherTest extends TestCase
         $this->requestHasher = new RequestHasher($this->cacheProfile);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_can_generate_a_hash_for_a_request()
     {
         $this->cacheProfile->shouldReceive('cacheNameSuffix')->andReturn('cacheProfileSuffix');

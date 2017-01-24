@@ -7,9 +7,7 @@ use Spatie\ResponseCache\Test\TestCase;
 
 class ClearCommandTest extends TestCase
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function it_will_clear_the_cache()
     {
         $firstResponse = $this->call('GET', '/random');
