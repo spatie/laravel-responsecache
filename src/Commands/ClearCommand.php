@@ -28,10 +28,9 @@ class ClearCommand extends Command
      * @var \Illuminate\Cache\CacheManager
      */
     protected $cache;
-    /**
-     * @var Repository
-     */
-    private $config;
+
+    /** @var Repository */
+    protected $config;
 
     /**
      * Create a new cache clear command instance.

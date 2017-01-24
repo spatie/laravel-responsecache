@@ -8,19 +8,13 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCache
 {
-    /**
-     * @var ResponseCache
-     */
+    /** @var ResponseCache */
     protected $cache;
 
-    /**
-     * @var RequestHasher
-     */
+    /** @var RequestHasher */
     protected $hasher;
 
-    /**
-     * @var CacheProfile
-     */
+    /** @var CacheProfile */
     protected $cacheProfile;
 
     /**

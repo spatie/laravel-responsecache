@@ -4,9 +4,6 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Support\Facades\Facade;
 
-/**
- * @see \Spatie\Skeleton\SkeletonClass
- */
 class ResponseCacheFacade extends Facade
 {
     /**

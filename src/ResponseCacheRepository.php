@@ -7,19 +7,13 @@ use Illuminate\Contracts\Foundation\Application;
 
 class ResponseCacheRepository
 {
-    /**
-     * @var \Illuminate\Cache\Repository
-     */
+    /** @var \Illuminate\Cache\Repository */
     protected $cache;
 
-    /**
-     * @var \Spatie\ResponseCache\ResponseSerializer
-     */
+    /** @var \Spatie\ResponseCache\ResponseSerializer */
     protected $responseSerializer;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $cacheStoreName;
 
     /**
