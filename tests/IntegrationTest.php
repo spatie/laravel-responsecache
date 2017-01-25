@@ -2,8 +2,8 @@
 
 namespace Spatie\ResponseCache\Test;
 
+use Illuminate\Http\Request;
 use ResponseCache;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class IntegrationTest extends TestCase
 {
@@ -143,5 +143,14 @@ class IntegrationTest extends TestCase
         $this->assertRegularResponse($secondResponse);
 
         $this->assertDifferentResponse($firstResponse, $secondResponse);
+    }
+
+    /** @test */
+    public function it_can_use_the_session_id_to_differentiate_caches()
+    {
+        $request = new Request();
+        $request->setMethod('get');
+
+        $this->assertNotFalse(app(UseSessionCacheProfile::class)->cacheNameSuffix($request));
     }
 }
