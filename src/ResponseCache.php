@@ -17,11 +17,6 @@ class ResponseCache
     /** @var CacheProfile */
     protected $cacheProfile;
 
-    /**
-     * @param \Spatie\ResponseCache\ResponseCacheRepository    $cache
-     * @param \Spatie\ResponseCache\RequestHasher              $hasher
-     * @param \Spatie\ResponseCache\CacheProfiles\CacheProfile $cacheProfile
-     */
     public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
     {
         $this->cache = $cache;
@@ -29,17 +24,9 @@ class ResponseCache
         $this->cacheProfile = $cacheProfile;
     }
 
-    /**
-     * Determine if the given request should be cached.
-     *
-     * @param \Illuminate\Http\Request                   $request
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     *
-     * @return bool
-     */
-    public function shouldCache(Request $request, Response $response)
+    public function shouldCache(Request $request, Response $response): bool
     {
-        if (!config('laravel-responsecache.enabled')) {
+        if (! config('responsecache.enabled')) {
             return false;
         }
 
@@ -54,65 +41,37 @@ class ResponseCache
         return $this->cacheProfile->shouldCacheResponse($response);
     }
 
-    /**
-     * Store the given response in the cache.
-     *
-     * @param \Illuminate\Http\Request                   $request
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     */
-    public function cacheResponse(Request $request, Response $response)
+    public function cacheResponse(Request $request, Response $response): Response
     {
-        if (config('laravel-responsecache.addCacheTimeHeader')) {
+        if (config('responsecache.addCacheTimeHeader')) {
             $response = $this->addCachedHeader($response);
         }
 
-        $this->cache->put($this->hasher->getHashFor($request), $response, $this->cacheProfile->cacheRequestUntil($request));
+        $this->cache->put(
+            $this->hasher->getHashFor($request),
+            $response,
+            $this->cacheProfile->cacheRequestUntil($request)
+        );
     }
 
-    /**
-     * Determine if the given request has been cached.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return bool
-     */
-    public function hasCached(Request $request)
+    public function hasBeenCached(Request $request): bool
     {
-        if (!config('laravel-responsecache.enabled')) {
-            return false;
-        }
-
-        return $this->cache->has($this->hasher->getHashFor($request));
+        return config('responsecache.enabled')
+            ? $this->cache->has($this->hasher->getHashFor($request))
+            : false;
     }
 
-    /**
-     * Get the cached response for the given request.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getCachedResponseFor(Request $request)
+    public function getCachedResponseFor(Request $request): Response
     {
         return $this->cache->get($this->hasher->getHashFor($request));
     }
 
-    /**
-     *  Flush the cache.
-     */
     public function flush()
     {
         $this->cache->flush();
     }
 
-    /**
-     * Add a header with the cache date on the response.
-     *
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function addCachedHeader(Response $response)
+    protected function addCachedHeader(Response $response): Response
     {
         $clonedResponse = clone $response;
 

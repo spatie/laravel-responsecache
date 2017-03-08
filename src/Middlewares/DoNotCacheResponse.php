@@ -5,13 +5,13 @@ namespace Spatie\ResponseCache\Middlewares;
 use Illuminate\Http\Request;
 use Closure;
 
-class DoNotCacheResponseMiddleware
+class DoNotCacheResponse
 {
     /**
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
+     * @param \Closure $next
      *
      * @return mixed
      */

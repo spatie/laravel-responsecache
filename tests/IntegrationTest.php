@@ -119,7 +119,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_cache_request_when_the_package_is_not_enable()
     {
-        $this->app['config']->set('laravel-responsecache.enabled', false);
+        $this->app['config']->set('responsecache.enabled', false);
 
         $firstResponse = $this->call('GET', '/random');
         $secondResponse = $this->call('GET', '/random');
@@ -135,7 +135,7 @@ class IntegrationTest extends TestCase
     {
         $firstResponse = $this->call('GET', '/random');
 
-        $this->app['config']->set('laravel-responsecache.enabled', false);
+        $this->app['config']->set('responsecache.enabled', false);
 
         $secondResponse = $this->call('GET', '/random');
 

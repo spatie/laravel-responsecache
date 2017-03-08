@@ -4,22 +4,11 @@ namespace Spatie\ResponseCache\Commands;
 
 use Illuminate\Cache\CacheManager;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Config\Repository;
 
 class ClearCommand extends Command
 {
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
     protected $signature = 'responsecache:clear';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Flush the response cache';
 
     /**
@@ -29,26 +18,16 @@ class ClearCommand extends Command
      */
     protected $cache;
 
-    /** @var Repository */
-    protected $config;
-
-    /**
-     * Create a new cache clear command instance.
-     *
-     * @param \Illuminate\Cache\CacheManager $cache
-     * @param Repository                     $config
-     */
-    public function __construct(CacheManager $cache, Repository $config)
+    public function __construct(CacheManager $cache)
     {
         parent::__construct();
 
         $this->cache = $cache;
-        $this->config = $config;
     }
 
     public function handle()
     {
-        $storeName = $this->config->get('laravel-responsecache.cacheStore');
+        $storeName = config('responsecache.cacheStore');
 
         $this->laravel['events']->fire('responsecache:clearing', [$storeName]);
 

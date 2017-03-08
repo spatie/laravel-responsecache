@@ -13,6 +13,6 @@ class ResponseCacheFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'laravel-responsecache';
+        return 'responsecache';
     }
 }

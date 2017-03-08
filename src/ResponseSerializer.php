@@ -6,14 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseSerializer
 {
-    /**
-     * Serialize a response.
-     *
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     *
-     * @return string
-     */
-    public function serialize(Response $response)
+    public function serialize(Response $response): string
     {
         $content = $response->getContent();
         $statusCode = $response->getStatusCode();
@@ -22,14 +15,7 @@ class ResponseSerializer
         return serialize(compact('content', 'statusCode', 'headers'));
     }
 
-    /**
-     * Unserialize a response.
-     *
-     * @param $serializedResponse
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function unserialize($serializedResponse)
+    public function unserialize(string $serializedResponse): Response
     {
         $responseProperties = unserialize($serializedResponse);
 

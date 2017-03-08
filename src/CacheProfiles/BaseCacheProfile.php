@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\CacheProfiles;
 
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 
@@ -18,14 +19,12 @@ abstract class BaseCacheProfile
         $this->app = $app;
     }
 
-    /**
+    /*
      * Return the time when the cache must be invalided.
-     *
-     * @return \DateTime
      */
-    public function cacheRequestUntil(Request $request)
+    public function cacheRequestUntil(Request $request): DateTime
     {
-        return Carbon::now()->addMinutes($this->app['config']->get('laravel-responsecache.cacheLifetimeInMinutes'));
+        return Carbon::now()->addMinutes($this->app['config']->get('responsecache.cacheLifetimeInMinutes'));
     }
 
     /**
@@ -42,14 +41,7 @@ abstract class BaseCacheProfile
         return '';
     }
 
-    /**
-     * Determine if the app is running in the console.
-     *
-     * To allow testing this will return false the environment is testing.
-     *
-     * @return bool
-     */
-    public function isRunningInConsole()
+    public function isRunningInConsole(): bool
     {
         if ($this->app->environment('testing')) {
             return false;

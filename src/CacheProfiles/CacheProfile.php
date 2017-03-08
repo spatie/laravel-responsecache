@@ -2,37 +2,26 @@
 
 namespace Spatie\ResponseCache\CacheProfiles;
 
+use DateTime;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 interface CacheProfile
 {
-    /**
+    /*
      * Determine if the given request should be cached.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return bool
      */
-    public function shouldCacheRequest(Request $request);
+    public function shouldCacheRequest(Request $request): bool;
 
-    /**
+    /*
      * Determine if the given response should be cached.
-     *
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     *
-     * @return bool
      */
-    public function shouldCacheResponse(Response $response);
+    public function shouldCacheResponse(Response $response): bool;
 
-    /**
+    /*
      * Return the time when the cache must be invalidated.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \DateTime
      */
-    public function cacheRequestUntil(Request $request);
+    public function cacheRequestUntil(Request $request): DateTime;
 
     /**
      * Return a string to differentiate this request from others.

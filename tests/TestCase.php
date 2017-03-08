@@ -3,9 +3,11 @@
 namespace Spatie\ResponseCache\Test;
 
 use File;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Route;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class TestCase extends Orchestra
@@ -14,13 +16,15 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
 
-        $this->app['laravel-responsecache']->flush();
+        $this->app['responsecache']->flush();
 
         $this->initializeDirectory($this->getTempDirectory());
 
         $this->setUpDatabase($this->app);
 
         $this->setUpRoutes($this->app);
+
+        $this->setUpMiddleware();
     }
 
     /**
@@ -149,5 +153,10 @@ abstract class TestCase extends Orchestra
     protected function assertDifferentResponse(Response $firstResponse, Response $secondResponse)
     {
         self::assertThat($firstResponse->getContent() != $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
+    }
+
+    protected function setUpMiddleware()
+    {
+        $this->app[Kernel::class]->pushMiddleware(CacheResponse::class);
     }
 }

@@ -6,8 +6,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Commands\ClearCommand;
-use Spatie\ResponseCache\Middlewares\DoNotCacheResponseMiddleware;
-use Spatie\ResponseCache\Middlewares\ResponseCacheMiddleware;
+use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 
 class ResponseCacheServiceProvider extends ServiceProvider
 {
@@ -17,14 +17,14 @@ class ResponseCacheServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../resources/config/laravel-responsecache.php' => config_path('laravel-responsecache.php'),
+            __DIR__.'/../resources/config/responsecache.php' => config_path('responsecache.php'),
         ], 'config');
 
         $this->app->bind(CacheProfile::class, function (Application $app) {
-            return $app->make(config('laravel-responsecache.cacheProfile'));
+            return $app->make(config('responsecache.cacheProfile'));
         });
 
-        $this->app->singleton('laravel-responsecache', ResponseCache::class);
+        $this->app->singleton('responsecache', ResponseCache::class);
 
         $this->app['command.responsecache:clear'] = $this->app->make(ClearCommand::class);
 
@@ -36,9 +36,8 @@ class ResponseCacheServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../resources/config/laravel-responsecache.php', 'laravel-responsecache');
+        $this->mergeConfigFrom(__DIR__.'/../resources/config/responsecache.php', 'responsecache');
 
-        $this->app[\Illuminate\Contracts\Http\Kernel::class]->pushMiddleware(ResponseCacheMiddleware::class);
-        $this->app[\Illuminate\Routing\Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponseMiddleware::class);
+        $this->app[\Illuminate\Routing\Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponse::class);
     }
 }

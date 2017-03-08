@@ -4,6 +4,7 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Contracts\Config\Repository as Repository;
 use Illuminate\Contracts\Foundation\Application;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCacheRepository
 {
@@ -16,42 +17,28 @@ class ResponseCacheRepository
     /** @var string */
     protected $cacheStoreName;
 
-    /**
-     * @param \Illuminate\Contracts\Foundation\Application $app
-     * @param \Spatie\ResponseCache\ResponseSerializer     $responseSerializer
-     */
     public function __construct(Application $app, ResponseSerializer $responseSerializer, Repository $config)
     {
-        $this->cache = $app['cache']->store($config->get('laravel-responsecache.cacheStore'));
+        $this->cache = $app['cache']->store($config->get('responsecache.cacheStore'));
         $this->responseSerializer = $responseSerializer;
     }
 
     /**
-     * @param string                                     $key
+     * @param string $key
      * @param \Symfony\Component\HttpFoundation\Response $response
-     * @param \DateTime|int                              $minutes
+     * @param \DateTime|int $minutes
      */
-    public function put($key, $response, $minutes)
+    public function put(string $key, $response, $minutes)
     {
         $this->cache->put($key, $this->responseSerializer->serialize($response), $minutes);
     }
 
-    /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function has($key)
+    public function has(string $key): bool
     {
         return $this->cache->has($key);
     }
 
-    /**
-     * @param string $key
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function get($key)
+    public function get(string $key): Response
     {
         return $this->responseSerializer->unserialize($this->cache->get($key));
     }

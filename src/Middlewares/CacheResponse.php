@@ -6,11 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\ResponseCache;
 
-class ResponseCacheMiddleware
+class CacheResponse
 {
-    /**
-     * @var \Spatie\ResponseCache\ResponseCache
-     */
+    /** @var \Spatie\ResponseCache\ResponseCache */
     protected $responseCache;
 
     public function __construct(ResponseCache $responseCache)
@@ -18,15 +16,9 @@ class ResponseCacheMiddleware
         $this->responseCache = $responseCache;
     }
 
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     *
-     * @return Request
-     */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Request
     {
-        if ($this->responseCache->hasCached($request)) {
+        if ($this->responseCache->hasBeenCached($request)) {
             return $this->responseCache->getCachedResponseFor($request);
         }
 
