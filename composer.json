@@ -31,8 +31,8 @@
     },
     "require-dev": {
         "phpunit/phpunit" : "^5.7",
-        "orchestra/testbench": "~3.4.0@dev",
-        "orchestra/database": "~3.4.0@dev",
+        "orchestra/testbench": "~3.4.0",
+        "orchestra/database": "~3.4.0",
         "mockery/mockery": "^0.9.4",
         "laravel/browser-kit-testing": "^1.0"
     },
