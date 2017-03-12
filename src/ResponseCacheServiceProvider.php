@@ -5,7 +5,7 @@ namespace Spatie\ResponseCache;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
-use Spatie\ResponseCache\Commands\ClearCommand;
+use Spatie\ResponseCache\Commands\Flush;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 
@@ -23,12 +23,12 @@ class ResponseCacheServiceProvider extends ServiceProvider
         $this->app->bind(CacheProfile::class, function (Application $app) {
             return $app->make(config('responsecache.cacheProfile'));
         });
-app()->environment();
+
         $this->app->singleton('responsecache', ResponseCache::class);
 
-        $this->app['command.responsecache:clear'] = $this->app->make(ClearCommand::class);
+        $this->app['command.responsecache:flush'] = $this->app->make(Flush::class);
 
-        $this->commands(['command.responsecache:clear']);
+        $this->commands(['command.responsecache:flush']);
     }
 
     /**

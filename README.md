@@ -106,7 +106,7 @@ Logged in users will each have their own separate cache. If this behaviour is wh
  need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
 
-###Flushing the cache
+### Flushing the cache
 The entire cache can be flushed with:
 ```php
 ResponseCache::flush();
@@ -114,11 +114,12 @@ ResponseCache::flush();
 This will flush everything from the cache store specified in the config-file.
 
 The same can be accomplished by issuing this artisan command:
+
 ```bash
-$ php artisan responsecache:clear
+$ php artisan responsecache:flush
 ```
 
-###Preventing a request from being cached
+### Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware. 
 This middleware [can be assigned to routes and controllers]
 (http://laravel.com/docs/master/controllers#controller-middleware).
@@ -144,7 +145,7 @@ class UserController extends Controller
 ```
 
 
-###Creating a custom cache profile
+### Creating a custom cache profile
 To determine which requests should be cached, and for how long, a cache profile class is used. 
 The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests`. 
 

@@ -31,7 +31,7 @@ interface CacheProfile
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return string
+     * @return mixed
      */
     public function cacheNameSuffix(Request $request);
 }

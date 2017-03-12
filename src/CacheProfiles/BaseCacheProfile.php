@@ -30,7 +30,7 @@ abstract class BaseCacheProfile
     /**
      * Set a string to add to differentiate this request from others.
      *
-     * @return string
+     * @return mixed
      */
     public function cacheNameSuffix(Request $request)
     {
