@@ -5,9 +5,11 @@ namespace Spatie\ResponseCache\Test;
 use File;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Routing\Router;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Route;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
+use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class TestCase extends Orchestra
@@ -158,5 +160,6 @@ abstract class TestCase extends Orchestra
     protected function setUpMiddleware()
     {
         $this->app[Kernel::class]->pushMiddleware(CacheResponse::class);
+        $this->app[Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponse::class);
     }
 }

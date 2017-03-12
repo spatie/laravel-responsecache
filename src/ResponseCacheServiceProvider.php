@@ -37,7 +37,5 @@ class ResponseCacheServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../resources/config/responsecache.php', 'responsecache');
-
-        $this->app[\Illuminate\Routing\Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponse::class);
     }
 }
