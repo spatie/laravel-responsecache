@@ -18,8 +18,9 @@ class IntegrationTest extends TestCase
     public function it_will_cache_a_get_request()
     {
         $firstResponse = $this->call('get', '/random');
+        //echo 'first response' . $firstResponse . PHP_EOL;
         $secondResponse = $this->call('get', '/random');
-
+        //echo 'second response' . $secondResponse . PHP_EOL;
         $this->assertRegularResponse($firstResponse);
         $this->assertCachedResponse($secondResponse);
 

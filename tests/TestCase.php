@@ -137,12 +137,12 @@ abstract class TestCase extends Orchestra
 
     protected function assertCachedResponse(Response $response)
     {
-        self::assertThat($response->headers->has('laravel-reponsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
+        self::assertThat($response->headers->has('laravel-responsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
     }
 
     protected function assertRegularResponse(Response $response)
     {
-        self::assertThat($response->headers->has('laravel-reponsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
+        self::assertThat($response->headers->has('laravel-responsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
     }
 
     protected function assertSameResponse(Response $firstResponse, Response $secondResponse)

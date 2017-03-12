@@ -23,7 +23,7 @@ class ResponseCacheServiceProvider extends ServiceProvider
         $this->app->bind(CacheProfile::class, function (Application $app) {
             return $app->make(config('responsecache.cacheProfile'));
         });
-
+app()->environment();
         $this->app->singleton('responsecache', ResponseCache::class);
 
         $this->app['command.responsecache:clear'] = $this->app->make(ClearCommand::class);
