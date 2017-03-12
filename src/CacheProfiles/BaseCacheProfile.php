@@ -9,22 +9,13 @@ use Illuminate\Contracts\Foundation\Application;
 
 abstract class BaseCacheProfile
 {
-    /**
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
-    protected $app;
-
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
 
     /*
      * Return the time when the cache must be invalided.
      */
     public function cacheRequestUntil(Request $request): DateTime
     {
-        return Carbon::now()->addMinutes($this->app['config']->get('responsecache.cacheLifetimeInMinutes'));
+        return Carbon::now()->addMinutes(config('responsecache.cacheLifetimeInMinutes'));
     }
 
     /**
@@ -34,8 +25,8 @@ abstract class BaseCacheProfile
      */
     public function cacheNameSuffix(Request $request)
     {
-        if ($this->app->auth->check()) {
-            return $this->app->auth->user()->id;
+        if (auth()->check()) {
+            return auth()->user()->id;
         }
 
         return '';
@@ -43,10 +34,10 @@ abstract class BaseCacheProfile
 
     public function isRunningInConsole(): bool
     {
-        if ($this->app->environment('testing')) {
+        if (app()->environment('testing')) {
             return false;
         }
 
-        return $this->app->runningInConsole();
+        return app()->runningInConsole();
     }
 }
