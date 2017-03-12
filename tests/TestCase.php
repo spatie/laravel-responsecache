@@ -8,6 +8,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\ResponseCache\ResponseCacheServiceProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
@@ -37,7 +38,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \Spatie\ResponseCache\ResponseCacheServiceProvider::class,
+            ResponseCacheServiceProvider::class,
         ];
     }
 
