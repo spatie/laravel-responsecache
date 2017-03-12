@@ -5,6 +5,7 @@ namespace Spatie\ResponseCache\Middlewares;
 use Closure;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\ResponseCache;
+use Symfony\Component\HttpFoundation\Response;
 
 class CacheResponse
 {
@@ -16,7 +17,7 @@ class CacheResponse
         $this->responseCache = $responseCache;
     }
 
-    public function handle(Request $request, Closure $next): Request
+    public function handle(Request $request, Closure $next): Response
     {
         if ($this->responseCache->hasBeenCached($request)) {
             return $this->responseCache->getCachedResponseFor($request);

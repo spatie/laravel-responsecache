@@ -52,6 +52,8 @@ class ResponseCache
             $response,
             $this->cacheProfile->cacheRequestUntil($request)
         );
+
+        return $response;
     }
 
     public function hasBeenCached(Request $request): bool
