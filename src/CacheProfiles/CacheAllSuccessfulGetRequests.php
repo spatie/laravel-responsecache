@@ -16,6 +16,7 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile implements CachePro
         if ($this->isRunningInConsole()) {
             return false;
         }
+        
         return $request->isMethod('get');
     }
 
