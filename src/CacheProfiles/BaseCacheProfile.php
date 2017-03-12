@@ -5,11 +5,9 @@ namespace Spatie\ResponseCache\CacheProfiles;
 use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Foundation\Application;
 
 abstract class BaseCacheProfile
 {
-
     /*
      * Return the time when the cache must be invalided.
      */
