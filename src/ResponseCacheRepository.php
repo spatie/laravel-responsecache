@@ -2,9 +2,9 @@
 
 namespace Spatie\ResponseCache;
 
-use Illuminate\Contracts\Config\Repository as Repository;
-use Illuminate\Contracts\Foundation\Application;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Config\Repository as Repository;
 
 class ResponseCacheRepository
 {

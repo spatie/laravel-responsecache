@@ -2,4 +2,6 @@
 
 namespace Spatie\ResponseCache\Events;
 
-class FlushingResponseCache {}
+class FlushingResponseCache
+{
+}

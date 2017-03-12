@@ -2,15 +2,15 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\ResponseSerializer;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResponseSerializerTest extends TestCase
 {
     /** @var \Spatie\ResponseCache\ResponseSerializer */
     protected $responseSerializer;
 
-    /**  @var string */
+    /** @var string */
     protected $content;
 
     /** @var string */

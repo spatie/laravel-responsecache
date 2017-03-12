@@ -34,7 +34,7 @@ class ResponseCache
             return false;
         }
 
-        if (!$this->cacheProfile->shouldCacheRequest($request)) {
+        if (! $this->cacheProfile->shouldCacheRequest($request)) {
             return false;
         }
 

@@ -3,14 +3,14 @@
 namespace Spatie\ResponseCache\Test;
 
 use File;
+use Route;
+use Illuminate\Routing\Router;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Routing\Router;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Route;
+use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 abstract class TestCase extends Orchestra
 {
@@ -96,11 +96,11 @@ abstract class TestCase extends Orchestra
     protected function setUpRoutes($app)
     {
         Route::any('/', function () {
-           return 'home of '.(auth()->check() ? auth()->user()->id : 'anonymous');
+            return 'home of '.(auth()->check() ? auth()->user()->id : 'anonymous');
         });
 
         Route::any('login/{id}', function ($id) {
-           auth()->login(User::find($id));
+            auth()->login(User::find($id));
 
             return redirect('/');
         });

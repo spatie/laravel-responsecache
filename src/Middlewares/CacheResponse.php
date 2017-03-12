@@ -30,6 +30,5 @@ class CacheResponse
         }
 
         return $response;
-
     }
 }

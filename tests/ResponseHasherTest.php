@@ -3,8 +3,8 @@
 namespace Spatie\ResponseCache\Test;
 
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\RequestHasher;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseHasherTest extends TestCase
 {
