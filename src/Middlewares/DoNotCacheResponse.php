@@ -2,8 +2,8 @@
 
 namespace Spatie\ResponseCache\Middlewares;
 
-use Illuminate\Http\Request;
 use Closure;
+use Illuminate\Http\Request;
 
 class DoNotCacheResponse
 {

@@ -2,10 +2,10 @@
 
 namespace Spatie\ResponseCache\CacheProfiles;
 
-use Carbon\Carbon;
 use DateTime;
-use Illuminate\Contracts\Foundation\Application;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Foundation\Application;
 
 abstract class BaseCacheProfile
 {

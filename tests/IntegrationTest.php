@@ -2,7 +2,6 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Illuminate\Http\Request;
 use ResponseCache;
 
 class IntegrationTest extends TestCase
@@ -41,8 +40,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_cache_errors()
     {
-        if (starts_with($this->app->version(), "5.1")) {
-            $this->markTestSkipped("This test only works in modern versions of Laravel");
+        if (starts_with($this->app->version(), '5.1')) {
+            $this->markTestSkipped('This test only works in modern versions of Laravel');
         }
 
         $firstResponse = $this->call('GET', '/notfound');
