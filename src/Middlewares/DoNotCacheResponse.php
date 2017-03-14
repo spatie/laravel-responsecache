@@ -17,7 +17,7 @@ class DoNotCacheResponse
      */
     public function handle(Request $request, Closure $next)
     {
-        $request->attributes->add(['laravel-cacheresponse.doNotCache' => true]);
+        $request->attributes->add(['responsecache.doNotCache' => true]);
 
         return $next($request);
     }

@@ -31,7 +31,7 @@ class ResponseCache
 
     public function shouldCache(Request $request, Response $response): bool
     {
-        if ($request->attributes->has('laravel-cacheresponse.doNotCache')) {
+        if ($request->attributes->has('responsecache.doNotCache')) {
             return false;
         }
 
