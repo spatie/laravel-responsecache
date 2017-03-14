@@ -22,13 +22,13 @@ class ResponseSerializerTest extends TestCase
 
         $this->responseSerializer = new ResponseSerializer();
 
-        $this->content = '<html>This is a reponse</html>';
+        $this->content = '<html>This is a response</html>';
 
         $this->statusCode = 500;
     }
 
     /** @test */
-    public function it_can_serialize_and_unserialize_a_reponse()
+    public function it_can_serialize_and_unserialize_a_response()
     {
         $testResponse = Response::create($this->content, $this->statusCode, ['testHeader' => 'testValue']);
 
