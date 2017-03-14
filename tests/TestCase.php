@@ -138,22 +138,36 @@ abstract class TestCase extends Orchestra
         File::makeDirectory($directory);
     }
 
-    protected function assertCachedResponse(Response $response)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $response
+     */
+    protected function assertCachedResponse($response)
     {
         self::assertThat($response->headers->has('laravel-responsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
     }
 
-    protected function assertRegularResponse(Response $response)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $response
+     */
+    protected function assertRegularResponse($response)
     {
         self::assertThat($response->headers->has('laravel-responsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
     }
 
-    protected function assertSameResponse(Response $firstResponse, Response $secondResponse)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $firstResponse
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $secondResponse
+     */
+    protected function assertSameResponse($firstResponse, $secondResponse)
     {
         self::assertThat($firstResponse->getContent() == $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
     }
 
-    protected function assertDifferentResponse(Response $firstResponse, Response $secondResponse)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $firstResponse
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $secondResponse
+     */
+    protected function assertDifferentResponse($firstResponse, $secondResponse)
     {
         self::assertThat($firstResponse->getContent() != $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
     }
