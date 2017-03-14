@@ -63,12 +63,12 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
     }
 
     /** @test */
-    public function it_will_determine_to_cache_reponses_for_a_certain_amount_of_time()
+    public function it_will_determine_to_cache_responses_for_a_certain_amount_of_time()
     {
         /** @var $expirationDate Carbon */
         $expirationDate = $this->cacheProfile->cacheRequestUntil($this->createRequest('get'));
 
-        $expirationDate->isFuture();
+        $this->assertTrue($expirationDate->isFuture());
     }
 
     /**

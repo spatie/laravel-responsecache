@@ -2,11 +2,12 @@
 
 namespace Spatie\ResponseCache\Test;
 
+use Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
 use ResponseCache;
 
 class IntegrationTest extends TestCase
 {
-    use \Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
+    use MakesHttpRequests;
 
     public function setUp()
     {
