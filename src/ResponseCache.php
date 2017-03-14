@@ -24,7 +24,8 @@ class ResponseCache
         $this->cacheProfile = $cacheProfile;
     }
 
-    public function enabled(Request $request): bool {
+    public function enabled(Request $request): bool
+    {
         return $this->cacheProfile->enabled($request);
     }
 

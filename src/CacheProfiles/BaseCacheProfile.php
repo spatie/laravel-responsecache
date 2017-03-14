@@ -5,16 +5,13 @@ namespace Spatie\ResponseCache\CacheProfiles;
 use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Foundation\Application;
 
 abstract class BaseCacheProfile
 {
-
     public function enabled(Request $request): bool
     {
         return config('responsecache.enabled');
     }
-
 
     /*
      * Return the time when the cache must be invalided.
