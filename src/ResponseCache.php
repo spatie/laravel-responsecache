@@ -24,12 +24,12 @@ class ResponseCache
         $this->cacheProfile = $cacheProfile;
     }
 
+    public function enabled(Request $request): bool {
+        return $this->cacheProfile->enabled($request);
+    }
+
     public function shouldCache(Request $request, Response $response): bool
     {
-        if (! config('responsecache.enabled')) {
-            return false;
-        }
-
         if ($request->attributes->has('laravel-cacheresponse.doNotCache')) {
             return false;
         }

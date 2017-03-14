@@ -2,8 +2,7 @@
 
 return [
     /*
-     *  This is the master switch to enable of disable the response cache. If set to
-     *  false no responses will be cached.
+     * Determine if the response cache middleware should be enabled.
      */
     'enabled' => env('RESPONSE_CACHE_ENABLED', true),
 

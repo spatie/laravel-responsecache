@@ -10,6 +10,12 @@ use Illuminate\Contracts\Foundation\Application;
 abstract class BaseCacheProfile
 {
 
+    public function enabled(Request $request): bool
+    {
+        return config('responsecache.enabled');
+    }
+
+
     /*
      * Return the time when the cache must be invalided.
      */
@@ -20,6 +26,8 @@ abstract class BaseCacheProfile
 
     /**
      * Set a string to add to differentiate this request from others.
+     *
+     * @param \Illuminate\Http\Request $request
      *
      * @return mixed
      */

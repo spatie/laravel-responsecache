@@ -19,14 +19,18 @@ class CacheResponse
 
     public function handle(Request $request, Closure $next): Response
     {
-        if ($this->responseCache->hasBeenCached($request)) {
-            return $this->responseCache->getCachedResponseFor($request);
+        if ($this->responseCache->enabled($request)) {
+            if ($this->responseCache->hasBeenCached($request)) {
+                return $this->responseCache->getCachedResponseFor($request);
+            }
         }
 
         $response = $next($request);
 
-        if ($this->responseCache->shouldCache($request, $response)) {
-            $this->responseCache->cacheResponse($request, $response);
+        if ($this->responseCache->enabled($request)) {
+            if ($this->responseCache->shouldCache($request, $response)) {
+                $this->responseCache->cacheResponse($request, $response);
+            }
         }
 
         return $response;

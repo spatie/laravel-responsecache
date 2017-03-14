@@ -59,14 +59,12 @@ This is the contents of the published config file:
 
 ```php
 return [
-
-    /**
-     *  This is the master switch to enable of disable the response cache. If set to
-     *  false no responses will be cached.
+    /*
+     * Determine if the response cache middleware should be enabled.
      */
     'enabled' => env('RESPONSE_CACHE_ENABLED', true),
 
-    /**
+    /*
      *  The given class will determinate if a request should be cached. The
      *  default class will cache all successful GET-requests.
      *
@@ -75,7 +73,7 @@ return [
      */
     'cacheProfile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
-    /**
+    /*
      * When using the default CacheRequestFilter this setting controls the
      * number of minutes responses must be cached.
      */
@@ -97,9 +95,11 @@ return [
 ];
 ```
 
+//TO DO: installation of middlewares
+
 ## Usage
 
-###Basic usage
+### Basic usage
 
 By default the package will cache all successful `get`-requests for a week.
 Logged in users will each have their own separate cache. If this behaviour is what you
@@ -155,32 +155,25 @@ Spatie\ResponseCache\CacheProfiles\CacheProfile`-interface. Let's take a look at
 ```php
 interface CacheProfile
 {
-    /**
+    /*
+     * Determine if the response cache middleware should be enabled.
+     */
+    public function enabled(Request $request): bool;
+
+    /*
      * Determine if the given request should be cached.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return bool
      */
-    public function shouldCacheRequest(Request $request);
+    public function shouldCacheRequest(Request $request): bool;
 
-    /**
+    /*
      * Determine if the given response should be cached.
-     *
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     *
-     * @return bool
      */
-    public function shouldCacheResponse(Response $response);
+    public function shouldCacheResponse(Response $response): bool;
 
-    /**
+    /*
      * Return the time when the cache must be invalidated.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \DateTime
      */
-    public function cacheRequestUntil(Request $request);
+    public function cacheRequestUntil(Request $request): DateTime;
 
     /**
      * Return a string to differentiate this request from others.
@@ -190,7 +183,7 @@ interface CacheProfile
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return string
+     * @return mixed
      */
     public function cacheNameSuffix(Request $request);
 }

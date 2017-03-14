@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 interface CacheProfile
 {
     /*
+     * Determine if the response cache middleware should be enabled.
+     */
+    public function enabled(Request $request): bool;
+
+    /*
      * Determine if the given request should be cached.
      */
     public function shouldCacheRequest(Request $request): bool;
