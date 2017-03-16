@@ -3,8 +3,8 @@
 namespace Spatie\ResponseCache\CacheProfiles;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Foundation\Application;
 
 abstract class BaseCacheProfile
 {

@@ -39,7 +39,7 @@ class ResponseCache
      */
     public function shouldCache(Request $request, Response $response)
     {
-        if (!config('laravel-responsecache.enabled')) {
+        if (! config('laravel-responsecache.enabled')) {
             return false;
         }
 
@@ -47,7 +47,7 @@ class ResponseCache
             return false;
         }
 
-        if (!$this->cacheProfile->shouldCacheRequest($request)) {
+        if (! $this->cacheProfile->shouldCacheRequest($request)) {
             return false;
         }
 
@@ -78,7 +78,7 @@ class ResponseCache
      */
     public function hasCached(Request $request)
     {
-        if (!config('laravel-responsecache.enabled')) {
+        if (! config('laravel-responsecache.enabled')) {
             return false;
         }
 

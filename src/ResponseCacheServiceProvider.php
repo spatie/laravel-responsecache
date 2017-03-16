@@ -4,10 +4,10 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Commands\ClearCommand;
-use Spatie\ResponseCache\Middlewares\DoNotCacheResponseMiddleware;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Middlewares\ResponseCacheMiddleware;
+use Spatie\ResponseCache\Middlewares\DoNotCacheResponseMiddleware;
 
 class ResponseCacheServiceProvider extends ServiceProvider
 {
