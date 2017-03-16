@@ -3,6 +3,9 @@
 namespace Spatie\ResponseCache\Test;
 
 use ResponseCache;
+use Illuminate\Support\Facades\Event;
+use Spatie\ResponseCache\Events\ServedActualResponse;
+use Spatie\ResponseCache\Events\ServedCachedResponse;
 use Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
 
 class IntegrationTest extends TestCase
@@ -24,6 +27,41 @@ class IntegrationTest extends TestCase
         $this->assertCachedResponse($secondResponse);
 
         $this->assertSameResponse($firstResponse, $secondResponse);
+    }
+
+    /** @test */
+    public function it_will_fire_an_event_when_responding_without_cache()
+    {
+        $mock = $this->getMockBuilder('stdClass')
+            ->setMethods(['callback'])
+            ->getMock();
+
+        $mock->expects($this->once())
+            ->method('callback');
+
+        Event::listen(ServedActualResponse::class, function () use ($mock) {
+            $mock->callback();
+        });
+
+        $this->call('get', '/random');
+    }
+
+    /** @test */
+    public function it_will_fire_an_event_when_responding_from_cache()
+    {
+        $mock = $this->getMockBuilder('stdClass')
+            ->setMethods(['callback'])
+            ->getMock();
+
+        $mock->expects($this->once())
+            ->method('callback');
+
+        Event::listen(ServedCachedResponse::class, function () use ($mock) {
+            $mock->callback();
+        });
+
+        $this->call('get', '/random');
+        $this->call('get', '/random');
     }
 
     /** @test */
