@@ -2,8 +2,8 @@
 
 namespace Spatie\ResponseCache\Commands;
 
-use Illuminate\Cache\CacheManager;
 use Illuminate\Console\Command;
+use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Config\Repository;
 
 class ClearCommand extends Command
