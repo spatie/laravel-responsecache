@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache;
 
+use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\Commands\Flush;
@@ -21,6 +22,12 @@ class ResponseCacheServiceProvider extends ServiceProvider
         $this->app->bind(CacheProfile::class, function (Application $app) {
             return $app->make(config('responsecache.cache_profile'));
         });
+
+        $this->app->when(ResponseCacheRepository::class)
+            ->needs(Repository::class)
+            ->give(function (): Repository {
+                return $this->app['cache']->store(config('responsecache.cache_store'));
+            });
 
         $this->app->singleton('responsecache', ResponseCache::class);
 
