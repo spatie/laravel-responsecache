@@ -18,7 +18,7 @@ abstract class BaseCacheProfile
      */
     public function cacheRequestUntil(Request $request): DateTime
     {
-        return Carbon::now()->addMinutes(config('responsecache.cacheLifetimeInMinutes'));
+        return Carbon::now()->addMinutes(config('responsecache.cache_lifetime_in_minutes'));
     }
 
     /**

@@ -44,7 +44,7 @@ class ResponseCache
 
     public function cacheResponse(Request $request, Response $response): Response
     {
-        if (config('responsecache.addCacheTimeHeader')) {
+        if (config('responsecache.add_cache_time_header')) {
             $response = $this->addCachedHeader($response);
         }
 

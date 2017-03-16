@@ -15,11 +15,11 @@ class ResponseCacheServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../resources/config/responsecache.php' => config_path('responsecache.php'),
+            __DIR__.'/../config/responsecache.php' => config_path('responsecache.php'),
         ], 'config');
 
         $this->app->bind(CacheProfile::class, function (Application $app) {
-            return $app->make(config('responsecache.cacheProfile'));
+            return $app->make(config('responsecache.cache_profile'));
         });
 
         $this->app->singleton('responsecache', ResponseCache::class);
@@ -34,6 +34,6 @@ class ResponseCacheServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../resources/config/responsecache.php', 'responsecache');
+        $this->mergeConfigFrom(__DIR__.'/../config/responsecache.php', 'responsecache');
     }
 }

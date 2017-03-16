@@ -15,11 +15,11 @@ class ResponseCacheRepository
     protected $responseSerializer;
 
     /** @var string */
-    protected $cacheStoreName;
+    protected $cache_storeName;
 
     public function __construct(Application $app, ResponseSerializer $responseSerializer, Repository $config)
     {
-        $this->cache = $app['cache']->store($config->get('responsecache.cacheStore'));
+        $this->cache = $app['cache']->store($config->get('responsecache.cache_store'));
         $this->responseSerializer = $responseSerializer;
     }
 

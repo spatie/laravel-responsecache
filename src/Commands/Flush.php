@@ -15,7 +15,7 @@ class Flush extends Command
 
     public function handle()
     {
-        $storeName = config('responsecache.cacheStore');
+        $storeName = config('responsecache.cache_store');
 
         event(new FlushingResponseCache());
 
