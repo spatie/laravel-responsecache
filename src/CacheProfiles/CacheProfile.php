@@ -28,15 +28,11 @@ interface CacheProfile
      */
     public function cacheRequestUntil(Request $request): DateTime;
 
-    /**
+    /*
      * Return a string to differentiate this request from others.
      *
      * For example: if you want a different cache per user you could return the id of
      * the logged in user.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return mixed
      */
-    public function cacheNameSuffix(Request $request);
+    public function cacheNameSuffix(Request $request): string;
 }
