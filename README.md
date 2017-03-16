@@ -216,7 +216,7 @@ interface CacheProfile
 
 ### Events
 
-There are several events you can use to monitor and debug caching in your application.
+There are several events you can use to monitor and debug response caching in your application.
 
 #### ResponseCacheHit
 
