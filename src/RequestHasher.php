@@ -15,16 +15,9 @@ class RequestHasher
         $this->cacheProfile = $cacheProfile;
     }
 
-    /**
-     * Get a hash value for the given request.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return string
-     */
-    public function getHashFor(Request $request)
+    public function getHashFor(Request $request): string
     {
-        return 'laravel-responsecache-'.md5(
+        return 'responsecache-'.md5(
             "{$request->getUri()}/{$request->getMethod()}/".$this->cacheProfile->cacheNameSuffix($request)
         );
     }

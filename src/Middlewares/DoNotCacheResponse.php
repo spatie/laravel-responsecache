@@ -2,22 +2,22 @@
 
 namespace Spatie\ResponseCache\Middlewares;
 
-use Illuminate\Http\Request;
 use Closure;
+use Illuminate\Http\Request;
 
-class DoNotCacheResponseMiddleware
+class DoNotCacheResponse
 {
     /**
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
+     * @param \Closure $next
      *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        $request->attributes->add(['laravel-cacheresponse.doNotCache' => true]);
+        $request->attributes->add(['responsecache.doNotCache' => true]);
 
         return $next($request);
     }

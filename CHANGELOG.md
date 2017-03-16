@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
+## 3.0.0 - 2017-XX-XX
+
+- added `enabled` method on cache profiles
+- middleware won't automatically be registered anymore
+- renamed config file
+- renamed various methods for readability
+- dropped PHP 5.6 support
+
 ## 2.0.0 - 2017-01-24
 - added support for Laravel 5.4
 - dropped support for all older Laravel versions

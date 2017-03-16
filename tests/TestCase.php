@@ -3,10 +3,15 @@
 namespace Spatie\ResponseCache\Test;
 
 use File;
+use Route;
+use Illuminate\Routing\Router;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Route;
 use Symfony\Component\HttpFoundation\Response;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
+use Spatie\ResponseCache\ResponseCacheServiceProvider;
+use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 
 abstract class TestCase extends Orchestra
 {
@@ -14,13 +19,15 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
 
-        $this->app['laravel-responsecache']->flush();
+        $this->app['responsecache']->flush();
 
         $this->initializeDirectory($this->getTempDirectory());
 
         $this->setUpDatabase($this->app);
 
         $this->setUpRoutes($this->app);
+
+        $this->setUpMiddleware();
     }
 
     /**
@@ -31,7 +38,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \Spatie\ResponseCache\ResponseCacheServiceProvider::class,
+            ResponseCacheServiceProvider::class,
         ];
     }
 
@@ -90,11 +97,11 @@ abstract class TestCase extends Orchestra
     protected function setUpRoutes($app)
     {
         Route::any('/', function () {
-           return 'home of '.(auth()->check() ? auth()->user()->id : 'anonymous');
+            return 'home of '.(auth()->check() ? auth()->user()->id : 'anonymous');
         });
 
         Route::any('login/{id}', function ($id) {
-           auth()->login(User::find($id));
+            auth()->login(User::find($id));
 
             return redirect('/');
         });
@@ -131,23 +138,43 @@ abstract class TestCase extends Orchestra
         File::makeDirectory($directory);
     }
 
-    protected function assertCachedResponse(Response $response)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $response
+     */
+    protected function assertCachedResponse($response)
     {
-        self::assertThat($response->headers->has('laravel-reponsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
+        self::assertThat($response->headers->has('laravel-responsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
     }
 
-    protected function assertRegularResponse(Response $response)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $response
+     */
+    protected function assertRegularResponse($response)
     {
-        self::assertThat($response->headers->has('laravel-reponsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
+        self::assertThat($response->headers->has('laravel-responsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
     }
 
-    protected function assertSameResponse(Response $firstResponse, Response $secondResponse)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $firstResponse
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $secondResponse
+     */
+    protected function assertSameResponse($firstResponse, $secondResponse)
     {
         self::assertThat($firstResponse->getContent() == $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
     }
 
-    protected function assertDifferentResponse(Response $firstResponse, Response $secondResponse)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $firstResponse
+     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $secondResponse
+     */
+    protected function assertDifferentResponse($firstResponse, $secondResponse)
     {
         self::assertThat($firstResponse->getContent() != $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
+    }
+
+    protected function setUpMiddleware()
+    {
+        $this->app[Kernel::class]->pushMiddleware(CacheResponse::class);
+        $this->app[Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponse::class);
     }
 }

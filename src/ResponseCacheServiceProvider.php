@@ -2,12 +2,11 @@
 
 namespace Spatie\ResponseCache;
 
+use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Spatie\ResponseCache\Commands\Flush;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
-use Spatie\ResponseCache\Commands\ClearCommand;
-use Spatie\ResponseCache\Middlewares\DoNotCacheResponseMiddleware;
-use Spatie\ResponseCache\Middlewares\ResponseCacheMiddleware;
 
 class ResponseCacheServiceProvider extends ServiceProvider
 {
@@ -17,18 +16,24 @@ class ResponseCacheServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../resources/config/laravel-responsecache.php' => config_path('laravel-responsecache.php'),
+            __DIR__.'/../config/responsecache.php' => config_path('responsecache.php'),
         ], 'config');
 
         $this->app->bind(CacheProfile::class, function (Application $app) {
-            return $app->make(config('laravel-responsecache.cacheProfile'));
+            return $app->make(config('responsecache.cache_profile'));
         });
 
-        $this->app->singleton('laravel-responsecache', ResponseCache::class);
+        $this->app->when(ResponseCacheRepository::class)
+            ->needs(Repository::class)
+            ->give(function (): Repository {
+                return $this->app['cache']->store(config('responsecache.cache_store'));
+            });
 
-        $this->app['command.responsecache:clear'] = $this->app->make(ClearCommand::class);
+        $this->app->singleton('responsecache', ResponseCache::class);
 
-        $this->commands(['command.responsecache:clear']);
+        $this->app['command.responsecache:flush'] = $this->app->make(Flush::class);
+
+        $this->commands(['command.responsecache:flush']);
     }
 
     /**
@@ -36,9 +41,6 @@ class ResponseCacheServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../resources/config/laravel-responsecache.php', 'laravel-responsecache');
-
-        $this->app[\Illuminate\Contracts\Http\Kernel::class]->pushMiddleware(ResponseCacheMiddleware::class);
-        $this->app[\Illuminate\Routing\Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponseMiddleware::class);
+        $this->mergeConfigFrom(__DIR__.'/../config/responsecache.php', 'responsecache');
     }
 }

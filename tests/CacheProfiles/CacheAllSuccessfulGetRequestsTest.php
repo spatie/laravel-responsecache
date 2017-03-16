@@ -4,11 +4,10 @@ namespace Spatie\ResponseCache\Test\CacheProfiles;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
-use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequestsBasedOnSessionId;
-use Spatie\ResponseCache\Test\TestCase;
 use Spatie\ResponseCache\Test\User;
+use Spatie\ResponseCache\Test\TestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 
 class CacheAllSuccessfulGetRequestsTest extends TestCase
 {
@@ -64,12 +63,12 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
     }
 
     /** @test */
-    public function it_will_determine_to_cache_reponses_for_a_certain_amount_of_time()
+    public function it_will_determine_to_cache_responses_for_a_certain_amount_of_time()
     {
-        /** @var $expirationDate Carbon  */
+        /** @var $expirationDate Carbon */
         $expirationDate = $this->cacheProfile->cacheRequestUntil($this->createRequest('get'));
 
-        $expirationDate->isFuture();
+        $this->assertTrue($expirationDate->isFuture());
     }
 
     /**

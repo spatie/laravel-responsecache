@@ -3,8 +3,8 @@
 namespace Spatie\ResponseCache\Test;
 
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\RequestHasher;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseHasherTest extends TestCase
 {
@@ -36,7 +36,7 @@ class ResponseHasherTest extends TestCase
     {
         $this->cacheProfile->shouldReceive('cacheNameSuffix')->andReturn('cacheProfileSuffix');
 
-        $this->assertEquals('laravel-responsecache-cc8efc2f40ad10ba3cf932adc786aeb5',
+        $this->assertEquals('responsecache-cc8efc2f40ad10ba3cf932adc786aeb5',
             $this->requestHasher->getHashFor($this->request));
     }
 }

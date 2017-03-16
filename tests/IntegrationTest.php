@@ -2,12 +2,15 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Illuminate\Http\Request;
 use ResponseCache;
+use Illuminate\Support\Facades\Event;
+use Spatie\ResponseCache\Events\CacheMissed;
+use Spatie\ResponseCache\Events\ResponseCacheHit;
+use Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
 
 class IntegrationTest extends TestCase
 {
-    use \Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
+    use MakesHttpRequests;
 
     public function setUp()
     {
@@ -27,6 +30,27 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
+    public function it_will_fire_an_event_when_responding_without_cache()
+    {
+        Event::fake();
+
+        $this->call('get', '/random');
+
+        Event::assertDispatched(CacheMissed::class);
+    }
+
+    /** @test */
+    public function it_will_fire_an_event_when_responding_from_cache()
+    {
+        Event::fake();
+
+        $this->call('get', '/random');
+        $this->call('get', '/random');
+
+        Event::assertDispatched(ResponseCacheHit::class);
+    }
+
+    /** @test */
     public function it_will_cache_redirects()
     {
         $firstResponse = $this->call('GET', '/redirect');
@@ -41,8 +65,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_cache_errors()
     {
-        if (starts_with($this->app->version(), "5.1")) {
-            $this->markTestSkipped("This test only works in modern versions of Laravel");
+        if (starts_with($this->app->version(), '5.1')) {
+            $this->markTestSkipped('This test only works in modern versions of Laravel');
         }
 
         $firstResponse = $this->call('GET', '/notfound');
@@ -119,7 +143,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_cache_request_when_the_package_is_not_enable()
     {
-        $this->app['config']->set('laravel-responsecache.enabled', false);
+        $this->app['config']->set('responsecache.enabled', false);
 
         $firstResponse = $this->call('GET', '/random');
         $secondResponse = $this->call('GET', '/random');
@@ -135,7 +159,7 @@ class IntegrationTest extends TestCase
     {
         $firstResponse = $this->call('GET', '/random');
 
-        $this->app['config']->set('laravel-responsecache.enabled', false);
+        $this->app['config']->set('responsecache.enabled', false);
 
         $secondResponse = $this->call('GET', '/random');
 

@@ -9,10 +9,12 @@ class ResponseCacheFacade extends Facade
     /**
      * Get the registered name of the component.
      *
+     * @see \Spatie\ResponseCache\ResponseCache
+     *
      * @return string
      */
     protected static function getFacadeAccessor()
     {
-        return 'laravel-responsecache';
+        return 'responsecache';
     }
 }

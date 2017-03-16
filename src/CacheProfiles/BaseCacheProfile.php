@@ -2,59 +2,45 @@
 
 namespace Spatie\ResponseCache\CacheProfiles;
 
+use DateTime;
 use Carbon\Carbon;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 
-abstract class BaseCacheProfile
+abstract class BaseCacheProfile implements CacheProfile
 {
-    /**
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
-    protected $app;
-
-    public function __construct(Application $app)
+    public function enabled(Request $request): bool
     {
-        $this->app = $app;
+        return config('responsecache.enabled');
     }
 
-    /**
+    /*
      * Return the time when the cache must be invalided.
-     *
-     * @return \DateTime
      */
-    public function cacheRequestUntil(Request $request)
+    public function cacheRequestUntil(Request $request): DateTime
     {
-        return Carbon::now()->addMinutes($this->app['config']->get('laravel-responsecache.cacheLifetimeInMinutes'));
+        return Carbon::now()->addMinutes(
+            config('responsecache.cache_lifetime_in_minutes')
+        );
     }
 
-    /**
+    /*
      * Set a string to add to differentiate this request from others.
-     *
-     * @return string
      */
-    public function cacheNameSuffix(Request $request)
+    public function cacheNameSuffix(Request $request): string
     {
-        if ($this->app->auth->check()) {
-            return $this->app->auth->user()->id;
+        if (auth()->check()) {
+            return auth()->user()->id;
         }
 
         return '';
     }
 
-    /**
-     * Determine if the app is running in the console.
-     *
-     * To allow testing this will return false the environment is testing.
-     *
-     * @return bool
-     */
-    public function isRunningInConsole()
+    public function isRunningInConsole(): bool
     {
-        if ($this->app->environment('testing')) {
+        if (app()->environment('testing')) {
             return false;
         }
 
-        return $this->app->runningInConsole();
+        return app()->runningInConsole();
     }
 }
