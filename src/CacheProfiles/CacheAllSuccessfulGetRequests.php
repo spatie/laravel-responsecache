@@ -5,7 +5,7 @@ namespace Spatie\ResponseCache\CacheProfiles;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CacheAllSuccessfulGetRequests extends BaseCacheProfile implements CacheProfile
+class CacheAllSuccessfulGetRequests extends BaseCacheProfile
 {
     public function shouldCacheRequest(Request $request): bool
     {

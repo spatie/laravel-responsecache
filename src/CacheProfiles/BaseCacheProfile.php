@@ -6,7 +6,7 @@ use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-abstract class BaseCacheProfile
+abstract class BaseCacheProfile implements CacheProfile
 {
     public function enabled(Request $request): bool
     {
