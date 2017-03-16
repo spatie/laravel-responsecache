@@ -2,8 +2,11 @@
 
 namespace Spatie\ResponseCache\Test\Commands;
 
+use Event;
 use Illuminate\Support\Facades\Artisan;
 use Spatie\ResponseCache\Test\TestCase;
+use Spatie\ResponseCache\Events\FlushedResponseCache;
+use Spatie\ResponseCache\Events\FlushingResponseCache;
 
 class FlushCommandTest extends TestCase
 {
@@ -20,5 +23,16 @@ class FlushCommandTest extends TestCase
         $this->assertRegularResponse($secondResponse);
 
         $this->assertDifferentResponse($firstResponse, $secondResponse);
+    }
+
+    /** @test */
+    public function it_will_fire_events_when_clearing_the_cache()
+    {
+        Event::fake();
+
+        Artisan::call('responsecache:flush');
+
+        Event::assertDispatched(FlushingResponseCache::class);
+        Event::assertDispatched(FlushedResponseCache::class);
     }
 }

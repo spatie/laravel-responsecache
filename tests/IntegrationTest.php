@@ -3,6 +3,9 @@
 namespace Spatie\ResponseCache\Test;
 
 use ResponseCache;
+use Illuminate\Support\Facades\Event;
+use Spatie\ResponseCache\Events\CacheMissed;
+use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
 
 class IntegrationTest extends TestCase
@@ -24,6 +27,27 @@ class IntegrationTest extends TestCase
         $this->assertCachedResponse($secondResponse);
 
         $this->assertSameResponse($firstResponse, $secondResponse);
+    }
+
+    /** @test */
+    public function it_will_fire_an_event_when_responding_without_cache()
+    {
+        Event::fake();
+
+        $this->call('get', '/random');
+
+        Event::assertDispatched(CacheMissed::class);
+    }
+
+    /** @test */
+    public function it_will_fire_an_event_when_responding_from_cache()
+    {
+        Event::fake();
+
+        $this->call('get', '/random');
+        $this->call('get', '/random');
+
+        Event::assertDispatched(ResponseCacheHit::class);
     }
 
     /** @test */

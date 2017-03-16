@@ -5,7 +5,9 @@ namespace Spatie\ResponseCache\Middlewares;
 use Closure;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\ResponseCache;
+use Spatie\ResponseCache\Events\CacheMissed;
 use Symfony\Component\HttpFoundation\Response;
+use Spatie\ResponseCache\Events\ResponseCacheHit;
 
 class CacheResponse
 {
@@ -21,6 +23,8 @@ class CacheResponse
     {
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->hasBeenCached($request)) {
+                event(new ResponseCacheHit($request));
+
                 return $this->responseCache->getCachedResponseFor($request);
             }
         }
@@ -32,6 +36,8 @@ class CacheResponse
                 $this->responseCache->cacheResponse($request, $response);
             }
         }
+
+        event(new CacheMissed($request));
 
         return $response;
     }

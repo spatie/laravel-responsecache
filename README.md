@@ -214,6 +214,30 @@ interface CacheProfile
 }
 ```
 
+### Events
+
+There are several events you can use to monitor and debug response caching in your application.
+
+#### ResponseCacheHit
+
+`Spatie\ResponseCache\Events\CacheMissed`
+
+This event is fired when a request passes through the `ResponseCache` middleware and a cached response was found and returned.
+
+#### CacheMissed
+
+`Spatie\ResponseCache\Events\CacheMissed`
+
+This event is fired when a request passes through the `ResponseCache` middleware but no cached response was found or returned.
+
+#### FlushingResponseCache and FlushedResponseCache
+
+`Spatie\ResponseCache\Events\FlushingResponseCache`
+
+`Spatie\ResponseCache\Events\FlushedResponseCache`
+
+These events are fired respectively when the `responsecache:flush` is started and finished.
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
