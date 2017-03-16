@@ -2,11 +2,11 @@
 
 namespace Spatie\ResponseCache\Test\Commands;
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Artisan;
+use Spatie\ResponseCache\Test\TestCase;
 use Spatie\ResponseCache\Events\FlushedResponseCache;
 use Spatie\ResponseCache\Events\FlushingResponseCache;
-use Spatie\ResponseCache\Test\TestCase;
 
 class FlushCommandTest extends TestCase
 {

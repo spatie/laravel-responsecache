@@ -2,7 +2,6 @@
 
 namespace Spatie\ResponseCache\Events;
 
-
 use Illuminate\Http\Request;
 
 class ServedActualResponse
