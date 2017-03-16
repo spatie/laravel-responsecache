@@ -4,8 +4,8 @@ namespace Spatie\ResponseCache\Test;
 
 use ResponseCache;
 use Illuminate\Support\Facades\Event;
-use Spatie\ResponseCache\Events\ServedActualResponse;
-use Spatie\ResponseCache\Events\ServedCachedResponse;
+use Spatie\ResponseCache\Events\CacheMissed;
+use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
 
 class IntegrationTest extends TestCase
@@ -36,7 +36,7 @@ class IntegrationTest extends TestCase
 
         $this->call('get', '/random');
 
-        Event::assertDispatched(ServedActualResponse::class);
+        Event::assertDispatched(CacheMissed::class);
     }
 
     /** @test */
@@ -47,7 +47,7 @@ class IntegrationTest extends TestCase
         $this->call('get', '/random');
         $this->call('get', '/random');
 
-        Event::assertDispatched(ServedCachedResponse::class);
+        Event::assertDispatched(ResponseCacheHit::class);
     }
 
     /** @test */

@@ -6,8 +6,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
-use Spatie\ResponseCache\Events\ServedActualResponse;
-use Spatie\ResponseCache\Events\ServedCachedResponse;
+use Spatie\ResponseCache\Events\CacheMissed;
+use Spatie\ResponseCache\Events\ResponseCacheHit;
 
 class CacheResponse
 {
@@ -23,7 +23,7 @@ class CacheResponse
     {
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->hasBeenCached($request)) {
-                event(new ServedCachedResponse($request));
+                event(new ResponseCacheHit($request));
 
                 return $this->responseCache->getCachedResponseFor($request);
             }
@@ -37,7 +37,7 @@ class CacheResponse
             }
         }
 
-        event(new ServedActualResponse($request));
+        event(new CacheMissed($request));
 
         return $response;
     }
