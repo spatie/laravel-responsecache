@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache;
 
+use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\Commands\Flush;
@@ -15,12 +16,18 @@ class ResponseCacheServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../resources/config/responsecache.php' => config_path('responsecache.php'),
+            __DIR__.'/../config/responsecache.php' => config_path('responsecache.php'),
         ], 'config');
 
         $this->app->bind(CacheProfile::class, function (Application $app) {
-            return $app->make(config('responsecache.cacheProfile'));
+            return $app->make(config('responsecache.cache_profile'));
         });
+
+        $this->app->when(ResponseCacheRepository::class)
+            ->needs(Repository::class)
+            ->give(function (): Repository {
+                return $this->app['cache']->store(config('responsecache.cache_store'));
+            });
 
         $this->app->singleton('responsecache', ResponseCache::class);
 
@@ -34,6 +41,6 @@ class ResponseCacheServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../resources/config/responsecache.php', 'responsecache');
+        $this->mergeConfigFrom(__DIR__.'/../config/responsecache.php', 'responsecache');
     }
 }

@@ -6,7 +6,7 @@ use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-abstract class BaseCacheProfile
+abstract class BaseCacheProfile implements CacheProfile
 {
     public function enabled(Request $request): bool
     {
@@ -18,17 +18,15 @@ abstract class BaseCacheProfile
      */
     public function cacheRequestUntil(Request $request): DateTime
     {
-        return Carbon::now()->addMinutes(config('responsecache.cacheLifetimeInMinutes'));
+        return Carbon::now()->addMinutes(
+            config('responsecache.cache_lifetime_in_minutes')
+        );
     }
 
-    /**
+    /*
      * Set a string to add to differentiate this request from others.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return mixed
      */
-    public function cacheNameSuffix(Request $request)
+    public function cacheNameSuffix(Request $request): string
     {
         if (auth()->check()) {
             return auth()->user()->id;
