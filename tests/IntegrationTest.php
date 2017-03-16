@@ -32,36 +32,22 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_fire_an_event_when_responding_without_cache()
     {
-        $mock = $this->getMockBuilder('stdClass')
-            ->setMethods(['callback'])
-            ->getMock();
-
-        $mock->expects($this->once())
-            ->method('callback');
-
-        Event::listen(ServedActualResponse::class, function () use ($mock) {
-            $mock->callback();
-        });
+        Event::fake();
 
         $this->call('get', '/random');
+
+        Event::assertDispatched(ServedActualResponse::class);
     }
 
     /** @test */
     public function it_will_fire_an_event_when_responding_from_cache()
     {
-        $mock = $this->getMockBuilder('stdClass')
-            ->setMethods(['callback'])
-            ->getMock();
-
-        $mock->expects($this->once())
-            ->method('callback');
-
-        Event::listen(ServedCachedResponse::class, function () use ($mock) {
-            $mock->callback();
-        });
+        Event::fake();
 
         $this->call('get', '/random');
         $this->call('get', '/random');
+
+        Event::assertDispatched(ServedCachedResponse::class);
     }
 
     /** @test */

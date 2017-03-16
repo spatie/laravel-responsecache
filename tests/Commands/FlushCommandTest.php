@@ -2,7 +2,7 @@
 
 namespace Spatie\ResponseCache\Test\Commands;
 
-use Illuminate\Support\Facades\Event;
+use Event;
 use Illuminate\Support\Facades\Artisan;
 use Spatie\ResponseCache\Test\TestCase;
 use Spatie\ResponseCache\Events\FlushedResponseCache;
@@ -28,19 +28,11 @@ class FlushCommandTest extends TestCase
     /** @test */
     public function it_will_fire_events_when_clearing_the_cache()
     {
-        $mock = $this->getMockBuilder('stdClass')->setMethods(['callback'])->getMock();
-
-        $mock->expects($this->exactly(2))
-            ->method('callback');
-
-        Event::listen(FlushingResponseCache::class, function () use ($mock) {
-            $mock->callback();
-        });
-
-        Event::listen(FlushedResponseCache::class, function () use ($mock) {
-            $mock->callback();
-        });
+        Event::fake();
 
         Artisan::call('responsecache:flush');
+
+        Event::assertDispatched(FlushingResponseCache::class);
+        Event::assertDispatched(FlushedResponseCache::class);
     }
 }
