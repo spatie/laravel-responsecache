@@ -2,9 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
-## 3.0.0 - 2017-XX-XX
+## 3.0.0 - 2017-03-16
 
 - added `enabled` method on cache profiles
+- added events
 - middleware won't automatically be registered anymore
 - renamed config file
 - renamed various methods for readability
