@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
+## 3.0.1 - 2017-03-16
+
+- fixed php version dependency in `composer.json`
+
 ## 3.0.0 - 2017-03-16
 
 - added `enabled` method on cache profiles
