@@ -6,9 +6,9 @@ use Event;
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Artisan;
 use Spatie\ResponseCache\Test\TestCase;
+use Spatie\ResponseCache\ResponseCacheRepository;
 use Spatie\ResponseCache\Events\FlushedResponseCache;
 use Spatie\ResponseCache\Events\FlushingResponseCache;
-use Spatie\ResponseCache\ResponseCacheRepository;
 
 class FlushCommandTest extends TestCase
 {
@@ -69,6 +69,5 @@ class FlushCommandTest extends TestCase
 
         // Simulating construction of Repository inside of the service provider
         return $this->app->contextual[ResponseCacheRepository::class][$this->app->getAlias(Repository::class)]();
-
     }
 }

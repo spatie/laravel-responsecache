@@ -30,6 +30,7 @@ class ResponseCacheServiceProvider extends ServiceProvider
                 if (config('responsecache.cache_tags')) {
                     return $repository->tags(config('repositorycache.cache_tags'));
                 }
+                
                 return $repository;
             });
 

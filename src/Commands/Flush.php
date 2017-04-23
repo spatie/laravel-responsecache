@@ -3,9 +3,9 @@
 namespace Spatie\ResponseCache\Commands;
 
 use Illuminate\Console\Command;
+use Spatie\ResponseCache\ResponseCacheRepository;
 use Spatie\ResponseCache\Events\FlushedResponseCache;
 use Spatie\ResponseCache\Events\FlushingResponseCache;
-use Spatie\ResponseCache\ResponseCacheRepository;
 
 class Flush extends Command
 {
