@@ -34,4 +34,9 @@ return [
      * configured in app/config/cache.php
      */
     'cache_store' => env('RESPONSE_CACHE_DRIVER', 'file'),
+
+    /*
+     * If selected cache driver supports tagging you can define it here.
+     */
+    'cache_tags' => env('RESPONSE_CACHE_STORE_TAG', null),
 ];

@@ -26,7 +26,12 @@ class ResponseCacheServiceProvider extends ServiceProvider
         $this->app->when(ResponseCacheRepository::class)
             ->needs(Repository::class)
             ->give(function (): Repository {
-                return $this->app['cache']->store(config('responsecache.cache_store'));
+                $repository = $this->app['cache']->store(config('responsecache.cache_store'));
+                if (config('responsecache.cache_tags')) {
+                    return $repository->tags(config('repositorycache.cache_tags'));
+                }
+
+                return $repository;
             });
 
         $this->app->singleton('responsecache', ResponseCache::class);
