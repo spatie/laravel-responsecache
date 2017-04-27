@@ -62,10 +62,10 @@ class FlushCommandTest extends TestCase
         $this->assertNull($appCache->get('appData'));
     }
 
-    protected function createTaggableResponseCacheStore($tags)
+    protected function createTaggableResponseCacheStore($tag): Repository
     {
         $this->app['config']->set('responsecache.cache_store', 'array');
-        $this->app['config']->set('responsecache.cache_tag', $tags);
+        $this->app['config']->set('responsecache.cache_tag', $tag);
 
         // Simulating construction of Repository inside of the service provider
         return $this->app->contextual[ResponseCacheRepository::class][$this->app->getAlias(Repository::class)]();
