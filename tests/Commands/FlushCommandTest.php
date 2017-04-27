@@ -41,7 +41,7 @@ class FlushCommandTest extends TestCase
     /** @test */
     public function it_will_preserve_cache_when_tags_are_on()
     {
-        $responseCache = $this->createTaggableResponseCacheStore(['responsecache', 'otherTag']);
+        $responseCache = $this->createTaggableResponseCacheStore('myTag');
         $appCache = $this->app['cache']->store('array');
 
         $appCache->forever('appData', 'someValue');
@@ -62,10 +62,10 @@ class FlushCommandTest extends TestCase
         $this->assertNull($appCache->get('appData'));
     }
 
-    protected function createTaggableResponseCacheStore($tags)
+    protected function createTaggableResponseCacheStore($tag): Repository
     {
         $this->app['config']->set('responsecache.cache_store', 'array');
-        $this->app['config']->set('responsecache.cache_tags', $tags);
+        $this->app['config']->set('responsecache.cache_tag', $tag);
 
         // Simulating construction of Repository inside of the service provider
         return $this->app->contextual[ResponseCacheRepository::class][$this->app->getAlias(Repository::class)]();

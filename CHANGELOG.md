@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
+## 3.1.0 - 2017-04-28
+
+- add support for taggable cache
+
 ## 3.0.1 - 2017-03-16
 
 - fixed php version dependency in `composer.json`
