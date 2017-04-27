@@ -98,11 +98,13 @@ return [
     'cache_store' => env('RESPONSE_CACHE_DRIVER', 'file'),
     
     /*
-     * If selected cache driver supports tagging you can define it here.
-     * You would use tags to separate cached data when sharing same storage. 
-     * This way you will be able to flush response cache and keep your application data.
+     * If the cache driver you configured supports tags, you may specify a tag name
+     * here. All responses will be tagged. When clearing the responsecache only
+     * items with that tag will be flushed.
+     *
+     * You may use a string are an array here.
      */
-    'cache_tags' => env('RESPONSE_CACHE_STORE_TAG', null),
+    'cache_tag' => '',
 ];
 ```
 
