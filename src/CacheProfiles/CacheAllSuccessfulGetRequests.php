@@ -22,6 +22,7 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile
 
     public function shouldCacheResponse(Response $response): bool
     {
-        return $response->isSuccessful() || $response->isRedirection();
+        return ($response->isSuccessful() || $response->isRedirection())
+            && $response->getStatusCode() !== 304;
     }
 }
