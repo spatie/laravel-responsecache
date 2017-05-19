@@ -229,7 +229,7 @@ There are several events you can use to monitor and debug response caching in yo
 
 #### ResponseCacheHit
 
-`Spatie\ResponseCache\Events\CacheMissed`
+`Spatie\ResponseCache\Events\ResponseCacheHit`
 
 This event is fired when a request passes through the `ResponseCache` middleware and a cached response was found and returned.
 
