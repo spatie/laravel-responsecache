@@ -77,9 +77,7 @@ class ResponseCache
     protected function addCachedHeader(Response $response): Response
     {
         $clonedResponse = clone $response;
-
-        $clonedResponse->headers->set('laravel-responsecache', 'cached on '.date('Y-m-d H:i:s'));
-
+        $clonedResponse->headers->set('Laravel-responsecache', 'cached on '.date('Y-m-d H:i:s'));
         return $clonedResponse;
     }
 }
