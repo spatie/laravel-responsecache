@@ -47,5 +47,15 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Spatie\\ResponseCache\\ResponseCacheServiceProvider"
+            ],
+            "aliases": {
+                "ResponseCache": "Spatie\\ResponseCache\\ResponseCacheFacade"
+            }
+        }
     }
 }
