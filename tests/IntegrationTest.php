@@ -168,4 +168,16 @@ class IntegrationTest extends TestCase
 
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
+
+    /** @test */
+    public function it_will_cache_file_responses()
+    {
+        $firstResponse = $this->call('get', '/image');
+        $secondResponse = $this->call('get', '/image');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertCachedResponse($secondResponse);
+
+        $this->assertSameResponse($firstResponse, $secondResponse);
+    }
 }
