@@ -124,8 +124,8 @@ abstract class TestCase extends Orchestra
             return 'uncacheable '.str_random();
         }]);
 
-        Route::any('/image', function() {
-            return response()->file(__DIR__ . '/User.php');
+        Route::any('/image', function () {
+            return response()->file(__DIR__.'/User.php');
         });
     }
 
