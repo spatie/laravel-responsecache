@@ -7,8 +7,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ResponseSerializer
 {
-    const RESPONSE_TYPE_NORMAL = 1;
-    const RESPONSE_TYPE_FILE = 2;
+    const RESPONSE_TYPE_NORMAL = 'response_type_normal';
+    const RESPONSE_TYPE_FILE = 'response_type_file';
 
     public function serialize(Response $response): string
     {
@@ -26,9 +26,8 @@ class ResponseSerializer
         return $response;
     }
 
-    private function getResponseData(Response $response): array
+    protected function getResponseData(Response $response): array
     {
-        $type = self::RESPONSE_TYPE_NORMAL;
         $statusCode = $response->getStatusCode();
         $headers = $response->headers;
 
@@ -36,20 +35,24 @@ class ResponseSerializer
             $content = $response->getFile()->getPathname();
             $type = self::RESPONSE_TYPE_FILE;
 
-            return compact('content', 'statusCode', 'headers', 'type');
+            return compact('statusCode', 'headers', 'content', 'type');
         }
 
         $content = $response->getContent();
+        $type = self::RESPONSE_TYPE_NORMAL;
 
-        return compact('content', 'statusCode', 'headers', 'type');
+        return compact('statusCode', 'headers', 'content', 'type');
     }
 
-    private function buildResponse(array $responseProperties): Response
+    protected function buildResponse(array $responseProperties): Response
     {
         $type = $responseProperties['type'] ?? self::RESPONSE_TYPE_NORMAL;
 
         if ($type === self::RESPONSE_TYPE_FILE) {
-            return new BinaryFileResponse($responseProperties['content'], $responseProperties['statusCode']);
+            return new BinaryFileResponse(
+                $responseProperties['content'],
+                $responseProperties['statusCode']
+            );
         }
 
         return new Response($responseProperties['content'], $responseProperties['statusCode']);
