@@ -12,35 +12,44 @@ class ResponseSerializer
 
     public function serialize(Response $response): string
     {
-        $type = self::RESPONSE_TYPE_NORMAL;
-
-        if ($response instanceof BinaryFileResponse) {
-            $content = $response->getFile()->getPathname();
-            $type = self::RESPONSE_TYPE_FILE;
-        } else {
-            $content = $response->getContent();
-        }
-
-        $statusCode = $response->getStatusCode();
-        $headers = $response->headers;
-
-        return serialize(compact('content', 'statusCode', 'headers', 'type'));
+        return serialize($this->getResponseData($response));
     }
 
     public function unserialize(string $serializedResponse): Response
     {
         $responseProperties = unserialize($serializedResponse);
 
-        $type = $responseProperties['type'] ?? self::RESPONSE_TYPE_NORMAL;
-
-        if ($type === self::RESPONSE_TYPE_FILE) {
-            $response = new BinaryFileResponse($responseProperties['content'], $responseProperties['statusCode']);
-        } else {
-            $response = new Response($responseProperties['content'], $responseProperties['statusCode']);
-        }
+        $response = $this->buildResponse($responseProperties);
 
         $response->headers = $responseProperties['headers'];
 
         return $response;
+    }
+
+    private function getResponseData(Response $response): array
+    {
+        $type= self::RESPONSE_TYPE_NORMAL;
+        $statusCode = $response->getStatusCode();
+        $headers = $response->headers;
+
+        if ($response instanceof BinaryFileResponse) {
+            $content = $response->getFile()->getPathname();
+            $type = self::RESPONSE_TYPE_FILE;
+
+            return compact('content', 'statusCode', 'headers', 'type');
+        }
+
+        $content = $response->getContent();
+        return compact('content', 'statusCode', 'headers', 'type');
+    }
+
+    private function buildResponse(array $responseProperties): Response{
+        $type = $responseProperties['type'] ?? self::RESPONSE_TYPE_NORMAL;
+
+        if ($type === self::RESPONSE_TYPE_FILE) {
+            return new BinaryFileResponse($responseProperties['content'], $responseProperties['statusCode']);
+        }
+
+        return new Response($responseProperties['content'], $responseProperties['statusCode']);
     }
 }
