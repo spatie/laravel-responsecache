@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
+## 3.2.0 - 2017-06-19
+
+- add support for `BinaryFileResponse`
+
 ## 3.1.0 - 2017-04-28
 
 - add support for taggable cache
