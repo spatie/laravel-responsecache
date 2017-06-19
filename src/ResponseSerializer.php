@@ -28,7 +28,7 @@ class ResponseSerializer
 
     private function getResponseData(Response $response): array
     {
-        $type= self::RESPONSE_TYPE_NORMAL;
+        $type = self::RESPONSE_TYPE_NORMAL;
         $statusCode = $response->getStatusCode();
         $headers = $response->headers;
 
@@ -43,7 +43,8 @@ class ResponseSerializer
         return compact('content', 'statusCode', 'headers', 'type');
     }
 
-    private function buildResponse(array $responseProperties): Response{
+    private function buildResponse(array $responseProperties): Response
+    {
         $type = $responseProperties['type'] ?? self::RESPONSE_TYPE_NORMAL;
 
         if ($type === self::RESPONSE_TYPE_FILE) {
