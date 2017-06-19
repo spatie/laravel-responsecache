@@ -40,6 +40,7 @@ class ResponseSerializer
         }
 
         $content = $response->getContent();
+
         return compact('content', 'statusCode', 'headers', 'type');
     }
 
