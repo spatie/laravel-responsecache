@@ -117,7 +117,7 @@ And finally you should install the provided middlewares `\Spatie\ResponseCache\M
 ...
 
 protected $middlewareGroups = [
-   web' => [
+   'web' => [
        ...
        \Spatie\ResponseCache\Middlewares\CacheResponse::class,
    ],
