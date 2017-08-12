@@ -10,8 +10,6 @@ use Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
 
 class IntegrationTest extends TestCase
 {
-    use MakesHttpRequests;
-
     public function setUp()
     {
         parent::setUp();
@@ -65,10 +63,6 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_cache_errors()
     {
-        if (starts_with($this->app->version(), '5.1')) {
-            $this->markTestSkipped('This test only works in modern versions of Laravel');
-        }
-
         $firstResponse = $this->call('GET', '/notfound');
         $secondResponse = $this->call('GET', '/notfound');
 

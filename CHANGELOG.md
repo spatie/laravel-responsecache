@@ -6,6 +6,10 @@ All notable changes to `laravel-responsecache` will be documented in this file
 
 - add support for `BinaryFileResponse`
 
+## 4.0.0 - 2017-XX-XX
+
+- add support for Laravel 5.5, drop support for all older versions
+
 ## 3.1.0 - 2017-04-28
 
 - add support for taggable cache
