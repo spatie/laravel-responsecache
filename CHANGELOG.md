@@ -5,7 +5,7 @@ All notable changes to `laravel-responsecache` will be documented in this file
 ## 4.0.0 - 2017-XX-XX
 
 - add support for Laravel 5.5, drop support for all older versions
-
+- rename facade class
 
 ## 3.2.0 - 2017-06-19
 

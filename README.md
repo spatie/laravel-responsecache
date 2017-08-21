@@ -48,7 +48,7 @@ This package also comes with a facade.
 
 'aliases' => [
     ...
-   'ResponseCache' => Spatie\ResponseCache\ResponseCacheFacade::class,
+   'ResponseCache' => Spatie\ResponseCache\Facades\ResponseCache::class,
 ];
 ```
 

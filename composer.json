@@ -53,7 +53,7 @@
                 "Spatie\\ResponseCache\\ResponseCacheServiceProvider"
             ],
             "aliases": {
-                "ResponseCache": "Spatie\\ResponseCache\\ResponseCacheFacade"
+                "ResponseCache": "Spatie\\ResponseCache\\Facades\\ResponseCache"
             }
         }
     },
