@@ -6,7 +6,6 @@ use ResponseCache;
 use Illuminate\Support\Facades\Event;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
-use Laravel\BrowserKitTesting\Concerns\MakesHttpRequests;
 
 class IntegrationTest extends TestCase
 {
