@@ -30,27 +30,7 @@ You can install the package via composer:
 $ composer require spatie/laravel-responsecache
 ```
 
-Next, you must install the service provider:
-
-```php
-// config/app.php
-
-'providers' => [
-    ...
-    Spatie\ResponseCache\ResponseCacheServiceProvider::class,
-];
-```
-
-This package also comes with a facade.
-
-```php
-// config/app.php
-
-'aliases' => [
-    ...
-   'ResponseCache' => Spatie\ResponseCache\Facades\ResponseCache::class,
-];
-```
+The package will automatically register itself.
 
 You can publish the config file with:
 ```bash
