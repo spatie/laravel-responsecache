@@ -21,17 +21,17 @@
     ],
     "require": {
         "php": "^7.0",
-        "illuminate/cache": "5.5.x-dev",
-        "illuminate/config": "5.5.x-dev",
-        "illuminate/console": "5.5.x-dev",
-        "illuminate/contracts": "5.5.x-dev",
-        "illuminate/http": "5.5.x-dev",
-        "illuminate/support": "5.5.x-dev",
+        "illuminate/cache": "~5.5.0",
+        "illuminate/config": "~5.5.0",
+        "illuminate/console": "~5.5.0",
+        "illuminate/contracts": "~5.5.0",
+        "illuminate/http": "~5.5.0",
+        "illuminate/support": "~5.5.0",
         "nesbot/carbon": "~1.19"
     },
     "require-dev": {
         "phpunit/phpunit" : "^6.2",
-        "orchestra/testbench": "3.5.x-dev",
+        "orchestra/testbench": "~3.5.0",
         "mockery/mockery": "^0.9.9"
     },
     "autoload": {
@@ -56,7 +56,5 @@
                 "ResponseCache": "Spatie\\ResponseCache\\Facades\\ResponseCache"
             }
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
