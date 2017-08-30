@@ -38,7 +38,11 @@ class ResponseCacheServiceProvider extends ServiceProvider
 
         $this->app['command.responsecache:flush'] = $this->app->make(Flush::class);
 
-        $this->commands(['command.responsecache:flush']);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Flush::class,
+            ]);
+        }
     }
 
     /**

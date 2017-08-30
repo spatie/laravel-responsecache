@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
+## 4.0.1 - 2017-08-30
+
+- fixed artisan command registration
+
 ## 4.0.0 - 2017-08-30
 
 - add support for Laravel 5.5, drop support for all older versions
