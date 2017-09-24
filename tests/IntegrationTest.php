@@ -173,4 +173,29 @@ class IntegrationTest extends TestCase
 
         $this->assertSameResponse($firstResponse, $secondResponse);
     }
+
+    /** @test */
+    public function it_wont_cache_if_lifetime_is_0()
+    {
+        $this->app['config']->set('responsecache.cache_lifetime_in_minutes', 0);
+
+        $firstResponse = $this->call('get', '/');
+        $secondResponse = $this->call('get', '/');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertRegularResponse($secondResponse);
+    }
+
+    /** @test */
+    public function it_will_cache_response_for_given_lifetime_which_is_defined_as_middleware_parameter()
+    {
+        // Set default lifetime as 0 to check if it will cache for given lifetime
+        $this->app['config']->set('responsecache.cache_lifetime_in_minutes', 0);
+
+        $firstResponse = $this->call('get', '/cache-for-given-lifetime');
+        $secondResponse = $this->call('get', '/cache-for-given-lifetime');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertCachedResponse($secondResponse);
+    }
 }

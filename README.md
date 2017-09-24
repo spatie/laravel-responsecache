@@ -59,7 +59,7 @@ return [
 
     /*
      * When using the default CacheRequestFilter this setting controls the
-     * number of minutes responses must be cached.
+     * default number of minutes responses must be cached.
      */
     'cache_lifetime_in_minutes' => env('RESPONSE_CACHE_LIFETIME', 60 * 24 * 7),
 
@@ -118,6 +118,30 @@ protected $routeMiddleware = [
 By default the package will cache all successful `get`-requests for a week.
 Logged in users will each have their own separate cache. If this behaviour is what you
  need, you're done: installing the `ResponseCacheServerProvider` was enough.
+
+
+### Specific Lifetime for a route
+If you want to set different lifetime for routes, you need to follow these steps.
+
+#### Step 1
+Add `cacheResponse` to routeMiddleware instead of web.
+
+```php
+protected $routeMiddleware = [
+   ...
+   'cacheResponse' => \Spatie\ResponseCache\Middlewares\CacheResponse::class,
+];
+```
+
+#### Step 2
+
+Use middleware method on a route and specify lifetime in minutes and you are done.
+
+```php
+Route::any('/', function () {
+    return 'dummy response';
+})->middleware('cacheResponse:5');;
+```
 
 
 ### Flushing the cache
