@@ -6,6 +6,7 @@ use ResponseCache;
 use Illuminate\Support\Facades\Event;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
+use Carbon\Carbon;
 
 class IntegrationTest extends TestCase
 {
@@ -197,5 +198,20 @@ class IntegrationTest extends TestCase
 
         $this->assertRegularResponse($firstResponse);
         $this->assertCachedResponse($secondResponse);
+    }
+
+    /** @test */
+    public function it_will_reproduce_cache_if_given_lifetime_is_expired()
+    {
+        // Set default lifetime as 0 to disable middleware that is already pushed to Kernel
+        $this->app['config']->set('responsecache.cache_lifetime_in_minutes', 0);
+
+        Carbon::setTestNow(Carbon::now()->subMinutes(6));
+        $firstResponse = $this->call('get', '/cache-for-given-lifetime');
+        Carbon::setTestNow();
+        $secondResponse = $this->call('get', '/cache-for-given-lifetime');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertRegularResponse($secondResponse);
     }
 }

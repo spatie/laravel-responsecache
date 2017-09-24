@@ -51,7 +51,7 @@ class ResponseCache
         $this->cache->put(
             $this->hasher->getHashFor($request),
             $response,
-            ($lifetimeInMinutes) ? $lifetimeInMinutes : $this->cacheProfile->cacheRequestUntil($request)
+            ($lifetimeInMinutes) ? intval($lifetimeInMinutes) : $this->cacheProfile->cacheRequestUntil($request)
         );
 
         return $response;
