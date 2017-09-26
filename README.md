@@ -223,7 +223,8 @@ Route::get('/my-special-snowflake', 'SnowflakeController@index')->middleware('ca
 
 // cache all these routes for 10 minutes
 Route::group(function() {
-   Route::get('/another-special-snowflake, 'AnotherSnowflakeController@index');
+   Route::get('/another-special-snowflake', 'AnotherSnowflakeController@index');
+   
    Route::get('/yet-another-special-snowflake, 'YetAnotherSnowflakeController@index');
 })->middleware('caceResponse:10');
 ```
