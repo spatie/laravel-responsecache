@@ -127,6 +127,10 @@ abstract class TestCase extends Orchestra
         Route::any('/image', function () {
             return response()->file(__DIR__.'/User.php');
         });
+
+        Route::any('/cache-for-given-lifetime', function () {
+            return 'dummy response';
+        })->middleware('cacheResponse:5');
     }
 
     public function getTempDirectory($suffix = '')
@@ -180,5 +184,6 @@ abstract class TestCase extends Orchestra
     {
         $this->app[Kernel::class]->pushMiddleware(CacheResponse::class);
         $this->app[Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponse::class);
+        $this->app[Router::class]->aliasMiddleware('cacheResponse', CacheResponse::class);
     }
 }

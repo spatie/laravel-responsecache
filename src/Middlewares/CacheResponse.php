@@ -19,7 +19,7 @@ class CacheResponse
         $this->responseCache = $responseCache;
     }
 
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $lifetimeInMinutes = null): Response
     {
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->hasBeenCached($request)) {
@@ -33,7 +33,7 @@ class CacheResponse
 
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->shouldCache($request, $response)) {
-                $this->responseCache->cacheResponse($request, $response);
+                $this->responseCache->cacheResponse($request, $response, $lifetimeInMinutes);
             }
         }
 
