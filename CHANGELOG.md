@@ -2,9 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
-## 4.1.0 - 2017-09-24
 
-- adds feature that lets defining specific lifetime for a route 
+## 4.1.0 - 2017-09-26
+
+- adds support for specific lifetimes on routes
 
 ## 4.0.1 - 2017-08-30
 
