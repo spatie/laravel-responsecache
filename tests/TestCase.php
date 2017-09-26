@@ -8,7 +8,6 @@ use Illuminate\Routing\Router;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\ResponseCacheServiceProvider;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;

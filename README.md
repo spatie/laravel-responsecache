@@ -6,12 +6,15 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-responsecache.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-responsecache)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 
-This Laravel >=5.4 package can cache an entire response. By default it will cache all successful get-requests for a week. This could potentially speed up the response quite considerably.
+This Laravel 5.5 package can cache an entire response. By default it will cache all successful get-requests for a week. This could potentially speed up the response quite considerably.
 
 So the first time a request comes in the package will save the response before sending it to the users. When the same request comes in again we're not going through the entire application but just respond with the saved response.
 
 
 If you're using Laravel 5.1, 5.2 or 5.3 check out the [v1 branch](https://github.com/spatie/laravel-responsecache/tree/v1).
+
+If you're using Laravel 5.4 check out the [v2 branch](https://github.com/spatie/laravel-responsecache/tree/v2).
+
 
 Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
@@ -119,31 +122,6 @@ By default the package will cache all successful `get`-requests for a week.
 Logged in users will each have their own separate cache. If this behaviour is what you
  need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
-
-### Specific Lifetime for a route
-If you want to set different lifetime for routes, you need to follow these steps.
-
-#### Step 1
-Add `cacheResponse` to routeMiddleware instead of web.
-
-```php
-protected $routeMiddleware = [
-   ...
-   'cacheResponse' => \Spatie\ResponseCache\Middlewares\CacheResponse::class,
-];
-```
-
-#### Step 2
-
-Use middleware method on a route and specify lifetime in minutes and you are done.
-
-```php
-Route::any('/', function () {
-    return 'dummy response';
-})->middleware('cacheResponse:5');;
-```
-
-
 ### Flushing the cache
 The entire cache can be flushed with:
 ```php
@@ -225,6 +203,29 @@ interface CacheProfile
      */
     public function cacheNameSuffix(Request $request);
 }
+```
+
+### Caching specific routes
+Instead of registering the `cacheResponse` middleware globally, you can also register it as route middleware.
+
+```php
+protected $routeMiddleware = [
+   ...
+   'cacheResponse' => \Spatie\ResponseCache\Middlewares\CacheResponse::class,
+];
+```
+
+When using the route middleware you can specify the number of minutes these routes should be cached:
+
+```php
+// cache this route for 5 minutes
+Route::get('/my-special-snowflake', 'SnowflakeController@index')->middleware('cacheResponse:5');
+
+// cache all these routes for 10 minutes
+Route::group(function() {
+   Route::get('/another-special-snowflake, 'AnotherSnowflakeController@index');
+   Route::get('/yet-another-special-snowflake, 'YetAnotherSnowflakeController@index');
+})->middleware('caceResponse:10');
 ```
 
 ### Events

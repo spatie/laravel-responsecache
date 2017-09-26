@@ -208,13 +208,13 @@ class IntegrationTest extends TestCase
 
         Carbon::setTestNow(Carbon::now()->subMinutes(6));
         $firstResponse = $this->call('get', '/cache-for-given-lifetime');
+        $this->assertRegularResponse($firstResponse);
+
         $secondResponse = $this->call('get', '/cache-for-given-lifetime');
+        $this->assertCachedResponse($secondResponse);
 
         Carbon::setTestNow();
         $thirdResponse = $this->call('get', '/cache-for-given-lifetime');
-
-        $this->assertRegularResponse($firstResponse);
-        $this->assertCachedResponse($secondResponse);
         $this->assertRegularResponse($thirdResponse);
     }
 }
