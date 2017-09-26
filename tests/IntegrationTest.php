@@ -2,11 +2,11 @@
 
 namespace Spatie\ResponseCache\Test;
 
+use Carbon\Carbon;
 use ResponseCache;
 use Illuminate\Support\Facades\Event;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
-use Carbon\Carbon;
 
 class IntegrationTest extends TestCase
 {
