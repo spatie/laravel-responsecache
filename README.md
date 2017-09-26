@@ -226,7 +226,7 @@ Route::group(function() {
    Route::get('/another-special-snowflake', 'AnotherSnowflakeController@index');
    
    Route::get('/yet-another-special-snowflake', 'YetAnotherSnowflakeController@index');
-})->middleware('caceResponse:10');
+})->middleware('cacheResponse:10');
 ```
 
 ### Events
