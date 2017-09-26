@@ -225,7 +225,7 @@ Route::get('/my-special-snowflake', 'SnowflakeController@index')->middleware('ca
 Route::group(function() {
    Route::get('/another-special-snowflake', 'AnotherSnowflakeController@index');
    
-   Route::get('/yet-another-special-snowflake, 'YetAnotherSnowflakeController@index');
+   Route::get('/yet-another-special-snowflake', 'YetAnotherSnowflakeController@index');
 })->middleware('caceResponse:10');
 ```
 
