@@ -245,6 +245,16 @@ This event is fired when a request passes through the `ResponseCache` middleware
 
 These events are fired respectively when the `responsecache:flush` is started and finished.
 
+### CSRF Tokens
+
+When a response is cached and a CSRF token exists on the page, it too will be cached and cause token mismatch or page expired errors. You can't reliably cache the response for the entire page when using forms that require CSRF tokens because the tokens will never match.
+
+It is recommended that you disable response caching for pages where forms exists to avoid these errors.
+
+Alternatively, but not recommended, you may disable CSRF protection on a per-route basis. It is highly unadvisable to disable CSRF for user-authenticated pages at the risk of cross-site request forgery.
+
+See how to disable CSRF on per-route basis here: https://laracasts.com/discuss/channels/laravel/disabling-csrf-for-a-specific-route-in-laravel-5
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
