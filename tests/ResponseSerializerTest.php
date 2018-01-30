@@ -4,7 +4,7 @@ namespace Spatie\ResponseCache\Test;
 
 use Spatie\ResponseCache\ResponseSerializer;
 use Symfony\Component\HttpFoundation\Response;
-use Spatie\ResponseCache\Exceptions\CouldntUnserialize;
+use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 
 class ResponseSerializerTest extends TestCase
 {
@@ -51,7 +51,7 @@ class ResponseSerializerTest extends TestCase
     /** @test */
     public function it_throws_when_something_something_else_than_a_response_is_unserialized()
     {
-        $this->expectException(CouldntUnserialize::class);
+        $this->expectException(CouldNotUnserialize::class);
 
         $this->responseSerializer->unserialize('b:0;');
     }
