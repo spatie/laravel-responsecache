@@ -2,10 +2,13 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file
 
+## 4.1.1 - 2018-01-30
+
+- add better exception handling when something goes wrong unserializing the response
 
 ## 4.1.0 - 2017-09-26
 
-- adds support for specific lifetimes on routes
+- add support for specific lifetimes on routes
 
 ## 4.0.1 - 2017-08-30
 
