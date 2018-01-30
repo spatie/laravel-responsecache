@@ -49,7 +49,7 @@ class ResponseSerializerTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_when_something_something_else_than_a_response_is_unserialized()
+    public function it_throws_an_exception_when_something_else_than_a_response_is_unserialized()
     {
         $this->expectException(CouldNotUnserialize::class);
 
