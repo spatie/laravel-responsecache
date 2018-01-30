@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache;
 
 use Symfony\Component\HttpFoundation\Response;
+use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ResponseSerializer
@@ -18,6 +19,10 @@ class ResponseSerializer
     public function unserialize(string $serializedResponse): Response
     {
         $responseProperties = unserialize($serializedResponse);
+
+        if (! $this->containsValidResponseProperties($responseProperties)) {
+            throw CouldNotUnserialize::serializedResponse($serializedResponse);
+        }
 
         $response = $this->buildResponse($responseProperties);
 
@@ -42,6 +47,19 @@ class ResponseSerializer
         $type = self::RESPONSE_TYPE_NORMAL;
 
         return compact('statusCode', 'headers', 'content', 'type');
+    }
+
+    protected function containsValidResponseProperties($properties): bool
+    {
+        if (! is_array($properties)) {
+            return false;
+        }
+
+        if (! isset($properties['content'], $properties['statusCode'])) {
+            return false;
+        }
+
+        return true;
     }
 
     protected function buildResponse(array $responseProperties): Response
