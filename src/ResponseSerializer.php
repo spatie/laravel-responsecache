@@ -2,9 +2,9 @@
 
 namespace Spatie\ResponseCache;
 
+use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class ResponseSerializer
 {
