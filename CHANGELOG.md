@@ -2,6 +2,13 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 4.2.0 - 2018-01-30
+
+- Added: `clear()` method and `responsecache:clear` command
+- Deprecated: `flush()` method and `responsecache:flush` command
+
+Deprecated features will still work until the next major version.
+
 ## 4.1.1 - 2018-01-30
 - Added: Better exception handling when something goes wrong unserializing the response
 
