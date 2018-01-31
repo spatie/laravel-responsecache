@@ -69,9 +69,17 @@ class ResponseCache
         return $this->cache->get($this->hasher->getHashFor($request));
     }
 
+    /**
+     * @deprecated Use the new clear method, this is just an alias.
+     */
     public function flush()
     {
-        $this->cache->flush();
+        $this->clear();
+    }
+
+    public function clear()
+    {
+        $this->cache->clear();
     }
 
     protected function addCachedHeader(Response $response): Response

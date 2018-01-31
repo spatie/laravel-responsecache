@@ -75,7 +75,7 @@ return [
     /*
      * If the cache driver you configured supports tags, you may specify a tag name
      * here. All responses will be tagged. When clearing the responsecache only
-     * items with that tag will be flushed.
+     * items with that tag will be cleared.
      *
      * You may use a string or an array here.
      */
@@ -114,17 +114,17 @@ By default the package will cache all successful `get`-requests for a week.
 Logged in users will each have their own separate cache. If this behaviour is what you
  need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
-### Flushing the cache
-The entire cache can be flushed with:
+### Clearing the cache
+The entire cache can be cleared with:
 ```php
-ResponseCache::flush();
+ResponseCache::clear();
 ```
-This will flush everything from the cache store specified in the config-file.
+This will clear everything from the cache store specified in the config-file.
 
 The same can be accomplished by issuing this artisan command:
 
 ```bash
-$ php artisan responsecache:flush
+$ php artisan responsecache:clear
 ```
 
 ### Preventing a request from being cached
@@ -237,13 +237,13 @@ This event is fired when a request passes through the `ResponseCache` middleware
 
 This event is fired when a request passes through the `ResponseCache` middleware but no cached response was found or returned.
 
-#### FlushingResponseCache and FlushedResponseCache
+#### ClearingResponseCache and ClearedResponseCache
 
-`Spatie\ResponseCache\Events\FlushingResponseCache`
+`Spatie\ResponseCache\Events\ClearingResponseCache`
 
-`Spatie\ResponseCache\Events\FlushedResponseCache`
+`Spatie\ResponseCache\Events\ClearedResponseCache`
 
-These events are fired respectively when the `responsecache:flush` is started and finished.
+These events are fired respectively when the `responsecache:clear` is started and finished.
 
 ### CSRF Tokens
 
