@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 4.2.1 - 2018-02-08
+
+- add support for L5.6
+
 ## 4.2.0 - 2018-01-30
 
 - Added: `clear()` method and `responsecache:clear` command
