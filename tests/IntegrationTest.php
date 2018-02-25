@@ -97,6 +97,20 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
+    public function it_can_forget_a_specific_cached_request()
+    {
+        $firstResponse = $this->call('GET', '/random');
+        $this->assertRegularResponse($firstResponse);
+
+        ResponseCache::forget('/random');
+
+        $secondResponse = $this->call('GET', '/random');
+        $this->assertRegularResponse($secondResponse);
+
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
+    }
+
+    /** @test */
     public function it_will_cache_responses_for_each_logged_in_user_separately()
     {
         $this->call('GET', '/login/1');

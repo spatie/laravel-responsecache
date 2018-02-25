@@ -90,4 +90,14 @@ class ResponseCache
 
         return $clonedResponse;
     }
+
+    public function forget(string $uri)
+    {
+        $request = Request::create($uri);
+        $hash = $this->hasher->getHashFor($request);
+
+        if ($this->cache->has($hash)) {
+            $this->cache->forget($hash);
+        }
+    }
 }
