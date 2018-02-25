@@ -127,6 +127,13 @@ The same can be accomplished by issuing this artisan command:
 $ php artisan responsecache:clear
 ```
 
+### Forget a specific URI
+
+You can forget a specific URI with:
+```php
+ResponseCache::forget('/some-uri');
+```
+
 ### Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware. 
 This middleware [can be assigned to routes and controllers]
