@@ -91,13 +91,22 @@ class ResponseCache
         return $clonedResponse;
     }
 
-    public function forget(string $uri)
+    /**
+     * @param string|array $uris
+     */
+    public function forget($uris): self
     {
-        $request = Request::create($uri);
-        $hash = $this->hasher->getHashFor($request);
-
-        if ($this->cache->has($hash)) {
-            $this->cache->forget($hash);
+        $uris = is_array($uris) ? $uris : func_get_args();
+        
+        foreach ($uris as $uri) {
+            $request = Request::create($uri);
+            $hash = $this->hasher->getHashFor($request);
+    
+            if ($this->cache->has($hash)) {
+                $this->cache->forget($hash);
+            }
         }
+
+        return $this;
     }
 }

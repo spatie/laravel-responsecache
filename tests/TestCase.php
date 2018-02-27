@@ -111,7 +111,7 @@ abstract class TestCase extends Orchestra
             return redirect('/');
         });
 
-        Route::any('/random', function () {
+        Route::any('/random/{id?}', function () {
             return str_random();
         });
 

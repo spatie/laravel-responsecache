@@ -111,6 +111,27 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
+    public function it_can_forget_several_specific_cached_requests_at_once()
+    {
+        $firstResponseFirstCall = $this->call('GET', '/random/1');
+        $this->assertRegularResponse($firstResponseFirstCall);
+
+        $secondResponseFirstCall = $this->call('GET', '/random/2');
+        $this->assertRegularResponse($secondResponseFirstCall);
+
+        ResponseCache::forget(['/random/1', '/random/2']);
+
+        $firstResponseSecondCall = $this->call('GET', '/random/1');
+        $this->assertRegularResponse($firstResponseSecondCall);
+
+        $secondResponseSecondCall = $this->call('GET', '/random/2');
+        $this->assertRegularResponse($secondResponseSecondCall);
+
+        $this->assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
+        $this->assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
+    }
+
+    /** @test */
     public function it_will_cache_responses_for_each_logged_in_user_separately()
     {
         $this->call('GET', '/login/1');
