@@ -97,15 +97,15 @@ class ResponseCache
     public function forget($uris): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
-        
-        foreach ($uris as $uri) {
+
+        collect($uris)->each(function ($uri) {
             $request = Request::create($uri);
             $hash = $this->hasher->getHashFor($request);
-    
+
             if ($this->cache->has($hash)) {
                 $this->cache->forget($hash);
             }
-        }
+        });
 
         return $this;
     }
