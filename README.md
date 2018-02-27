@@ -127,11 +127,18 @@ The same can be accomplished by issuing this artisan command:
 $ php artisan responsecache:clear
 ```
 
-### Forget a specific URI
+### Forget one or several specific URI(s)
 
-You can forget a specific URI with:
+You can forget specific URIs with:
 ```php
+// Forget one URI
 ResponseCache::forget('/some-uri');
+
+// Forget several URIs
+ResponseCache::forget(['/some-uri', '/other-uri']);
+
+// Alternatively
+ResponseCache::forget('/some-uri', '/other-uri');
 ```
 
 ### Preventing a request from being cached
