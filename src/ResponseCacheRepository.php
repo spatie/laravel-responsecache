@@ -51,4 +51,9 @@ class ResponseCacheRepository
     {
         $this->cache->clear();
     }
+
+    public function forget(string $key): bool
+    {
+        return $this->cache->forget($key);
+    }
 }
