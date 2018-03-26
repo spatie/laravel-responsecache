@@ -208,6 +208,11 @@ interface CacheProfile
      * @return mixed
      */
     public function cacheNameSuffix(Request $request);
+    
+    /*
+     * Return a hash value which will be use for a key for response cache
+     */
+    public function getHashFor(Request $request): string;
 }
 ```
 

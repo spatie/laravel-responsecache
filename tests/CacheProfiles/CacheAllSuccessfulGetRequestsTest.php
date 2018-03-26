@@ -71,6 +71,15 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
         $this->assertTrue($expirationDate->isFuture());
     }
 
+    /** @test */
+    public function it_can_generate_a_hash_for_a_request()
+    {
+        $request = Request::create('https://spatie.be');
+
+        $this->assertEquals('responsecache-7a6ac874731d33f1ba5f68055fe926f9',
+            $this->cacheProfile->getHashFor($request));
+    }
+
     /**
      * Create a new request with the given method.
      *

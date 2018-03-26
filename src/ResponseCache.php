@@ -11,16 +11,12 @@ class ResponseCache
     /** @var ResponseCache */
     protected $cache;
 
-    /** @var RequestHasher */
-    protected $hasher;
-
     /** @var CacheProfile */
     protected $cacheProfile;
 
-    public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
+    public function __construct(ResponseCacheRepository $cache, CacheProfile $cacheProfile)
     {
         $this->cache = $cache;
-        $this->hasher = $hasher;
         $this->cacheProfile = $cacheProfile;
     }
 
@@ -49,7 +45,7 @@ class ResponseCache
         }
 
         $this->cache->put(
-            $this->hasher->getHashFor($request),
+            $this->cacheProfile->getHashFor($request),
             $response,
             ($lifetimeInMinutes) ? intval($lifetimeInMinutes) : $this->cacheProfile->cacheRequestUntil($request)
         );
@@ -60,13 +56,13 @@ class ResponseCache
     public function hasBeenCached(Request $request): bool
     {
         return config('responsecache.enabled')
-            ? $this->cache->has($this->hasher->getHashFor($request))
+            ? $this->cache->has($this->cacheProfile->getHashFor($request))
             : false;
     }
 
     public function getCachedResponseFor(Request $request): Response
     {
-        return $this->cache->get($this->hasher->getHashFor($request));
+        return $this->cache->get($this->cacheProfile->getHashFor($request));
     }
 
     /**
@@ -100,7 +96,7 @@ class ResponseCache
 
         collect($uris)->each(function ($uri) {
             $request = Request::create($uri);
-            $hash = $this->hasher->getHashFor($request);
+            $hash = $this->cacheProfile->getHashFor($request);
 
             if ($this->cache->has($hash)) {
                 $this->cache->forget($hash);
