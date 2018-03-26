@@ -43,4 +43,11 @@ abstract class BaseCacheProfile implements CacheProfile
 
         return app()->runningInConsole();
     }
+
+    public function getHashFor(Request $request): string
+    {
+        return 'responsecache-'.md5(
+                "{$request->getUri()}/{$request->getMethod()}/".$this->cacheNameSuffix($request)
+            );
+    }
 }
