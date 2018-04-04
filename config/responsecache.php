@@ -40,7 +40,7 @@ return [
      * here. All responses will be tagged. When clearing the responsecache only
      * items with that tag will be flushed.
      *
-     * You may use a string are an array here.
+     * You may use a string or an array here.
      */
     'cache_tag' => '',
 ];
