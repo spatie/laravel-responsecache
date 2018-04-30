@@ -3,7 +3,7 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Cache\Repository;
-use Illuminate\Foundation\Application;
+use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\Commands\Clear;
 use Spatie\ResponseCache\Commands\Flush;
@@ -20,7 +20,7 @@ class ResponseCacheServiceProvider extends ServiceProvider
             __DIR__.'/../config/responsecache.php' => config_path('responsecache.php'),
         ], 'config');
 
-        $this->app->bind(CacheProfile::class, function (Application $app) {
+        $this->app->bind(CacheProfile::class, function (Container $app) {
             return $app->make(config('responsecache.cache_profile'));
         });
 

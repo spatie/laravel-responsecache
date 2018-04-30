@@ -28,8 +28,8 @@ abstract class BaseCacheProfile implements CacheProfile
      */
     public function cacheNameSuffix(Request $request): string
     {
-        if (auth()->check()) {
-            return auth()->user()->id;
+        if (\Auth::check()) {
+            return \Auth::user()->id;
         }
 
         return '';
