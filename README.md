@@ -143,8 +143,7 @@ ResponseCache::forget('/some-uri', '/other-uri');
 
 ### Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware. 
-This middleware [can be assigned to routes and controllers]
-(http://laravel.com/docs/master/controllers#controller-middleware).
+This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
 Using the middleware are route could be exempt from being cached.
 
