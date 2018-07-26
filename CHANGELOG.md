@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 4.4.1 - 2018-07-26
+
+- fix for issue #123
+
 ## 4.4.0 - 2018-04-30
 
 - add support for Lumen
