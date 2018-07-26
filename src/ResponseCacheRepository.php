@@ -49,7 +49,7 @@ class ResponseCacheRepository
 
     public function clear()
     {
-        $this->cache->clear();
+        $this->cache->flush();
     }
 
     public function forget(string $key): bool
