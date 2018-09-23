@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 4.4.3 - 2018-09-23
+
+- fix for forgetting a specific url
+
 ## 4.4.2 - 2018-08-24
 
 - add support for Laravel 5.7
