@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 4.4.4 - 2018-09-23
+
+- fix for caching urls with query parameters
+
 ## 4.4.3 - 2018-09-23
 
 - fix for forgetting a specific url
