@@ -25,7 +25,25 @@ class CacheResponse
             if ($this->responseCache->hasBeenCached($request)) {
                 event(new ResponseCacheHit($request));
 
-                return $this->responseCache->getCachedResponseFor($request);
+                $response = $this->responseCache->getCachedResponseFor($request);
+
+                $pattern = '/<meta name="csrf-token" content="([^"]+)">/';
+
+                $cachedContent = $response->getContent();
+
+                if (preg_match($pattern, $cachedContent, $matches)) {
+
+                    $cachedCsrf = $matches[1];
+                    $updatedCsrf = csrf_token();
+
+                    $updatedContent = str_replace($cachedCsrf, $updatedCsrf, $cachedContent);
+
+                    $response->setContent($updatedContent);
+
+                }
+
+                return $response;
+
             }
         }
 
