@@ -264,5 +264,4 @@ class IntegrationTest extends TestCase
 
         $this->assertSameResponse($firstResponse, $secondResponse);
     }
-
 }

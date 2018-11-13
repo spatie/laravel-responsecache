@@ -32,18 +32,15 @@ class CacheResponse
                 $cachedContent = $response->getContent();
 
                 if (preg_match($pattern, $cachedContent, $matches)) {
-
                     $cachedCsrf = $matches[1];
                     $updatedCsrf = csrf_token();
 
                     $updatedContent = str_replace($cachedCsrf, $updatedCsrf, $cachedContent);
 
                     $response->setContent($updatedContent);
-
                 }
 
                 return $response;
-
             }
         }
 
