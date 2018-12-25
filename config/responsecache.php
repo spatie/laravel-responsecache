@@ -42,5 +42,5 @@ return [
      *
      * You may use a string or an array here.
      */
-    'cache_tag' => '',
+    'cache_tag' => env('RESPONSE_CACHE_TAG', 'responsecache'),
 ];

@@ -49,7 +49,8 @@ class ResponseCache
         }
 
         $this->cache->put(
-            $this->hasher->getHashFor($request),
+        $this->cacheProfile->cacheNameSuffix($request),
+        $this->hasher->getHashFor($request),
             $response,
             ($lifetimeInMinutes) ? intval($lifetimeInMinutes) : $this->cacheProfile->cacheRequestUntil($request)
         );
@@ -60,13 +61,13 @@ class ResponseCache
     public function hasBeenCached(Request $request): bool
     {
         return config('responsecache.enabled')
-            ? $this->cache->has($this->hasher->getHashFor($request))
+            ? $this->cache->has($this->hasher->getHashFor($request), $this->cacheProfile->cacheNameSuffix($request))
             : false;
     }
 
     public function getCachedResponseFor(Request $request): Response
     {
-        return $this->cache->get($this->hasher->getHashFor($request));
+        return $this->cache->get($this->hasher->getHashFor($request), $this->cacheProfile->cacheNameSuffix($request));
     }
 
     /**
@@ -101,11 +102,22 @@ class ResponseCache
         collect($uris)->each(function ($uri) {
             $request = Request::create($uri);
             $hash = $this->hasher->getHashFor($request);
+            $prefix = $this->cacheProfile->cacheNameSuffix($request);
 
-            if ($this->cache->has($hash)) {
-                $this->cache->forget($hash);
+            if ($this->cache->has($hash, $prefix)) {
+                $this->cache->forget($hash, $prefix);
             }
         });
+
+        return $this;
+    }
+
+    /**
+     * @param string|array $uris
+     */
+    public function forgetByPrefix($prefix): self
+    {
+       \Cache::tags(['responsecache', $prefix])->flush();
 
         return $this;
     }
