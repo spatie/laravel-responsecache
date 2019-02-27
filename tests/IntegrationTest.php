@@ -10,7 +10,7 @@ use Spatie\ResponseCache\Events\ResponseCacheHit;
 
 class IntegrationTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }

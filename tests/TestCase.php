@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\Test;
 
 use File;
+use Illuminate\Support\Str;
 use Route;
 use Illuminate\Routing\Router;
 use Illuminate\Contracts\Http\Kernel;
@@ -14,7 +15,7 @@ use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 
 abstract class TestCase extends Orchestra
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -95,36 +96,38 @@ abstract class TestCase extends Orchestra
      */
     protected function setUpRoutes($app)
     {
-        Route::any('/', function () {
-            return 'home of '.(auth()->check() ? auth()->user()->id : 'anonymous');
-        });
+        Route::middleware(CacheResponse::class)->group(function () {
+            Route::any('/', function () {
+                return 'home of '.(auth()->check() ? auth()->user()->id : 'anonymous');
+            });
 
-        Route::any('login/{id}', function ($id) {
-            auth()->login(User::find($id));
+            Route::any('login/{id}', function ($id) {
+                auth()->login(User::find($id));
 
-            return redirect('/');
-        });
+                return redirect('/');
+            });
 
-        Route::any('logout', function () {
-            auth()->logout();
+            Route::any('logout', function () {
+                auth()->logout();
 
-            return redirect('/');
-        });
+                return redirect('/');
+            });
 
-        Route::any('/random/{id?}', function () {
-            return str_random();
-        });
+            Route::any('/random/{id?}', function () {
+                return Str::random();
+            });
 
-        Route::any('/redirect', function () {
-            return redirect('/');
-        });
+            Route::any('/redirect', function () {
+                return redirect('/');
+            });
 
-        Route::any('/uncacheable', ['middleware' => 'doNotCacheResponse', function () {
-            return 'uncacheable '.str_random();
-        }]);
+            Route::any('/uncacheable', ['middleware' => 'doNotCacheResponse', function () {
+                return 'uncacheable '.Str::random();
+            }]);
 
-        Route::any('/image', function () {
-            return response()->file(__DIR__.'/User.php');
+            Route::any('/image', function () {
+                return response()->file(__DIR__.'/User.php');
+            });
         });
 
         Route::any('/cache-for-given-lifetime', function () {
@@ -181,7 +184,6 @@ abstract class TestCase extends Orchestra
 
     protected function setUpMiddleware()
     {
-        $this->app[Kernel::class]->pushMiddleware(CacheResponse::class);
         $this->app[Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponse::class);
         $this->app[Router::class]->aliasMiddleware('cacheResponse', CacheResponse::class);
     }

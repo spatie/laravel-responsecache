@@ -8,13 +8,13 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCache
 {
-    /** @var ResponseCache */
+    /** @var \Spatie\ResponseCache\ResponseCache */
     protected $cache;
 
-    /** @var RequestHasher */
+    /** @var \Spatie\ResponseCache\RequestHasher */
     protected $hasher;
 
-    /** @var CacheProfile */
+    /** @var \Spatie\ResponseCache\CacheProfiles\CacheProfile */
     protected $cacheProfile;
 
     public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
@@ -93,6 +93,8 @@ class ResponseCache
 
     /**
      * @param string|array $uris
+     *
+     * @return \Spatie\ResponseCache\ResponseCache
      */
     public function forget($uris): self
     {

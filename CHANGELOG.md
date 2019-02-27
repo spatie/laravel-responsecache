@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 4.4.5 - 2019-02-27
+
+- add support for Laravel 5.8
+- you can no longer add multiple `CacheResponse` middleware to one route
+
 ## 4.4.4 - 2018-09-23
 
 - fix for caching urls with query parameters
