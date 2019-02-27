@@ -2,9 +2,8 @@
 
 namespace Spatie\ResponseCache;
 
-use DateTime;
-use Illuminate\Cache\Repository;
 use Illuminate\Support\Str;
+use Illuminate\Cache\Repository;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCacheRepository
