@@ -3,10 +3,9 @@
 namespace Spatie\ResponseCache\Test;
 
 use File;
-use Illuminate\Support\Str;
 use Route;
+use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
