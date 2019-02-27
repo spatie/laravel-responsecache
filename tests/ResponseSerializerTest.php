@@ -17,7 +17,7 @@ class ResponseSerializerTest extends TestCase
     /** @var string */
     protected $statusCode;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

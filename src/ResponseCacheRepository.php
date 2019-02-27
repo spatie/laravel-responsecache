@@ -2,7 +2,9 @@
 
 namespace Spatie\ResponseCache;
 
+use DateTime;
 use Illuminate\Cache\Repository;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCacheRepository
@@ -26,6 +28,12 @@ class ResponseCacheRepository
      */
     public function put(string $key, $response, $minutes)
     {
+        $useSeconds = Str::startsWith(app()->version(), '5.8');
+
+        if ($useSeconds && is_int($minutes)) {
+            $this->cache->put($key, $this->responseSerializer->serialize($response), $minutes * 60);
+        }
+
         $this->cache->put($key, $this->responseSerializer->serialize($response), $minutes);
     }
 

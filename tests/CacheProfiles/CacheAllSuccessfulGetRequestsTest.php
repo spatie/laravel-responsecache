@@ -14,7 +14,7 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
     /** @var \Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests */
     protected $cacheProfile;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

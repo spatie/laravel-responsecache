@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache\CacheProfiles;
 
+use Illuminate\Support\Facades\Auth;
 use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,8 +29,8 @@ abstract class BaseCacheProfile implements CacheProfile
      */
     public function cacheNameSuffix(Request $request): string
     {
-        if (\Auth::check()) {
-            return \Auth::user()->id;
+        if (Auth::check()) {
+            return Auth::user()->id;
         }
 
         return '';
