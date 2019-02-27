@@ -23,17 +23,11 @@ class ResponseCacheRepository
     /**
      * @param string $key
      * @param \Symfony\Component\HttpFoundation\Response $response
-     * @param \DateTime|int $minutes
+     * @param \DateTime|int $seconds
      */
-    public function put(string $key, $response, $minutes)
+    public function put(string $key, $response, $seconds)
     {
-        $useSeconds = Str::startsWith(app()->version(), '5.8');
-
-        if ($useSeconds && is_int($minutes)) {
-            $this->cache->put($key, $this->responseSerializer->serialize($response), $minutes * 60);
-        }
-
-        $this->cache->put($key, $this->responseSerializer->serialize($response), $minutes);
+        $this->cache->put($key, $this->responseSerializer->serialize($response), $seconds);
     }
 
     public function has(string $key): bool

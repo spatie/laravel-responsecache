@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 5.0.0 - 2019-02-27
+
+- drop support for Laravel 5.7 and lower
+- drop support for PHP 7.0 and lower
+- change all cache time parameters to seconds (see UPGRADING.md)
+
 ## 4.4.5 - 2019-02-27
 
 - add support for Laravel 5.8

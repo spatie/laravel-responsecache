@@ -213,7 +213,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_wont_cache_if_lifetime_is_0()
     {
-        $this->app['config']->set('responsecache.cache_lifetime_in_minutes', 0);
+        $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
         $firstResponse = $this->call('get', '/');
         $secondResponse = $this->call('get', '/');
@@ -226,7 +226,7 @@ class IntegrationTest extends TestCase
     public function it_will_cache_response_for_given_lifetime_which_is_defined_as_middleware_parameter()
     {
         // Set default lifetime as 0 to check if it will cache for given lifetime
-        $this->app['config']->set('responsecache.cache_lifetime_in_minutes', 0);
+        $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
         $firstResponse = $this->call('get', '/cache-for-given-lifetime');
         $secondResponse = $this->call('get', '/cache-for-given-lifetime');
@@ -239,7 +239,7 @@ class IntegrationTest extends TestCase
     public function it_will_reproduce_cache_if_given_lifetime_is_expired()
     {
         // Set default lifetime as 0 to disable middleware that is already pushed to Kernel
-        $this->app['config']->set('responsecache.cache_lifetime_in_minutes', 0);
+        $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
         Carbon::setTestNow(Carbon::now()->subMinutes(6));
         $firstResponse = $this->call('get', '/cache-for-given-lifetime');

@@ -42,7 +42,7 @@ class ResponseCache
         return $this->cacheProfile->shouldCacheResponse($response);
     }
 
-    public function cacheResponse(Request $request, Response $response, $lifetimeInMinutes = null): Response
+    public function cacheResponse(Request $request, Response $response, $lifetimeInSeconds = null): Response
     {
         if (config('responsecache.add_cache_time_header')) {
             $response = $this->addCachedHeader($response);
@@ -51,7 +51,7 @@ class ResponseCache
         $this->cache->put(
             $this->hasher->getHashFor($request),
             $response,
-            ($lifetimeInMinutes) ? intval($lifetimeInMinutes) : $this->cacheProfile->cacheRequestUntil($request)
+            ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
         );
 
         return $response;

@@ -54,9 +54,9 @@ return [
 
     /*
      * When using the default CacheRequestFilter this setting controls the
-     * default number of minutes responses must be cached.
+     * default number of seconds responses must be cached.
      */
-    'cache_lifetime_in_minutes' => env('RESPONSE_CACHE_LIFETIME', 60 * 24 * 7),
+    'cache_lifetime_in_seconds' => env('RESPONSE_CACHE_LIFETIME', 60 * 24 * 7),
 
     /*
      * This setting determines if a http header named "Laravel-responsecache"
@@ -220,18 +220,18 @@ protected $routeMiddleware = [
 ];
 ```
 
-When using the route middleware you can specify the number of minutes these routes should be cached:
+When using the route middleware you can specify the number of seconds these routes should be cached:
 
 ```php
 // cache this route for 5 minutes
-Route::get('/my-special-snowflake', 'SnowflakeController@index')->middleware('cacheResponse:5');
+Route::get('/my-special-snowflake', 'SnowflakeController@index')->middleware('cacheResponse:300');
 
 // cache all these routes for 10 minutes
 Route::group(function() {
    Route::get('/another-special-snowflake', 'AnotherSnowflakeController@index');
    
    Route::get('/yet-another-special-snowflake', 'YetAnotherSnowflakeController@index');
-})->middleware('cacheResponse:10');
+})->middleware('cacheResponse:600');
 ```
 
 ### Events

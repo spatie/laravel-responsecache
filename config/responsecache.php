@@ -17,9 +17,9 @@ return [
 
     /*
      * When using the default CacheRequestFilter this setting controls the
-     * default number of minutes responses must be cached.
+     * default number of seconds responses must be cached.
      */
-    'cache_lifetime_in_minutes' => env('RESPONSE_CACHE_LIFETIME', 60 * 24 * 7),
+    'cache_lifetime_in_seconds' => env('RESPONSE_CACHE_LIFETIME', 60 * 24 * 7),
 
     /*
      * This setting determines if a http header named "Laravel-responsecache"
