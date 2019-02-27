@@ -2,7 +2,6 @@
 
 namespace Spatie\ResponseCache;
 
-use Illuminate\Support\Str;
 use Illuminate\Cache\Repository;
 use Symfony\Component\HttpFoundation\Response;
 
