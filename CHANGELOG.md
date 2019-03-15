@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 5.0.1 - 2019-03-15
+
+- fix cache lifetime in config file
+
 ## 5.0.0 - 2019-02-27
 
 - drop support for Laravel 5.7 and lower
