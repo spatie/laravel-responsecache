@@ -15,7 +15,7 @@ If you're using Laravel 5.1, 5.2 or 5.3 check out the [v1 branch](https://github
 
 If you're using Laravel 5.4 check out the [v2 branch](https://github.com/spatie/laravel-responsecache/tree/v2).
 
-If you're using Laravel 5.5, 5.6 or 5.7 check out the [v5 branch](https://github.com/spatie/laravel-responsecache/tree/v5).
+If you're using Laravel 5.5 and above check out the [v5 branch](https://github.com/spatie/laravel-responsecache/tree/v5).
 
 Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
@@ -111,7 +111,7 @@ protected $routeMiddleware = [
 
 ### Basic usage
 
-By default the package will cache all successful `get`-requests for a week.
+By default, the package will cache all successful `get`-requests for a week.
 Logged in users will each have their own separate cache. If this behaviour is what you
  need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
@@ -154,7 +154,7 @@ Using the middleware are route could be exempt from being cached.
 Route::get('/auth/logout', ['middleware' => 'doNotCacheResponse', 'uses' => 'AuthController@getLogout']);
 ```
 
-Alternatively you can add the middleware to a controller:
+Alternatively, you can add the middleware to a controller:
 
 ```php
 class UserController extends Controller
