@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 5.0.2 - 2019-04-05
+
+- make host specific caches
+
 ## 5.0.1 - 2019-03-15
 
 - fix cache lifetime in config file
