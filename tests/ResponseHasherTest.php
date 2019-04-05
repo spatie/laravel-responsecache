@@ -36,7 +36,7 @@ class ResponseHasherTest extends TestCase
     {
         $this->cacheProfile->shouldReceive('cacheNameSuffix')->andReturn('cacheProfileSuffix');
 
-        $this->assertEquals('responsecache-1906a94776759c109dba2177825ade33',
+        $this->assertEquals('responsecache-4d4ecd81770e6753c5fab1dd274f7b45',
             $this->requestHasher->getHashFor($this->request));
     }
 }
