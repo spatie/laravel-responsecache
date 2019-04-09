@@ -15,8 +15,10 @@ If you're using Laravel 5.1, 5.2 or 5.3 check out the [v1 branch](https://github
 
 If you're using Laravel 5.4 check out the [v2 branch](https://github.com/spatie/laravel-responsecache/tree/v2).
 
-If you're using Laravel 5.5 and above check out the [v5 branch](https://github.com/spatie/laravel-responsecache/tree/v5).
+If you're using Laravel 5.5 use the *v4* tag `"spatie/laravel-responsecache": "~4.4.5"`
 
+If you're using Laravel 5.6 and above check out the [v5 branch](https://github.com/spatie/laravel-responsecache/tree/v5).
+ 
 Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
 ## Installation
