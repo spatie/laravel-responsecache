@@ -18,14 +18,14 @@ If you're using Laravel 5.4 check out the [v2 branch](https://github.com/spatie/
 If you're using Laravel 5.5 use the *v4* tag `"spatie/laravel-responsecache": "~4.4.5"`
 
 If you're using Laravel 5.6 and above check out the [v5 branch](https://github.com/spatie/laravel-responsecache/tree/v5).
- 
+
 Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
 ## Installation
 
 You can install the package via composer:
 ``` bash
-$ composer require spatie/laravel-responsecache
+composer require spatie/laravel-responsecache
 ```
 
 The package will automatically register itself.
@@ -74,7 +74,7 @@ return [
      * configured in app/config/cache.php
      */
     'cache_store' => env('RESPONSE_CACHE_DRIVER', 'file'),
-    
+
     /*
      * If the cache driver you configured supports tags, you may specify a tag name
      * here. All responses will be tagged. When clearing the responsecache only
@@ -86,7 +86,7 @@ return [
 ];
 ```
 
-And finally you should install the provided middlewares `\Spatie\ResponseCache\Middlewares\CacheResponse::class` and `\Spatie\ResponseCache\Middlewares\DoNotCacheResponse` in the http kernel. 
+And finally you should install the provided middlewares `\Spatie\ResponseCache\Middlewares\CacheResponse::class` and `\Spatie\ResponseCache\Middlewares\DoNotCacheResponse` in the http kernel.
 
 
 ```php
@@ -127,7 +127,7 @@ This will clear everything from the cache store specified in the config-file.
 The same can be accomplished by issuing this artisan command:
 
 ```bash
-$ php artisan responsecache:clear
+php artisan responsecache:clear
 ```
 
 ### Forget one or several specific URI(s)
@@ -145,7 +145,7 @@ ResponseCache::forget('/some-uri', '/other-uri');
 ```
 
 ### Preventing a request from being cached
-Requests can be ignored by using the `doNotCacheResponse`-middleware. 
+Requests can be ignored by using the `doNotCacheResponse`-middleware.
 This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
 Using the middleware are route could be exempt from being cached.
@@ -170,8 +170,8 @@ class UserController extends Controller
 
 
 ### Creating a custom cache profile
-To determine which requests should be cached, and for how long, a cache profile class is used. 
-The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests`. 
+To determine which requests should be cached, and for how long, a cache profile class is used.
+The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests`.
 
 You can create your own cache profile class by implementing the `
 Spatie\ResponseCache\CacheProfiles\CacheProfile`-interface. Let's take a look at the interface:
@@ -232,7 +232,7 @@ Route::get('/my-special-snowflake', 'SnowflakeController@index')->middleware('ca
 // cache all these routes for 10 minutes
 Route::group(function() {
    Route::get('/another-special-snowflake', 'AnotherSnowflakeController@index');
-   
+
    Route::get('/yet-another-special-snowflake', 'YetAnotherSnowflakeController@index');
 })->middleware('cacheResponse:600');
 ```
@@ -278,7 +278,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 ## Testing
 You can run the tests with:
 ``` bash
-$ composer test
+composer test
 ```
 
 ## Alternatives
@@ -312,7 +312,7 @@ We publish all received postcards [on our company website](https://spatie.be/en/
 
 Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
-Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie). 
+Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie).
 All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
 
 ## License
