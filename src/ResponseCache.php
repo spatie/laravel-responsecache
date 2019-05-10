@@ -101,7 +101,7 @@ class ResponseCache
         $uris = is_array($uris) ? $uris : func_get_args();
 
         collect($uris)->each(function ($uri) {
-            $request = Request::create($uri);
+            $request = Request::create(url($uri));
             $hash = $this->hasher->getHashFor($request);
 
             if ($this->cache->has($hash)) {

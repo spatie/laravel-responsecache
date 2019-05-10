@@ -160,7 +160,7 @@ abstract class TestCase extends Orchestra
      */
     protected function assertRegularResponse($response)
     {
-        self::assertThat($response->headers->has('laravel-responsecache'), self::isFalse(), 'Failed to assert that the response was not cached');
+        self::assertThat($response->headers->has('laravel-responsecache'), self::isFalse(), 'Failed to assert that the response was a regular response');
     }
 
     /**
