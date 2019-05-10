@@ -116,6 +116,14 @@ abstract class TestCase extends Orchestra
                 return Str::random();
             });
 
+            Route::any('/csrf_field', ['middleware' => 'web', function () {
+                return csrf_field();
+            }]);
+
+            Route::any('/csrf_token', ['middleware' => 'web', function () {
+                return csrf_token();
+            }]);
+
             Route::any('/redirect', function () {
                 return redirect('/');
             });
@@ -178,7 +186,7 @@ abstract class TestCase extends Orchestra
      */
     protected function assertDifferentResponse($firstResponse, $secondResponse)
     {
-        self::assertThat($firstResponse->getContent() != $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
+        self::assertThat($firstResponse->getContent() != $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are different');
     }
 
     protected function setUpMiddleware()

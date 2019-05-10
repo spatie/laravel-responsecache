@@ -29,6 +29,11 @@ class ResponseCacheRepository
         $this->cache->put($key, $this->responseSerializer->serialize($response), $seconds);
     }
 
+    public function putToken(string $key, $token, $seconds)
+    {
+        $this->cache->put($key.'-token', $token, $seconds);
+    }
+
     public function has(string $key): bool
     {
         return $this->cache->has($key);
@@ -37,6 +42,11 @@ class ResponseCacheRepository
     public function get(string $key): Response
     {
         return $this->responseSerializer->unserialize($this->cache->get($key));
+    }
+
+    public function getToken(string $key): string
+    {
+        return $this->cache->get($key.'-token', '');
     }
 
     /**

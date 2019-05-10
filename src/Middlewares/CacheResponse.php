@@ -25,7 +25,14 @@ class CacheResponse
             if ($this->responseCache->hasBeenCached($request)) {
                 event(new ResponseCacheHit($request));
 
-                return $this->responseCache->getCachedResponseFor($request);
+                $response = $this->responseCache->getCachedResponseFor($request);
+                $cachedToken = $this->responseCache->getCachedCsrfTokenFor($request);
+
+                if ($response->getContent()) {
+                    $response->setContent(str_replace($cachedToken, csrf_token(), $response->getContent()));
+                }
+
+                return $response;
             }
         }
 

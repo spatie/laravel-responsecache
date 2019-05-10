@@ -252,4 +252,30 @@ class IntegrationTest extends TestCase
         $thirdResponse = $this->call('get', '/cache-for-given-lifetime');
         $this->assertRegularResponse($thirdResponse);
     }
+
+    /** @test */
+    public function it_will_refresh_csrf_token_on_cached_response()
+    {
+        $firstResponse = $this->call('get', '/csrf_token');
+        session()->regenerateToken();
+        $secondResponse = $this->call('get', '/csrf_token');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertCachedResponse($secondResponse);
+
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
+    }
+
+    /** @test */
+    public function it_will_refresh_csrf_field_on_cached_response()
+    {
+        $firstResponse = $this->call('get', '/csrf_field');
+        session()->regenerateToken();
+        $secondResponse = $this->call('get', '/csrf_field');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertCachedResponse($secondResponse);
+
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
+    }
 }

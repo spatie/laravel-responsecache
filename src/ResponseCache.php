@@ -54,6 +54,12 @@ class ResponseCache
             ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
         );
 
+        $this->cache->putToken(
+            $this->hasher->getHashFor($request),
+            csrf_token(),
+            ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
+        );
+
         return $response;
     }
 
@@ -67,6 +73,11 @@ class ResponseCache
     public function getCachedResponseFor(Request $request): Response
     {
         return $this->cache->get($this->hasher->getHashFor($request));
+    }
+
+    public function getCachedCsrfTokenFor(Request $request): string
+    {
+        return $this->cache->getToken($this->hasher->getHashFor($request));
     }
 
     /**
