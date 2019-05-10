@@ -31,7 +31,7 @@ class ResponseCacheRepository
 
     public function putToken(string $key, $token, $seconds)
     {
-        $this->cache->put($key.'-token', $token, $seconds);
+        $this->cache->put("{$key}-token", $token, $seconds);
     }
 
     public function has(string $key): bool
@@ -46,7 +46,7 @@ class ResponseCacheRepository
 
     public function getToken(string $key): string
     {
-        return $this->cache->get($key.'-token', '');
+        return $this->cache->get("{$key}-token", '');
     }
 
     /**
