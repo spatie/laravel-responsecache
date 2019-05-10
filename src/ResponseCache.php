@@ -2,7 +2,6 @@
 
 namespace Spatie\ResponseCache;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
@@ -102,7 +101,7 @@ class ResponseCache
         $uris = is_array($uris) ? $uris : func_get_args();
 
         collect($uris)->each(function ($uri) {
-            $request = Request::create(Str::start($uri, config('app.url')));
+            $request = Request::create(url($uri));
             $hash = $this->hasher->getHashFor($request);
 
             if ($this->cache->has($hash)) {
