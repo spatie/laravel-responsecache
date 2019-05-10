@@ -8,6 +8,6 @@ class InvalidReplacer extends Exception
 {
     public static function callbackString(): self
     {
-        return new static("The replacer callback must return a string.");
+        return new static('The replacer callback must return a string.');
     }
 }

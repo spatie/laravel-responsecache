@@ -14,7 +14,7 @@ class Replacer
 
     public function __construct(string $key, callable $callback)
     {
-        if (!is_string($value = $callback())) {
+        if (! is_string($value = $callback())) {
             throw InvalidReplacer::callbackString();
         }
 

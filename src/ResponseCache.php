@@ -3,7 +3,6 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\Exceptions\InvalidReplacer;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 

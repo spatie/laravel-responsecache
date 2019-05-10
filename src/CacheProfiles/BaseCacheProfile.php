@@ -50,7 +50,7 @@ abstract class BaseCacheProfile implements CacheProfile
         return [
             'csrf_token' => function () {
                 return csrf_token() ?? '';
-            }
+            },
         ];
     }
 }
