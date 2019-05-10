@@ -210,8 +210,36 @@ interface CacheProfile
      * @return mixed
      */
     public function cacheNameSuffix(Request $request);
+    
+    /*
+     * Return an array with a key and callback that returns a string. Responsecache will
+     * then use these to replace the response content dynamically, we already do this
+     * for the csrf_token in the BaseCacheProfile. Extend this to your liking.
+     */
+    public function replacers(Request $request): array;
 }
 ```
+
+### Injecting dyanmic content with Replacers
+If you need inject dynamic content into the cached response, you can register replacers in your cache profile.
+Our default `BaseCacheProfile` class already registers one for `csrf_tokens`.
+
+Replacers need a `key` and a `callback` that returns a `string`:
+
+```php
+public function replacers(Request $request): array
+{
+    return [
+        'csrf_token' => function () {
+            return csrf_token() ?? '';
+        }
+    ];
+}
+```
+
+The callback will be called when the response is cached for the first time, 
+when the cached response is returned, the callback will be called again and the cached value will be
+replaced with the new value.
 
 ### Caching specific routes
 Instead of registering the `cacheResponse` middleware globally, you can also register it as route middleware.
@@ -260,16 +288,6 @@ This event is fired when a request passes through the `ResponseCache` middleware
 `Spatie\ResponseCache\Events\ClearedResponseCache`
 
 These events are fired respectively when the `responsecache:clear` is started and finished.
-
-### CSRF Tokens
-
-When a response is cached and a CSRF token exists on the page, it too will be cached and cause token mismatch or page expired errors. You can't reliably cache the response for the entire page when using forms that require CSRF tokens because the tokens will never match.
-
-It is recommended that you disable response caching for pages where forms exists to avoid these errors.
-
-Alternatively, but not recommended, you may disable CSRF protection on a per-route basis. It is highly unadvisable to disable CSRF for user-authenticated pages at the risk of cross-site request forgery.
-
-See how to disable CSRF on per-route basis here: https://laracasts.com/discuss/channels/laravel/disabling-csrf-for-a-specific-route-in-laravel-5
 
 ## Changelog
 

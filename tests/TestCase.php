@@ -116,10 +116,6 @@ abstract class TestCase extends Orchestra
                 return Str::random();
             });
 
-            Route::any('/csrf_field', ['middleware' => 'web', function () {
-                return csrf_field();
-            }]);
-
             Route::any('/csrf_token', ['middleware' => 'web', function () {
                 return csrf_token();
             }]);

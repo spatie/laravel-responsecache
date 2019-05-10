@@ -24,14 +24,14 @@ class ResponseCacheRepository
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @param \DateTime|int $seconds
      */
-    public function put(string $key, $response, $seconds)
+    public function put(string $key, $response, $seconds): void
     {
         $this->cache->put($key, $this->responseSerializer->serialize($response), $seconds);
     }
 
-    public function putToken(string $key, $token, $seconds)
+    public function putKey(string $key, $value, $seconds): void
     {
-        $this->cache->put("{$key}-token", $token, $seconds);
+        $this->cache->put($key, $value, $seconds);
     }
 
     public function has(string $key): bool
@@ -44,9 +44,9 @@ class ResponseCacheRepository
         return $this->responseSerializer->unserialize($this->cache->get($key));
     }
 
-    public function getToken(string $key): string
+    public function getKey(string $key): string
     {
-        return $this->cache->get("{$key}-token", '');
+        return $this->cache->get($key, '');
     }
 
     /**

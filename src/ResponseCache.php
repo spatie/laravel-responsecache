@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
+use Spatie\ResponseCache\Exceptions\InvalidReplacer;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
@@ -54,11 +55,15 @@ class ResponseCache
             ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
         );
 
-        $this->cache->putToken(
-            $this->hasher->getHashFor($request),
-            csrf_token(),
-            ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
-        );
+        foreach ($this->cacheProfile->replacers($request) as $key => $callback) {
+            $replacer = new Replacer($key, $callback);
+
+            $this->cache->putKey(
+                $this->hasher->getHashFor($request).$replacer->getKey(),
+                $replacer->getValue(),
+                ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
+            );
+        }
 
         return $response;
     }
@@ -75,9 +80,9 @@ class ResponseCache
         return $this->cache->get($this->hasher->getHashFor($request));
     }
 
-    public function getCachedCsrfTokenFor(Request $request): string
+    public function getCachedKeyFor(Request $request, string $key): string
     {
-        return $this->cache->getToken($this->hasher->getHashFor($request));
+        return $this->cache->getKey($this->hasher->getHashFor($request).$key);
     }
 
     /**

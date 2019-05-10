@@ -4,6 +4,8 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
+use Spatie\ResponseCache\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +16,13 @@ class CacheResponse
     /** @var \Spatie\ResponseCache\ResponseCache */
     protected $responseCache;
 
-    public function __construct(ResponseCache $responseCache)
+    /** @var \Spatie\ResponseCache\CacheProfiles\CacheProfile */
+    protected $cacheProfile;
+
+    public function __construct(ResponseCache $responseCache, CacheProfile $cacheProfile)
     {
         $this->responseCache = $responseCache;
+        $this->cacheProfile = $cacheProfile;
     }
 
     public function handle(Request $request, Closure $next, $lifetimeInSeconds = null): Response
@@ -26,10 +32,15 @@ class CacheResponse
                 event(new ResponseCacheHit($request));
 
                 $response = $this->responseCache->getCachedResponseFor($request);
-                $cachedToken = $this->responseCache->getCachedCsrfTokenFor($request);
 
                 if ($response->getContent()) {
-                    $response->setContent(str_replace($cachedToken, csrf_token(), $response->getContent()));
+                    foreach ($this->cacheProfile->replacers($request) as $key => $callback) {
+                        $replacer = new Replacer($key, $callback);
+
+                        $cachedValue = $this->responseCache->getCachedKeyFor($request, $replacer->getKey());
+
+                        $response->setContent(str_replace($cachedValue, $replacer->getValue(), $response->getContent()));
+                    }
                 }
 
                 return $response;
