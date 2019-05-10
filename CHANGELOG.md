@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 5.0.3 - 2019-05-10
+
+- make sure the request starts with the app url - fixes #177
+
 ## 5.0.2 - 2019-04-05
 
 - make host specific caches
