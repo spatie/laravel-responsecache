@@ -157,6 +157,37 @@ class IntegrationTest extends TestCase
         $this->assertDifferentResponse($firstUserSecondCall, $secondUserSecondCall);
     }
 
+    /** @test * */
+    public function forgetting_will_forget_for_all_users()
+    {
+        $this->call('GET', '/login/1');
+        $firstUserFirstCall = $this->call('GET', '/');
+        $this->call('GET', 'logout');
+
+        $this->call('GET', '/login/2');
+        $secondUserFirstCall = $this->call('GET', '/');
+        $this->call('GET', 'logout');
+
+        ResponseCache::forget('/');
+
+        $this->call('GET', '/login/1');
+        $firstUserSecondCall = $this->call('GET', '/');
+        $this->call('GET', 'logout');
+
+        $this->call('GET', '/login/2');
+        $secondUserSecondCall = $this->call('GET', '/');
+        $this->call('GET', 'logout');
+
+        $this->assertRegularResponse($firstUserFirstCall);
+        $this->assertRegularResponse($firstUserSecondCall);
+
+        $this->assertRegularResponse($secondUserFirstCall);
+        $this->assertRegularResponse($secondUserSecondCall);
+
+        $this->assertDifferentResponse($firstUserFirstCall, $firstUserSecondCall);
+        $this->assertDifferentResponse($secondUserFirstCall, $secondUserSecondCall);
+    }
+
     /** @test */
     public function it_will_not_cache_routes_with_the_doNotCacheResponse_middleware()
     {
