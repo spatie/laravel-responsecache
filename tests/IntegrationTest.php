@@ -99,6 +99,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_forget_a_specific_cached_request()
     {
+        config()->set('app.url', 'http://spatie.be');
+
         $firstResponse = $this->call('GET', '/random');
         $this->assertRegularResponse($firstResponse);
 
