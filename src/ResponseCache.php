@@ -8,7 +8,7 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCache
 {
-    /** @var \Spatie\ResponseCache\ResponseCache */
+    /** @var \Spatie\ResponseCache\ResponseCacheRepository */
     protected $cache;
 
     /** @var \Spatie\ResponseCache\RequestHasher */
