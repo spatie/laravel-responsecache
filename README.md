@@ -83,6 +83,14 @@ return [
      * You may use a string or an array here.
      */
     'cache_tag' => '',
+    
+    /*
+     * Here you may define replacers that dynamically replace content from the response.
+     * Each replacer must implement the ReplacerInterface.
+     */
+    'replacers' => [
+        \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
+    ],
 ];
 ```
 
@@ -220,21 +228,20 @@ interface CacheProfile
 }
 ```
 
-### Injecting dyanmic content with Replacers
-If you need inject dynamic content into the cached response, you can register replacers in your cache profile.
-Our default `BaseCacheProfile` class already registers one for `csrf_tokens`.
+### Injecting dynamic content with Replacers
+If you need inject dynamic content into the cached response, you can register replacers in the config file.
+We add a `CsrfTokenReplacer` by default in the config file.
 
-Replacers need a `key` and a `callback` that returns a `string`:
+Replacers must implement the `ReplacerInterface` interface.
 
 ```php
-public function replacers(Request $request): array
-{
-    return [
-        'csrf_token' => function () {
-            return csrf_token() ?? '';
-        }
-    ];
-}
+/*
+ * Here you may define replacers that dynamically replace content from the response.
+ * Each replacer must implement the ReplacerInterface.
+ */
+'replacers' => [
+    \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
+],
 ```
 
 The callback will be called when the response is cached for the first time, 
