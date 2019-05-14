@@ -35,11 +35,4 @@ interface CacheProfile
      * the logged in user.
      */
     public function cacheNameSuffix(Request $request): string;
-
-    /*
-     * Return an array with a key and callback that returns a string. Responsecache will
-     * then use these to replace the response content dynamically, we already do this
-     * for the csrf_token in the BaseCacheProfile. Extend this to your liking.
-     */
-    public function replacers(Request $request): array;
 }

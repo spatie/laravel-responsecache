@@ -71,19 +71,6 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
         $this->assertTrue($expirationDate->isFuture());
     }
 
-    /** @test */
-    public function it_will_refresh_csrf_token_on_cached_response()
-    {
-        $firstResponse = $this->call('get', '/csrf_token');
-        session()->regenerateToken();
-        $secondResponse = $this->call('get', '/csrf_token');
-
-        $this->assertRegularResponse($firstResponse);
-        $this->assertCachedResponse($secondResponse);
-
-        $this->assertDifferentResponse($firstResponse, $secondResponse);
-    }
-
     /**
      * Create a new request with the given method.
      *

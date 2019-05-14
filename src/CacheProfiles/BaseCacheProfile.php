@@ -44,13 +44,4 @@ abstract class BaseCacheProfile implements CacheProfile
 
         return app()->runningInConsole();
     }
-
-    public function replacers(Request $request): array
-    {
-        return [
-            'csrf_token' => function () {
-                return csrf_token() ?? '';
-            },
-        ];
-    }
 }
