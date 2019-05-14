@@ -3,9 +3,9 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\Replacers\ReplacerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
+use Spatie\ResponseCache\Replacers\ReplacerInterface;
 
 class ResponseCache
 {

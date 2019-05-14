@@ -6,7 +6,7 @@ class CsrfTokenReplacer implements ReplacerInterface
 {
     public function getKey(): string
     {
-         return 'csrf-token';
+        return 'csrf-token';
     }
 
     public function getValue(): string
