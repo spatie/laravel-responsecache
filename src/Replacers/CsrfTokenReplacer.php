@@ -2,14 +2,14 @@
 
 namespace Spatie\ResponseCache\Replacers;
 
-class CsrfTokenReplacer implements ReplacerInterface
+class CsrfTokenReplacer implements Replacer
 {
-    public function getKey(): string
+    public function searchFor(): string
     {
         return 'csrf-token';
     }
 
-    public function getValue(): string
+    public function replaceBy(): string
     {
         return csrf_token() ?? '';
     }

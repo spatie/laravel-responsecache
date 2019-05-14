@@ -5,7 +5,7 @@ namespace Spatie\ResponseCache;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
-use Spatie\ResponseCache\Replacers\ReplacerInterface;
+use Spatie\ResponseCache\Replacers\Replacer;
 
 class ResponseCache
 {
@@ -57,10 +57,10 @@ class ResponseCache
 
         foreach (config('responsecache.replacers', []) as $replacerClass) {
             $replacer = resolve($replacerClass);
-            if ($replacer instanceof ReplacerInterface) {
+            if ($replacer instanceof Replacer) {
                 $this->cache->putKey(
-                    $this->hasher->getHashFor($request).$replacer->getKey(),
-                    $replacer->getValue(),
+                    $this->hasher->getHashFor($request).$replacer->searchFor(),
+                    $replacer->replaceBy(),
                     ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
                 );
             }

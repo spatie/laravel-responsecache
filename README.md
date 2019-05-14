@@ -232,7 +232,7 @@ interface CacheProfile
 If you need inject dynamic content into the cached response, you can register replacers in the config file.
 We add a `CsrfTokenReplacer` by default in the config file.
 
-Replacers must implement the `ReplacerInterface` interface.
+Replacers must implement the `Replacer` interface.
 
 ```php
 /*

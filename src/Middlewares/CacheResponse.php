@@ -35,9 +35,9 @@ class CacheResponse
                 if ($response->getContent()) {
                     foreach (config('responsecache.replacers', []) as $replacerClass) {
                         $replacer = resolve($replacerClass);
-                        if ($replacer instanceof \Spatie\ResponseCache\Replacers\ReplacerInterface) {
-                            $cachedValue = $this->responseCache->getCachedKeyFor($request, $replacer->getKey());
-                            $response->setContent(str_replace($cachedValue, $replacer->getValue(), $response->getContent()));
+                        if ($replacer instanceof \Spatie\ResponseCache\Replacers\Replacer) {
+                            $cachedValue = $this->responseCache->getCachedKeyFor($request, $replacer->searchFor());
+                            $response->setContent(str_replace($cachedValue, $replacer->replaceBy(), $response->getContent()));
                         }
                     }
                 }
