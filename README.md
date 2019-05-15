@@ -237,16 +237,16 @@ Replacers must implement the `Replacer` interface.
 ```php
 /*
  * Here you may define replacers that dynamically replace content from the response.
- * Each replacer must implement the ReplacerInterface.
+ * Each replacer must implement the Replacer interface.
  */
 'replacers' => [
     \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
 ],
 ```
 
-The callback will be called when the response is cached for the first time, 
-when the cached response is returned, the callback will be called again and the cached value will be
-replaced with the new value.
+The replacer's `replaceBy` function will be called when the response is cached for the first time, 
+when the cached response is returned, the function will be called again and the cached value will be
+replaced with the new value. With the `searchFor` function you can define the cache key.
 
 ### Caching specific routes
 Instead of registering the `cacheResponse` middleware globally, you can also register it as route middleware.

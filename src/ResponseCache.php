@@ -55,16 +55,15 @@ class ResponseCache
             ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
         );
 
-        foreach (config('responsecache.replacers', []) as $replacerClass) {
-            $replacer = resolve($replacerClass);
-            if ($replacer instanceof Replacer) {
-                $this->cache->putKey(
-                    $this->hasher->getHashFor($request).$replacer->searchFor(),
-                    $replacer->replaceBy(),
-                    ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
-                );
-            }
-        }
+        collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
+            return resolve($replacerClass);
+        })->each(function (Replacer $replacer) use ($request, $lifetimeInSeconds) {
+            $this->cache->putKey(
+                $this->hasher->getHashFor($request).$replacer->searchFor(),
+                $replacer->replaceBy(),
+                ($lifetimeInSeconds) ? intval($lifetimeInSeconds) : $this->cacheProfile->cacheRequestUntil($request)
+            );
+        });
 
         return $response;
     }

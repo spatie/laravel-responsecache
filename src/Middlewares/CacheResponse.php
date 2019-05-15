@@ -4,6 +4,7 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,13 +34,12 @@ class CacheResponse
                 $response = $this->responseCache->getCachedResponseFor($request);
 
                 if ($response->getContent()) {
-                    foreach (config('responsecache.replacers', []) as $replacerClass) {
-                        $replacer = resolve($replacerClass);
-                        if ($replacer instanceof \Spatie\ResponseCache\Replacers\Replacer) {
-                            $cachedValue = $this->responseCache->getCachedKeyFor($request, $replacer->searchFor());
-                            $response->setContent(str_replace($cachedValue, $replacer->replaceBy(), $response->getContent()));
-                        }
-                    }
+                    collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
+                        return resolve($replacerClass);
+                    })->each(function (Replacer $replacer) use ($request, $response) {
+                        $cachedValue = $this->responseCache->getCachedKeyFor($request, $replacer->searchFor());
+                        $response->setContent(str_replace($cachedValue, $replacer->replaceBy(), $response->getContent()));
+                    });
                 }
 
                 return $response;
