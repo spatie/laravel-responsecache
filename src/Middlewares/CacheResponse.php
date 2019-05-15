@@ -4,9 +4,9 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Spatie\ResponseCache\Events\CacheMissed;
+use Spatie\ResponseCache\Replacers\Replacer;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
