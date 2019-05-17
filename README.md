@@ -267,6 +267,7 @@ This event is fired when a request passes through the `ResponseCache` middleware
 These events are fired respectively when the `responsecache:clear` is started and finished.
 
 ### Creating a Replacer
+
 To replace cached content by dynamic content, you can create a replacer.
 By default we add a `CsrfTokenReplacer` in the config file.
 
@@ -310,16 +311,16 @@ Afterwards you can define your replacer in the `responsecache.php` config file:
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Testing
+
 You can run the tests with:
 ``` bash
 composer test
 ```
 
 ## Alternatives
-- [Barry Vd. Heuvel](https://twitter.com/barryvdh) made [a package that caches responses by leveraging HttpCache](https://github.com/barryvdh/laravel-httpcache).
 
-- spatie/laravel-responsecache is tied to Laravel 5.1. If you need this functionality in Laravel 4
-take a look at [Flatten](https://github.com/Anahkiasen/flatten) by [Maxime Fabre](https://twitter.com/Anahkiasen).
+- [Barry Vd. Heuvel](https://twitter.com/barryvdh) made [a package that caches responses by leveraging HttpCache](https://github.com/barryvdh/laravel-httpcache).
+- [Joseph Silber](https://twitter.com/joseph_silber) created [Laravel Page Cache](https://github.com/JosephSilber/page-cache) that can write it's cache to disk and let Nginx read them, so PHP doesn't even have to start up anymore.
 
 ## Contributing
 
