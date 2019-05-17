@@ -4,6 +4,7 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Spatie\ResponseCache\ResponseCache;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Replacers\Replacer;
@@ -28,9 +29,7 @@ class CacheResponse
 
                 $response = $this->responseCache->getCachedResponseFor($request);
 
-                collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
-                    return app($replacerClass);
-                })->each(function (Replacer $replacer) use ($response) {
+                $this->getReplacers()->each(function (Replacer $replacer) use ($response) {
                     $replacer->replaceInCachedResponse($response);
                 });
 
@@ -59,14 +58,18 @@ class CacheResponse
     {
         $cachedResponse = clone $response;
 
-        collect(config('responsecache.replacers', []))
-            ->map(function ($replacerClass) {
-                return app($replacerClass);
-            })
-            ->each(function (Replacer $replacer) use ($cachedResponse) {
-                $replacer->prepareResponseToCache($cachedResponse);
-            });
+        $this->getReplacers()->each(function (Replacer $replacer) use ($cachedResponse) {
+            $replacer->prepareResponseToCache($cachedResponse);
+        });
 
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds);
+    }
+
+    protected function getReplacers(): Collection
+    {
+        return collect(config('responsecache.replacers'))
+            ->map(function (string $replacerClass) {
+                return app($replacerClass);
+            });
     }
 }
