@@ -6,9 +6,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CsrfTokenReplacer implements Replacer
 {
-    protected $replacedBy = '<csrf-token-here>';
+    protected $replacementString = '<csrf-token-here>';
 
-    public function transformInitialResponse(Response $response): void
+    public function prepareResponseToCache(Response $response): void
     {
         if (! $response->getContent()) {
             return;
@@ -16,19 +16,19 @@ class CsrfTokenReplacer implements Replacer
 
         $response->setContent(str_replace(
             csrf_token(),
-            $this->replacedBy,
+            $this->replacementString,
             $response->getContent()
         ));
     }
 
-    public function replaceCachedResponse(Response $response): void
+    public function replaceInCachedResponse(Response $response): void
     {
         if (! $response->getContent()) {
             return;
         }
 
         $response->setContent(str_replace(
-            $this->replacedBy,
+            $this->replacementString,
             csrf_token(),
             $response->getContent()
         ));

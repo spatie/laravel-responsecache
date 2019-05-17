@@ -9,10 +9,10 @@ interface Replacer
     /*
      * Transform the initial response before it gets cached.
      */
-    public function transformInitialResponse(Response $response): void;
+    public function prepareResponseToCache(Response $response): void;
 
     /*
      * Replace any data you want in the cached response before it gets sent.
      */
-    public function replaceCachedResponse(Response $response): void;
+    public function replaceInCachedResponse(Response $response): void;
 }

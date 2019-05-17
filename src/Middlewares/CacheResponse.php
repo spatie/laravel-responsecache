@@ -31,7 +31,7 @@ class CacheResponse
                 collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
                     return app($replacerClass);
                 })->each(function (Replacer $replacer) use ($response) {
-                    $replacer->replaceCachedResponse($response);
+                    $replacer->replaceInCachedResponse($response);
                 });
 
                 return $response;
@@ -58,7 +58,7 @@ class CacheResponse
         collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
             return app($replacerClass);
         })->each(function (Replacer $replacer) use ($cachedResponse) {
-            $replacer->transformInitialResponse($cachedResponse);
+            $replacer->prepareResponseToCache($cachedResponse);
         });
 
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds);
