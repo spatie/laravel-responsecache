@@ -173,7 +173,7 @@ abstract class TestCase extends Orchestra
      */
     protected function assertSameResponse($firstResponse, $secondResponse)
     {
-        self::assertThat($firstResponse->getContent() == $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
+        self::assertThat($firstResponse->getContent() === $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
     }
 
     /**
@@ -182,7 +182,7 @@ abstract class TestCase extends Orchestra
      */
     protected function assertDifferentResponse($firstResponse, $secondResponse)
     {
-        self::assertThat($firstResponse->getContent() != $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are different');
+        self::assertThat($firstResponse->getContent() !== $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are different');
     }
 
     protected function setUpMiddleware()

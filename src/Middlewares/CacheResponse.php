@@ -29,7 +29,7 @@ class CacheResponse
                 $response = $this->responseCache->getCachedResponseFor($request);
 
                 collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
-                    return resolve($replacerClass);
+                    return app($replacerClass);
                 })->each(function (Replacer $replacer) use ($response) {
                     $replacer->replaceCachedResponse($response);
                 });
@@ -42,20 +42,25 @@ class CacheResponse
 
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->shouldCache($request, $response)) {
-                $cachedResponse = clone $response;
-
-                collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
-                    return resolve($replacerClass);
-                })->each(function (Replacer $replacer) use ($cachedResponse) {
-                    $replacer->transformInitialResponse($cachedResponse);
-                });
-
-                $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds);
+                $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds);
             }
         }
 
         event(new CacheMissed($request));
 
         return $response;
+    }
+
+    private function makeReplacementsAndCacheResponse(Request $request, Response $response, $lifetimeInSeconds = null): void
+    {
+        $cachedResponse = clone $response;
+
+        collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
+            return app($replacerClass);
+        })->each(function (Replacer $replacer) use ($cachedResponse) {
+            $replacer->transformInitialResponse($cachedResponse);
+        });
+
+        $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds);
     }
 }
