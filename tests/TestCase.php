@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\ResponseCache\Facades\ResponseCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\ResponseCacheServiceProvider;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
@@ -45,7 +46,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageAliases($app)
     {
         return [
-            'ResponseCache' => \Spatie\ResponseCache\ResponseCacheFacade::class,
+            'ResponseCache' => ResponseCache::class,
         ];
     }
 

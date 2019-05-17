@@ -8,6 +8,7 @@ All notable changes to `laravel-responsecache` will be documented in this file.
 - you can now swap out `RequestHasher` in favor of a custom one
 - `CacheAllSuccessfulGetRequests` will only cache responses of which the content type starts with `text`
 - removed deprecated `Flush` command
+- `\Spatie\ResponseCache\ResponseCacheFacade` has been removed
 - dropped support for carbon v1
 
 ## 5.0.3 - 2019-05-10
