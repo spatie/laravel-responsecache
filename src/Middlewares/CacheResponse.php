@@ -54,8 +54,7 @@ class CacheResponse
         Request $request,
         Response $response,
         $lifetimeInSeconds = null
-    ): void
-    {
+    ): void {
         $cachedResponse = clone $response;
 
         $this->getReplacers()->each(function (Replacer $replacer) use ($cachedResponse) {
