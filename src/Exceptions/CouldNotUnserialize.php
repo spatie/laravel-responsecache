@@ -8,6 +8,6 @@ class CouldNotUnserialize extends Exception
 {
     public static function serializedResponse(string $serializedResponse): self
     {
-        return new static("Could not unserialize `{$serializedResponse}`");
+        return new static("Could not unserialize serialized response `{$serializedResponse}`");
     }
 }

@@ -51,15 +51,21 @@ class CacheResponse
         return $response;
     }
 
-    private function makeReplacementsAndCacheResponse(Request $request, Response $response, $lifetimeInSeconds = null): void
+    protected function makeReplacementsAndCacheResponse(
+        Request $request,
+        Response $response,
+        $lifetimeInSeconds = null
+    ): void
     {
         $cachedResponse = clone $response;
 
-        collect(config('responsecache.replacers', []))->map(function ($replacerClass) {
-            return app($replacerClass);
-        })->each(function (Replacer $replacer) use ($cachedResponse) {
-            $replacer->prepareResponseToCache($cachedResponse);
-        });
+        collect(config('responsecache.replacers', []))
+            ->map(function ($replacerClass) {
+                return app($replacerClass);
+            })
+            ->each(function (Replacer $replacer) use ($cachedResponse) {
+                $replacer->prepareResponseToCache($cachedResponse);
+            });
 
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds);
     }
