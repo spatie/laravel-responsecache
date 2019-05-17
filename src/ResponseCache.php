@@ -3,7 +3,6 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\Hasher\DefaultHasher;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
