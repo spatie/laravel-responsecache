@@ -44,6 +44,16 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
     }
 
     /** @test */
+    public function it_will_determine_that_a_non_text_response_should_not_be_cached()
+    {
+        $response = $this->createResponse(200, 'application/pdf');
+
+        $shouldCacheResponse = $this->cacheProfile->shouldCacheResponse($response);
+
+        $this->assertFalse($shouldCacheResponse);
+    }
+
+    /** @test */
     public function it_will_determine_that_an_error_should_not_be_cached()
     {
         foreach (range(400, 599) as $statusCode) {
@@ -65,7 +75,7 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
     /** @test */
     public function it_will_determine_to_cache_responses_for_a_certain_amount_of_time()
     {
-        /** @var $expirationDate Carbon */
+        /** @var $expirationDate \Carbon\Carbon */
         $expirationDate = $this->cacheProfile->cacheRequestUntil($this->createRequest('get'));
 
         $this->assertTrue($expirationDate->isFuture());
@@ -94,11 +104,13 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
      *
      * @return \Symfony\Component\HttpFoundation\Response;
      */
-    protected function createResponse($statusCode)
+    protected function createResponse($statusCode, $contentType = 'text/html; charset=UTF-8')
     {
         $response = new Response();
 
-        $response->setStatusCode($statusCode);
+        $response
+            ->setStatusCode($statusCode)
+            ->headers->set('Content-Type', $contentType);
 
         return $response;
     }
