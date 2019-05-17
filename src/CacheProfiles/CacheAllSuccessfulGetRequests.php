@@ -2,8 +2,8 @@
 
 namespace Spatie\ResponseCache\CacheProfiles;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequests extends BaseCacheProfile
