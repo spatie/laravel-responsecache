@@ -6,18 +6,9 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-responsecache.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-responsecache)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 
-This Laravel 5.8 package can cache an entire response. By default it will cache all successful get-requests for a week. This could potentially speed up the response quite considerably.
+This Laravel 5.8 package can cache an entire response. By default it will cache all successful get-requests that return text based content (such as html and json) for a week. This could potentially speed up the response quite considerably.
 
 So the first time a request comes in the package will save the response before sending it to the users. When the same request comes in again we're not going through the entire application but just respond with the saved response.
-
-
-If you're using Laravel 5.1, 5.2 or 5.3 check out the [v1 branch](https://github.com/spatie/laravel-responsecache/tree/v1).
-
-If you're using Laravel 5.4 check out the [v2 branch](https://github.com/spatie/laravel-responsecache/tree/v2).
-
-If you're using Laravel 5.5 use the *v4* tag `"spatie/laravel-responsecache": "~4.4.5"`
-
-If you're using Laravel 5.6 and above check out the [v5 branch](https://github.com/spatie/laravel-responsecache/tree/v5).
 
 Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
