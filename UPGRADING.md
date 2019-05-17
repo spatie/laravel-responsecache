@@ -2,6 +2,13 @@
 
 Because there are many breaking changes an upgrade is not that easy. There are many edge cases this guide does not cover. We accept PRs to improve this guide.
 
+## 6.0.0
+
+If you're using the default settings you can upgrade without any problems.
+
+- By default the `CsrfTokenReplacer` will be applied before caching the request. For most users, this will be harmless
+- The flush command has been removed. Do not try to use it anymore
+
 ## 5.0.0
 
 As of Laravel 5.8 defining cache time in seconds is supported. All mentions of response cache time should be changed from minutes to seconds:
