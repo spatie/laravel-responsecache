@@ -20,7 +20,7 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
 
-        $this->app['responsecache']->flush();
+        $this->app['responsecache']->clear();
 
         $this->initializeDirectory($this->getTempDirectory());
 

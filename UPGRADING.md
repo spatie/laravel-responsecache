@@ -7,7 +7,9 @@ Because there are many breaking changes an upgrade is not that easy. There are m
 If you're using the default settings you can upgrade without any problems.
 
 - By default the `CsrfTokenReplacer` will be applied before caching the request. For most users, this will be harmless
-- The flush command has been removed. Do not try to use it anymore
+- The `flush` method has been removed, use `clear` instead
+- The `Flush` command has been removed. Use `ClearCommand` instead
+
 
 ## 5.0.0
 

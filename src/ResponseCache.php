@@ -75,14 +75,6 @@ class ResponseCache
         return $this->cache->get($this->hasher->getHashFor($request));
     }
 
-    /**
-     * @deprecated Use the new clear method, this is just an alias.
-     */
-    public function flush()
-    {
-        $this->clear();
-    }
-
     public function clear()
     {
         $this->cache->clear();
