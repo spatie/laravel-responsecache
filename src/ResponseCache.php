@@ -50,10 +50,14 @@ class ResponseCache
             $response = $this->addCachedHeader($response);
         }
 
+        $lifetimeInSeconds = $lifetimeInSeconds
+            ? (int)$lifetimeInSeconds
+            : $this->cacheProfile->cacheRequestUntil($request);
+
         $this->cache->put(
             $this->hasher->getHashFor($request),
             $response,
-            ($lifetimeInSeconds) ? (int)$lifetimeInSeconds : $this->cacheProfile->cacheRequestUntil($request)
+            $lifetimeInSeconds,
         );
 
         return $response;

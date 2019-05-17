@@ -10,6 +10,7 @@ All notable changes to `laravel-responsecache` will be documented in this file.
 - removed deprecated `Flush` command
 - `\Spatie\ResponseCache\ResponseCacheFacade` has been removed
 - dropped support for carbon v1
+- dropped support for PHP 7.2
 
 ## 5.0.3 - 2019-05-10
 
