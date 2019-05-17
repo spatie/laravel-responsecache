@@ -14,9 +14,6 @@ abstract class BaseCacheProfile implements CacheProfile
         return config('responsecache.enabled');
     }
 
-    /*
-     * Return the time when the cache must be invalided.
-     */
     public function cacheRequestUntil(Request $request): DateTime
     {
         return Carbon::now()->addSeconds(
@@ -24,10 +21,7 @@ abstract class BaseCacheProfile implements CacheProfile
         );
     }
 
-    /*
-     * Set a string to add to differentiate this request from others.
-     */
-    public function cacheNameSuffix(Request $request): string
+    public function useCacheNameSuffix(Request $request): string
     {
         if (Auth::check()) {
             return Auth::user()->id;

@@ -34,5 +34,5 @@ interface CacheProfile
      * For example: if you want a different cache per user you could return the id of
      * the logged in user.
      */
-    public function cacheNameSuffix(Request $request): string;
+    public function useCacheNameSuffix(Request $request): string;
 }

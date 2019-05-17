@@ -83,20 +83,6 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_flush_the_cached_requests()
-    {
-        $firstResponse = $this->call('GET', '/random');
-        $this->assertRegularResponse($firstResponse);
-
-        ResponseCache::flush();
-
-        $secondResponse = $this->call('GET', '/random');
-        $this->assertRegularResponse($secondResponse);
-
-        $this->assertDifferentResponse($firstResponse, $secondResponse);
-    }
-
-    /** @test */
     public function it_can_forget_a_specific_cached_request()
     {
         config()->set('app.url', 'http://spatie.be');

@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use Spatie\ResponseCache\Test\TestCase;
 use Spatie\ResponseCache\ResponseCacheRepository;
 use Spatie\ResponseCache\Events\ClearedResponseCache;
-use Spatie\ResponseCache\Events\FlushedResponseCache;
 use Spatie\ResponseCache\Events\ClearingResponseCache;
-use Spatie\ResponseCache\Events\FlushingResponseCache;
 
 class ClearCommandTest extends TestCase
 {
@@ -36,9 +34,7 @@ class ClearCommandTest extends TestCase
 
         Artisan::call('responsecache:clear');
 
-        Event::assertDispatched(FlushingResponseCache::class);
         Event::assertDispatched(ClearingResponseCache::class);
-        Event::assertDispatched(FlushedResponseCache::class);
         Event::assertDispatched(ClearedResponseCache::class);
     }
 

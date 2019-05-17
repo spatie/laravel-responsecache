@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\Test;
 
 use File;
+use Illuminate\Foundation\Testing\TestResponse;
 use Route;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
@@ -151,36 +152,22 @@ abstract class TestCase extends Orchestra
         File::makeDirectory($directory);
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $response
-     */
-    protected function assertCachedResponse($response)
+    protected function assertCachedResponse(TestResponse $response)
     {
         self::assertThat($response->headers->has('laravel-responsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $response
-     */
-    protected function assertRegularResponse($response)
+    protected function assertRegularResponse(TestResponse $response)
     {
         self::assertThat($response->headers->has('laravel-responsecache'), self::isFalse(), 'Failed to assert that the response was a regular response');
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $firstResponse
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $secondResponse
-     */
-    protected function assertSameResponse($firstResponse, $secondResponse)
+    protected function assertSameResponse(TestResponse $firstResponse, TestResponse $secondResponse)
     {
         self::assertThat($firstResponse->getContent() === $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $firstResponse
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $secondResponse
-     */
-    protected function assertDifferentResponse($firstResponse, $secondResponse)
+    protected function assertDifferentResponse(TestResponse $firstResponse, TestResponse $secondResponse)
     {
         self::assertThat($firstResponse->getContent() !== $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are different');
     }

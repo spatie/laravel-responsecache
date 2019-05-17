@@ -3,6 +3,8 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
+use Spatie\ResponseCache\Hasher\DefaultHasher;
+use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
@@ -11,7 +13,7 @@ class ResponseCache
     /** @var \Spatie\ResponseCache\ResponseCache */
     protected $cache;
 
-    /** @var \Spatie\ResponseCache\RequestHasher */
+    /** @var RequestHasher */
     protected $hasher;
 
     /** @var \Spatie\ResponseCache\CacheProfiles\CacheProfile */

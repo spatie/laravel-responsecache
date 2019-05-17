@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 interface Replacer
 {
     /*
-     * Transform the initial response before it gets cached.
+     * Prepare the initial response before it gets cached.
      */
     public function prepareResponseToCache(Response $response): void;
 

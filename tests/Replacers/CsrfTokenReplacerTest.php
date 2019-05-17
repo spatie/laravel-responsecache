@@ -11,6 +11,7 @@ class CsrfTokenReplacerTest extends TestCase
     public function it_will_refresh_csrf_token_on_cached_response()
     {
         session()->regenerateToken();
+
         config()->set('responsecache.replacers', [
             CsrfTokenReplacer::class,
         ]);
@@ -22,7 +23,6 @@ class CsrfTokenReplacerTest extends TestCase
         session()->regenerateToken();
 
         $secondToken = csrf_token();
-
         $secondResponse = $this->call('get', '/csrf_token');
 
         $this->assertRegularResponse($firstResponse);
