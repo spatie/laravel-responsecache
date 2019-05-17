@@ -242,8 +242,6 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_reproduce_cache_if_given_lifetime_is_expired()
     {
-        $this->markTestSkipped('still to solve');
-
         // Set default lifetime as 0 to disable middleware that is already pushed to Kernel
         $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
