@@ -55,8 +55,7 @@ class CacheResponse
         Request $request,
         Response $response,
         $lifetimeInSeconds = null
-    ): void
-    {
+    ): void {
         $cachedResponse = clone $response;
 
         collect(config('responsecache.replacers', []))
