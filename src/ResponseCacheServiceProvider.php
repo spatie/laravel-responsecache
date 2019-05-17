@@ -5,10 +5,9 @@ namespace Spatie\ResponseCache;
 use Illuminate\Cache\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
-use Spatie\ResponseCache\Commands\ClearCommand;
-use Spatie\ResponseCache\Commands\FlushCommand;
-use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Hasher\RequestHasher;
+use Spatie\ResponseCache\Commands\ClearCommand;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCacheServiceProvider extends ServiceProvider
 {
