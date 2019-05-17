@@ -2,7 +2,6 @@
 
 namespace Spatie\ResponseCache\Test\CacheProfiles;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\Test\User;
 use Spatie\ResponseCache\Test\TestCase;
