@@ -2,8 +2,8 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Illuminate\Http\Request;
 use Mockery;
+use Illuminate\Http\Request;
 use Spatie\ResponseCache\Hasher\DefaultHasher;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
