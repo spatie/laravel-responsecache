@@ -83,6 +83,14 @@ return [
      * You may use a string or an array here.
      */
     'cache_tag' => '',
+    
+    /*
+     * Here you may define replacers that dynamically replace content from the response.
+     * Each replacer must implement the Replacer interface.
+     */
+    'replacers' => [
+        \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
+    ],
 ];
 ```
 
@@ -261,15 +269,44 @@ This event is fired when a request passes through the `ResponseCache` middleware
 
 These events are fired respectively when the `responsecache:clear` is started and finished.
 
-### CSRF Tokens
+### Creating a Replacer
+To replace cached content by dynamic content, you can create a replacer.
+By default we add a `CsrfTokenReplacer` in the config file.
 
-When a response is cached and a CSRF token exists on the page, it too will be cached and cause token mismatch or page expired errors. You can't reliably cache the response for the entire page when using forms that require CSRF tokens because the tokens will never match.
+You can create your own replacers by implementing the `Spatie\ResponseCache\Replacers\Replacer`-interface. Let's take a look at the interface:
 
-It is recommended that you disable response caching for pages where forms exists to avoid these errors.
+```php
+interface Replacer
+{
+    /*
+     * Transform the initial response before it gets cached.
+     *
+     * For example: replace a generated csrf_token by '<csrf-token-here>' that you can
+     * replace with its dynamic counterpart when the cached response is returned.
+     */
+    public function transformInitialResponse(Response $response): void;
 
-Alternatively, but not recommended, you may disable CSRF protection on a per-route basis. It is highly unadvisable to disable CSRF for user-authenticated pages at the risk of cross-site request forgery.
+    /*
+     * Replace any data you want in the cached response before it gets
+     * sent to the browser.
+     *
+     * For example: replace '<csrf-token-here>' by a call to csrf_token()
+     */
+    public function replaceCachedResponse(Response $response): void;
+}
+```
 
-See how to disable CSRF on per-route basis here: https://laracasts.com/discuss/channels/laravel/disabling-csrf-for-a-specific-route-in-laravel-5
+Afterwards you can define your replacer in the `responsecache.php` config file:
+
+```
+/*
+ * Here you may define replacers that dynamically replace content from the response.
+ * Each replacer must implement the Replacer interface.
+ */
+'replacers' => [
+    \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
+],
+```
 
 ## Changelog
 
