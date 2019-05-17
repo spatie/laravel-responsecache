@@ -9,20 +9,15 @@ use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
-use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class CacheResponse
 {
     /** @var \Spatie\ResponseCache\ResponseCache */
     protected $responseCache;
 
-    /** @var \Spatie\ResponseCache\CacheProfiles\CacheProfile */
-    protected $cacheProfile;
-
-    public function __construct(ResponseCache $responseCache, CacheProfile $cacheProfile)
+    public function __construct(ResponseCache $responseCache)
     {
         $this->responseCache = $responseCache;
-        $this->cacheProfile = $cacheProfile;
     }
 
     public function handle(Request $request, Closure $next, $lifetimeInSeconds = null): Response
