@@ -67,6 +67,14 @@ return [
     'cache_store' => env('RESPONSE_CACHE_DRIVER', 'file'),
 
     /*
+     * Here you may define replacers that dynamically replace content from the response.
+     * Each replacer must implement the Replacer interface.
+     */
+    'replacers' => [
+        \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
+    ],
+    
+    /*
      * If the cache driver you configured supports tags, you may specify a tag name
      * here. All responses will be tagged. When clearing the responsecache only
      * items with that tag will be flushed.
@@ -74,15 +82,7 @@ return [
      * You may use a string or an array here.
      */
     'cache_tag' => '',
-
-    /*
-     * Here you may define replacers that dynamically replace content from the response.
-     * Each replacer must implement the Replacer interface.
-     */
-    'replacers' => [
-        \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
-    ],
-
+    
     /*
      * This class is responsible for generating a hash for a request. This hash
      * is used to look up an cached response.
