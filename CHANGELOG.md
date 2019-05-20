@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
-## 6.0.0 - 2019-05-XX
+## 6.0.0 - 2019-05-20
 
 - added support for replacers
 - you can now swap out `RequestHasher` in favor of a custom one
