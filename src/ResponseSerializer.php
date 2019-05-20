@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache;
 
+use Illuminate\Http\Response as IlluminateResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -73,6 +74,6 @@ class ResponseSerializer
             );
         }
 
-        return new Response($responseProperties['content'], $responseProperties['statusCode']);
+        return new IlluminateResponse($responseProperties['content'], $responseProperties['statusCode']);
     }
 }
