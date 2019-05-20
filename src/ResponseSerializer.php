@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ResponseSerializer
 {
-    const RESPONSE_TYPE_NORMAL = 'response_type_normal';
-    const RESPONSE_TYPE_FILE = 'response_type_file';
+    public const RESPONSE_TYPE_NORMAL = 'response_type_normal';
+    public const RESPONSE_TYPE_FILE = 'response_type_file';
 
     public function serialize(Response $response): string
     {
