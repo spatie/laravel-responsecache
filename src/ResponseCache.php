@@ -10,7 +10,7 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCache
 {
-    /** @var \Spatie\ResponseCache\ResponseCache */
+    /** @var \Spatie\ResponseCache\ResponseCacheRepository */
     protected $cache;
 
     /** @var RequestHasher */
@@ -44,7 +44,7 @@ class ResponseCache
         return $this->cacheProfile->shouldCacheResponse($response);
     }
 
-    public function cacheResponse(Request $request, Response $response, $lifetimeInSeconds = null): Response
+    public function cacheResponse(Request $request, Response $response, $lifetimeInSeconds = null, array $tags = []): Response
     {
         if (config('responsecache.add_cache_time_header')) {
             $response = $this->addCachedHeader($response);
@@ -54,7 +54,7 @@ class ResponseCache
             ? (int)$lifetimeInSeconds
             : $this->cacheProfile->cacheRequestUntil($request);
 
-        $this->cache->put(
+        $this->tags($tags)->put(
             $this->hasher->getHashFor($request),
             $response,
             $lifetimeInSeconds,
@@ -63,21 +63,26 @@ class ResponseCache
         return $response;
     }
 
-    public function hasBeenCached(Request $request): bool
+    public function hasBeenCached(Request $request, array $tags = []): bool
     {
         return config('responsecache.enabled')
-            ? $this->cache->has($this->hasher->getHashFor($request))
+            ? $this->tags($tags)->has($this->hasher->getHashFor($request))
             : false;
     }
 
-    public function getCachedResponseFor(Request $request): Response
+    public function getCachedResponseFor(Request $request, array $tags = []): Response
     {
-        return $this->cache->get($this->hasher->getHashFor($request));
+        return $this->tags($tags)->get($this->hasher->getHashFor($request));
     }
 
-    public function clear()
+    /**
+     * @param string|array $tags
+     */
+    public function clear($tags = [])
     {
-        $this->cache->clear();
+        $tags = is_array($tags) ? $tags : func_get_args();
+
+        $this->tags($tags)->clear();
     }
 
     protected function addCachedHeader(Response $response): Response
@@ -108,5 +113,16 @@ class ResponseCache
         });
 
         return $this;
+    }
+
+    public function tags($tags = [])
+    {
+        $tags = is_array($tags) ? $tags : func_get_args();
+    
+        if (is_array($tags) && !empty($tags)) {
+            return $this->cache->tags($tags);
+        }
+
+        return $this->cache;
     }
 }

@@ -21,13 +21,15 @@ class CacheResponse
         $this->responseCache = $responseCache;
     }
 
-    public function handle(Request $request, Closure $next, $lifetimeInSeconds = null): Response
+    public function handle(Request $request, Closure $next, $lifetimeInSeconds = null, ...$tags): Response
     {
+        $lifetimeInSeconds === "" ? null : $lifetimeInSeconds;
+
         if ($this->responseCache->enabled($request)) {
-            if ($this->responseCache->hasBeenCached($request)) {
+            if ($this->responseCache->hasBeenCached($request, $tags)) {
                 event(new ResponseCacheHit($request));
 
-                $response = $this->responseCache->getCachedResponseFor($request);
+                $response = $this->responseCache->getCachedResponseFor($request, $tags);
 
                 $this->getReplacers()->each(function (Replacer $replacer) use ($response) {
                     $replacer->replaceInCachedResponse($response);
@@ -38,10 +40,10 @@ class CacheResponse
         }
 
         $response = $next($request);
-
+       
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->shouldCache($request, $response)) {
-                $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds);
+                $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
             }
         }
 
@@ -53,7 +55,8 @@ class CacheResponse
     protected function makeReplacementsAndCacheResponse(
         Request $request,
         Response $response,
-        $lifetimeInSeconds = null
+        $lifetimeInSeconds = null,
+        array $tags = []
     ): void {
         $cachedResponse = clone $response;
 
@@ -61,7 +64,7 @@ class CacheResponse
             $replacer->prepareResponseToCache($cachedResponse);
         });
 
-        $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds);
+        $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }
 
     protected function getReplacers(): Collection

@@ -138,6 +138,14 @@ abstract class TestCase extends Orchestra
         Route::any('/cache-for-given-lifetime', function () {
             return 'dummy response';
         })->middleware('cacheResponse:300');
+
+        Route::any('/tagged/1', function () {
+            return Str::random();
+        })->middleware('cacheResponse:,foo');
+
+        Route::any('/tagged/2', function () {
+            return Str::random();
+        })->middleware('cacheResponse:,foo,bar');
     }
 
     public function getTempDirectory($suffix = '')

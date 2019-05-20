@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Cache\Repository;
+use Illuminate\Cache\TaggedCache;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCacheRepository
@@ -48,5 +49,14 @@ class ResponseCacheRepository
     public function forget(string $key): bool
     {
         return $this->cache->forget($key);
+    }
+
+    /**
+     * @param  array|mixed  $names
+     * @return \Illuminate\Cache\TaggedCache
+     */
+    public function tags($names): TaggedCache
+    {
+        return $this->cache->tags($names);
     }
 }
