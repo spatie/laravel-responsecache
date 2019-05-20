@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Foundation\Testing\TestResponse;
+use Spatie\ResponseCache\Facades\ResponseCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\ResponseCacheServiceProvider;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
@@ -18,7 +20,7 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
 
-        $this->app['responsecache']->flush();
+        $this->app['responsecache']->clear();
 
         $this->initializeDirectory($this->getTempDirectory());
 
@@ -44,7 +46,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageAliases($app)
     {
         return [
-            'ResponseCache' => \Spatie\ResponseCache\ResponseCacheFacade::class,
+            'ResponseCache' => ResponseCache::class,
         ];
     }
 
@@ -116,6 +118,10 @@ abstract class TestCase extends Orchestra
                 return Str::random();
             });
 
+            Route::any('/csrf_token', ['middleware' => 'web', function () {
+                return csrf_token();
+            }]);
+
             Route::any('/redirect', function () {
                 return redirect('/');
             });
@@ -147,38 +153,24 @@ abstract class TestCase extends Orchestra
         File::makeDirectory($directory);
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $response
-     */
-    protected function assertCachedResponse($response)
+    protected function assertCachedResponse(TestResponse $response)
     {
         self::assertThat($response->headers->has('laravel-responsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $response
-     */
-    protected function assertRegularResponse($response)
+    protected function assertRegularResponse(TestResponse $response)
     {
         self::assertThat($response->headers->has('laravel-responsecache'), self::isFalse(), 'Failed to assert that the response was a regular response');
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $firstResponse
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $secondResponse
-     */
-    protected function assertSameResponse($firstResponse, $secondResponse)
+    protected function assertSameResponse(TestResponse $firstResponse, TestResponse $secondResponse)
     {
-        self::assertThat($firstResponse->getContent() == $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
+        self::assertThat($firstResponse->getContent() === $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $firstResponse
-     * @param \Symfony\Component\HttpFoundation\Respons|\Illuminate\Foundation\Testing\TestResponse $secondResponse
-     */
-    protected function assertDifferentResponse($firstResponse, $secondResponse)
+    protected function assertDifferentResponse(TestResponse $firstResponse, TestResponse $secondResponse)
     {
-        self::assertThat($firstResponse->getContent() != $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
+        self::assertThat($firstResponse->getContent() !== $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are different');
     }
 
     protected function setUpMiddleware()

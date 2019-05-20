@@ -6,18 +6,9 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-responsecache.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-responsecache)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 
-This Laravel 5.8 package can cache an entire response. By default it will cache all successful get-requests for a week. This could potentially speed up the response quite considerably.
+This Laravel 5.8 package can cache an entire response. By default it will cache all successful get-requests that return text based content (such as html and json) for a week. This could potentially speed up the response quite considerably.
 
 So the first time a request comes in the package will save the response before sending it to the users. When the same request comes in again we're not going through the entire application but just respond with the saved response.
-
-
-If you're using Laravel 5.1, 5.2 or 5.3 check out the [v1 branch](https://github.com/spatie/laravel-responsecache/tree/v1).
-
-If you're using Laravel 5.4 check out the [v2 branch](https://github.com/spatie/laravel-responsecache/tree/v2).
-
-If you're using Laravel 5.5 use the *v4* tag `"spatie/laravel-responsecache": "~4.4.5"`
-
-If you're using Laravel 5.6 and above check out the [v5 branch](https://github.com/spatie/laravel-responsecache/tree/v5).
 
 Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
@@ -59,7 +50,7 @@ return [
      * When using the default CacheRequestFilter this setting controls the
      * default number of seconds responses must be cached.
      */
-    'cache_lifetime_in_seconds' => env('RESPONSE_CACHE_LIFETIME', 60 * 24 * 7),
+    'cache_lifetime_in_seconds' => env('RESPONSE_CACHE_LIFETIME', 60 * 60 * 24 * 7),
 
     /*
      * This setting determines if a http header named "Laravel-responsecache"
@@ -76,13 +67,27 @@ return [
     'cache_store' => env('RESPONSE_CACHE_DRIVER', 'file'),
 
     /*
+     * Here you may define replacers that dynamically replace content from the response.
+     * Each replacer must implement the Replacer interface.
+     */
+    'replacers' => [
+        \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
+    ],
+    
+    /*
      * If the cache driver you configured supports tags, you may specify a tag name
      * here. All responses will be tagged. When clearing the responsecache only
-     * items with that tag will be cleared.
+     * items with that tag will be flushed.
      *
      * You may use a string or an array here.
      */
     'cache_tag' => '',
+    
+    /*
+     * This class is responsible for generating a hash for a request. This hash
+     * is used to look up an cached response.
+     */
+    'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,
 ];
 ```
 
@@ -143,6 +148,8 @@ ResponseCache::forget(['/some-uri', '/other-uri']);
 // Alternatively
 ResponseCache::forget('/some-uri', '/other-uri');
 ```
+
+The `forget` method only works when you're not using a `cacheNameSuffix` in your cache profile. 
 
 ### Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware.
@@ -261,31 +268,61 @@ This event is fired when a request passes through the `ResponseCache` middleware
 
 These events are fired respectively when the `responsecache:clear` is started and finished.
 
-### CSRF Tokens
+### Creating a Replacer
 
-When a response is cached and a CSRF token exists on the page, it too will be cached and cause token mismatch or page expired errors. You can't reliably cache the response for the entire page when using forms that require CSRF tokens because the tokens will never match.
+To replace cached content by dynamic content, you can create a replacer.
+By default we add a `CsrfTokenReplacer` in the config file.
 
-It is recommended that you disable response caching for pages where forms exists to avoid these errors.
+You can create your own replacers by implementing the `Spatie\ResponseCache\Replacers\Replacer`-interface. Let's take a look at the interface:
 
-Alternatively, but not recommended, you may disable CSRF protection on a per-route basis. It is highly unadvisable to disable CSRF for user-authenticated pages at the risk of cross-site request forgery.
+```php
+interface Replacer
+{
+    /*
+     * Transform the initial response before it gets cached.
+     *
+     * For example: replace a generated csrf_token by '<csrf-token-here>' that you can
+     * replace with its dynamic counterpart when the cached response is returned.
+     */
+    public function transformInitialResponse(Response $response): void;
 
-See how to disable CSRF on per-route basis here: https://laracasts.com/discuss/channels/laravel/disabling-csrf-for-a-specific-route-in-laravel-5
+    /*
+     * Replace any data you want in the cached response before it gets
+     * sent to the browser.
+     *
+     * For example: replace '<csrf-token-here>' by a call to csrf_token()
+     */
+    public function replaceCachedResponse(Response $response): void;
+}
+```
+
+Afterwards you can define your replacer in the `responsecache.php` config file:
+
+```
+/*
+ * Here you may define replacers that dynamically replace content from the response.
+ * Each replacer must implement the Replacer interface.
+ */
+'replacers' => [
+    \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,
+],
+```
 
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Testing
+
 You can run the tests with:
 ``` bash
 composer test
 ```
 
 ## Alternatives
-- [Barry Vd. Heuvel](https://twitter.com/barryvdh) made [a package that caches responses by leveraging HttpCache](https://github.com/barryvdh/laravel-httpcache).
 
-- spatie/laravel-responsecache is tied to Laravel 5.1. If you need this functionality in Laravel 4
-take a look at [Flatten](https://github.com/Anahkiasen/flatten) by [Maxime Fabre](https://twitter.com/Anahkiasen).
+- [Barry Vd. Heuvel](https://twitter.com/barryvdh) made [a package that caches responses by leveraging HttpCache](https://github.com/barryvdh/laravel-httpcache).
+- [Joseph Silber](https://twitter.com/joseph_silber) created [Laravel Page Cache](https://github.com/JosephSilber/page-cache) that can write it's cache to disk and let Nginx read them, so PHP doesn't even have to start up anymore.
 
 ## Contributing
 

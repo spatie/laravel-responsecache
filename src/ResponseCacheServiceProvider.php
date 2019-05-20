@@ -5,15 +5,12 @@ namespace Spatie\ResponseCache;
 use Illuminate\Cache\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
-use Spatie\ResponseCache\Commands\Clear;
-use Spatie\ResponseCache\Commands\Flush;
+use Spatie\ResponseCache\Hasher\RequestHasher;
+use Spatie\ResponseCache\Commands\ClearCommand;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCacheServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
     public function boot()
     {
         $this->publishes([
@@ -22,6 +19,10 @@ class ResponseCacheServiceProvider extends ServiceProvider
 
         $this->app->bind(CacheProfile::class, function (Container $app) {
             return $app->make(config('responsecache.cache_profile'));
+        });
+
+        $this->app->bind(RequestHasher::class, function (Container $app) {
+            return $app->make(config('responsecache.hasher'));
         });
 
         $this->app->when(ResponseCacheRepository::class)
@@ -37,19 +38,13 @@ class ResponseCacheServiceProvider extends ServiceProvider
 
         $this->app->singleton('responsecache', ResponseCache::class);
 
-        $this->app['command.responsecache:flush'] = $this->app->make(Flush::class);
-
         if ($this->app->runningInConsole()) {
             $this->commands([
-                Flush::class,
-                Clear::class,
+                ClearCommand::class,
             ]);
         }
     }
 
-    /**
-     * Register the application services.
-     */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/responsecache.php', 'responsecache');

@@ -16,6 +16,7 @@ class ResponseCacheRepository
     public function __construct(ResponseSerializer $responseSerializer, Repository $cache)
     {
         $this->cache = $cache;
+
         $this->responseSerializer = $responseSerializer;
     }
 
@@ -39,17 +40,9 @@ class ResponseCacheRepository
         return $this->responseSerializer->unserialize($this->cache->get($key));
     }
 
-    /**
-     * @deprecated Use the new clear method, this is just an alias.
-     */
-    public function flush()
-    {
-        $this->clear();
-    }
-
     public function clear()
     {
-        $this->cache->flush();
+        $this->cache->clear();
     }
 
     public function forget(string $key): bool

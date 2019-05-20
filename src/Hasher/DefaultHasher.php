@@ -1,11 +1,11 @@
 <?php
 
-namespace Spatie\ResponseCache;
+namespace Spatie\ResponseCache\Hasher;
 
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
-class RequestHasher
+class DefaultHasher implements RequestHasher
 {
     /** @var \Spatie\ResponseCache\CacheProfiles\CacheProfile */
     protected $cacheProfile;
@@ -18,7 +18,7 @@ class RequestHasher
     public function getHashFor(Request $request): string
     {
         return 'responsecache-'.md5(
-            "{$request->getHost()}/{$request->getRequestUri()}/{$request->getMethod()}/".$this->cacheProfile->cacheNameSuffix($request)
+            "{$request->getHost()}-{$request->getRequestUri()}-{$request->getMethod()}/".$this->cacheProfile->useCacheNameSuffix($request)
         );
     }
 }

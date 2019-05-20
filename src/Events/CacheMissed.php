@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 class CacheMissed
 {
+    /** @var \Illuminate\Http\Request */
     public $request;
 
-    /** @param \Illuminate\Http\Request $request */
     public function __construct(Request $request)
     {
         $this->request = $request;
