@@ -149,6 +149,8 @@ ResponseCache::forget(['/some-uri', '/other-uri']);
 ResponseCache::forget('/some-uri', '/other-uri');
 ```
 
+The `forget` method only works when you're not using a `cacheNameSuffix` in your cache profile. 
+
 ### Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware.
 This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
