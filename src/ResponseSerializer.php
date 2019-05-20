@@ -2,8 +2,8 @@
 
 namespace Spatie\ResponseCache;
 
-use Illuminate\Http\Response as IlluminateResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response as IlluminateResponse;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
