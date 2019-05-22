@@ -57,7 +57,7 @@ class ResponseCache
         $this->cache->put(
             $this->hasher->getHashFor($request),
             $response,
-            $lifetimeInSeconds,
+            $lifetimeInSeconds
         );
 
         return $response;
