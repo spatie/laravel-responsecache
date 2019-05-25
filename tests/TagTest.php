@@ -16,8 +16,8 @@ class TagTest extends TestCase
     {
         parent::getEnvironmentSetUp($app);
 
-        $app['config']->set('cache.driver', 'redis');
         // Set the driver to redis (tags don't work with the file driver)
+        $app['config']->set('cache.driver', 'redis');
         $app['config']->set('responsecache.cache_store', 'redis');
         // Before running the test, we have to clear the redis cache of any
         // previously cached responses. Setting the cache_tag scopes the
@@ -48,7 +48,7 @@ class TagTest extends TestCase
     {
         $firstResponse = $this->call('GET', '/tagged/1');
         $this->assertRegularResponse($firstResponse);
-        
+
         $this->app['responsecache']->clear('foo');
 
         $secondResponse = $this->call('GET', '/tagged/1');

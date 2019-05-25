@@ -23,7 +23,7 @@ class CacheResponse
 
     public function handle(Request $request, Closure $next, $lifetimeInSeconds = null, ...$tags): Response
     {
-        $lifetimeInSeconds === "" ? null : $lifetimeInSeconds;
+        $lifetimeInSeconds === '' ? null : $lifetimeInSeconds;
 
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->hasBeenCached($request, $tags)) {
@@ -40,7 +40,7 @@ class CacheResponse
         }
 
         $response = $next($request);
-       
+
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->shouldCache($request, $response)) {
                 $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
