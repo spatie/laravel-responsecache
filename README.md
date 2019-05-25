@@ -216,7 +216,7 @@ interface CacheProfile
      *
      * @return mixed
      */
-    public function cacheNameSuffix(Request $request);
+    public function useCacheNameSuffix(Request $request);
 }
 ```
 
