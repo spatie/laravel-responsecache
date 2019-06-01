@@ -135,6 +135,24 @@ The same can be accomplished by issuing this artisan command:
 php artisan responsecache:clear
 ```
 
+For your convenience, you have at your disposal the `CacheAutoUpdater` trait. 
+When you include it in your models, it will execute a cache cleanup whenever the eloquent events `created`,` updated`, or `deleted` are called in this model.
+
+```php
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Spatie\ResponseCache\Traits\CacheAutoUpdater;
+
+class Page extends Model
+{
+	use CacheAutoUpdater;
+
+	// ...
+}
+```
 ### Forget one or several specific URI(s)
 
 You can forget specific URIs with:
