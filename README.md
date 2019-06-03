@@ -135,16 +135,41 @@ The same can be accomplished by issuing this artisan command:
 php artisan responsecache:clear
 ```
 
-For your convenience, you have at your disposal the `CacheAutoUpdater` trait. 
-When you include it in your models, it will execute a cache cleanup whenever the eloquent events `created`,` updated`, or `deleted` are called in this model.
+If you need to automate your cache clean up every time your model saves, you can create yourself a trait that hooks into the eloquent boot life cicle.
+In this example the cache is cleaned whenever the eloquent events `created`,` updated`, or `deleted` are called in this model.
 
 ```php
 <?php
 
+namespace App\Traits;
+
+use Spatie\ResponseCache\Facades\ResponseCache;
+
+trait CacheAutoUpdater
+{
+    public static function bootCacheAutoUpdater()
+    {
+        self::created(function ($model) {
+            ResponseCache::clear();
+        });
+
+        self::updated(function ($model) {
+            ResponseCache::clear();
+        });
+
+        self::deleted(function ($model) {
+            ResponseCache::clear();
+        });
+    }
+}
+
+// Then in your models
+<?php
+
 namespace App;
 
+use App\Traits\CacheAutoUpdater;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\ResponseCache\Traits\CacheAutoUpdater;
 
 class Page extends Model
 {
