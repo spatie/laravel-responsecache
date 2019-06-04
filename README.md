@@ -123,11 +123,17 @@ Logged in users will each have their own separate cache. If this behaviour is wh
  need, you're done: installing the `ResponseCacheServerProvider` was enough.
 
 ### Clearing the cache
+
+#### Manually
+
 The entire cache can be cleared with:
 ```php
 ResponseCache::clear();
 ```
 This will clear everything from the cache store specified in the config-file.
+
+
+#### Using a console command
 
 The same can be accomplished by issuing this artisan command:
 
@@ -135,49 +141,33 @@ The same can be accomplished by issuing this artisan command:
 php artisan responsecache:clear
 ```
 
-If you need to automate your cache clean up every time your model saves, you can create yourself a trait that hooks into the eloquent boot life cicle.
-In this example the cache is cleaned whenever the eloquent events `created`,` updated`, or `deleted` are called in this model.
+#### Using model events 
 
+You can leverage model events to clear the cache whenever a model is saved or deleted. Here's an example.
 ```php
-<?php
-
 namespace App\Traits;
 
 use Spatie\ResponseCache\Facades\ResponseCache;
 
-trait CacheAutoUpdater
+trait ClearsResponseCache
 {
-    public static function bootCacheAutoUpdater()
+    public static function bootClearsResponseCache()
     {
-        self::created(function ($model) {
+        self::created(function () {
             ResponseCache::clear();
         });
 
-        self::updated(function ($model) {
+        self::updated(function () {
             ResponseCache::clear();
         });
 
-        self::deleted(function ($model) {
+        self::deleted(function () {
             ResponseCache::clear();
         });
     }
 }
-
-// Then in your models
-<?php
-
-namespace App;
-
-use App\Traits\CacheAutoUpdater;
-use Illuminate\Database\Eloquent\Model;
-
-class Page extends Model
-{
-	use CacheAutoUpdater;
-
-	// ...
-}
 ```
+
 ### Forget one or several specific URI(s)
 
 You can forget specific URIs with:
