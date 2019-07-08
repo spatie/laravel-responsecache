@@ -10,7 +10,7 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCache
 {
-    /** @var \Spatie\ResponseCache\ResponseCache */
+    /** @var \Spatie\ResponseCache\ResponseCacheRepository */
     protected $cache;
 
     /** @var RequestHasher */
@@ -44,40 +44,40 @@ class ResponseCache
         return $this->cacheProfile->shouldCacheResponse($response);
     }
 
-    public function cacheResponse(Request $request, Response $response, $lifetimeInSeconds = null): Response
-    {
+    public function cacheResponse(
+        Request $request,
+        Response $response,
+        ?int $lifetimeInSeconds = null,
+        array $tags = []
+    ): Response {
         if (config('responsecache.add_cache_time_header')) {
             $response = $this->addCachedHeader($response);
         }
 
-        $lifetimeInSeconds = $lifetimeInSeconds
-            ? (int) $lifetimeInSeconds
-            : $this->cacheProfile->cacheRequestUntil($request);
-
-        $this->cache->put(
+        $this->taggedCache($tags)->put(
             $this->hasher->getHashFor($request),
             $response,
-            $lifetimeInSeconds,
+            $lifetimeInSeconds ?? $this->cacheProfile->cacheRequestUntil($request),
         );
 
         return $response;
     }
 
-    public function hasBeenCached(Request $request): bool
+    public function hasBeenCached(Request $request, array $tags = []): bool
     {
         return config('responsecache.enabled')
-            ? $this->cache->has($this->hasher->getHashFor($request))
+            ? $this->taggedCache($tags)->has($this->hasher->getHashFor($request))
             : false;
     }
 
-    public function getCachedResponseFor(Request $request): Response
+    public function getCachedResponseFor(Request $request, array $tags = []): Response
     {
-        return $this->cache->get($this->hasher->getHashFor($request));
+        return $this->taggedCache($tags)->get($this->hasher->getHashFor($request));
     }
 
-    public function clear()
+    public function clear(array $tags = [])
     {
-        $this->cache->clear();
+        $this->taggedCache($tags)->clear();
     }
 
     protected function addCachedHeader(Response $response): Response
@@ -92,21 +92,31 @@ class ResponseCache
         return $clonedResponse;
     }
 
+    protected function taggedCache(array $tags = []): ResponseCacheRepository
+    {
+        if (empty($tags)) {
+            return $this->cache;
+        }
+
+        return $this->cache->tags($tags);
+    }
+
     /**
      * @param string|array $uris
+     * @param string[]        $tags
      *
      * @return \Spatie\ResponseCache\ResponseCache
      */
-    public function forget($uris): self
+    public function forget($uris, array $tags = []): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
 
-        collect($uris)->each(function ($uri) {
+        collect($uris)->each(function ($uri) use ($tags) {
             $request = Request::create(url($uri));
             $hash = $this->hasher->getHashFor($request);
 
-            if ($this->cache->has($hash)) {
-                $this->cache->forget($hash);
+            if ($this->taggedCache($tags)->has($hash)) {
+                $this->taggedCache($tags)->forget($hash);
             }
         });
 

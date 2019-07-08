@@ -49,4 +49,9 @@ class ResponseCacheRepository
     {
         return $this->cache->forget($key);
     }
+
+    public function tags(array $tags): self
+    {
+        return new self($this->responseSerializer, $this->cache->tags($tags));
+    }
 }
