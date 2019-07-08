@@ -4,7 +4,6 @@ namespace Spatie\ResponseCache;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\Hasher\DefaultHasher;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
@@ -52,7 +51,7 @@ class ResponseCache
         }
 
         $lifetimeInSeconds = $lifetimeInSeconds
-            ? (int)$lifetimeInSeconds
+            ? (int) $lifetimeInSeconds
             : $this->cacheProfile->cacheRequestUntil($request);
 
         $this->cache->put(
