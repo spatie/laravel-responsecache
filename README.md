@@ -285,7 +285,7 @@ Route::group(function() {
 
 ### Tagging Routes
 
-If the cache driver you configured supports tags, you can specify a list of tags when applying the middleware:
+If the [cache driver you configured supports tags](https://laravel.com/docs/5.8/cache#cache-tags), you can specify a list of tags when applying the middleware.
 
 ```php
 // add a "foo" tag to this route with a 300 second lifetime

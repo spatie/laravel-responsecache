@@ -87,10 +87,10 @@ class CacheResponse
 
     protected function getTags(array $args): array
     {
+        $tags = $args;
+
         if (count($args) >= 1 && is_numeric($args[0])) {
             $tags = array_slice($args, 1);
-        } else {
-            $tags = $args;
         }
 
         return array_filter($tags);
