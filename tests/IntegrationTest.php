@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache\Test;
 
+use DateTime;
 use Carbon\Carbon;
 use ResponseCache;
 use Illuminate\Support\Facades\Event;
@@ -255,5 +256,21 @@ class IntegrationTest extends TestCase
         Carbon::setTestNow();
         $thirdResponse = $this->call('get', '/cache-for-given-lifetime');
         $this->assertRegularResponse($thirdResponse);
+    }
+
+    /** @test */
+    public function it_can_add_a_cache_time_header()
+    {
+        $this->app['config']->set('responsecache.add_cache_time_header', true);
+        $this->app['config']->set('responsecache.cache_time_header_name', 'X-Cached-At');
+
+        $firstResponse = $this->call('get', '/random');
+        $secondResponse = $this->call('get', '/random');
+
+        $this->assertFalse($firstResponse->headers->has('X-Cached-At'));
+        $this->assertTrue($secondResponse->headers->has('X-Cached-At'));
+        $this->assertInstanceOf(DateTime::class, $secondResponse->headers->getDate('X-Cached-At'));
+
+        $this->assertSameResponse($firstResponse, $secondResponse);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Spatie\ResponseCache;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\Hasher\DefaultHasher;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
@@ -51,7 +51,7 @@ class ResponseCache
         }
 
         $lifetimeInSeconds = $lifetimeInSeconds
-            ? (int)$lifetimeInSeconds
+            ? (int) $lifetimeInSeconds
             : $this->cacheProfile->cacheRequestUntil($request);
 
         $this->cache->put(
@@ -84,7 +84,10 @@ class ResponseCache
     {
         $clonedResponse = clone $response;
 
-        $clonedResponse->headers->set('laravel-responsecache', 'cached on '.date('Y-m-d H:i:s'));
+        $clonedResponse->headers->set(
+            config('responsecache.cache_time_header_name'),
+            CarbonImmutable::now()->toRfc2822String(),
+        );
 
         return $clonedResponse;
     }

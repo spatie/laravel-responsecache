@@ -53,11 +53,17 @@ return [
     'cache_lifetime_in_seconds' => env('RESPONSE_CACHE_LIFETIME', 60 * 60 * 24 * 7),
 
     /*
-     * This setting determines if a http header named "Laravel-responsecache"
-     * with the cache time should be added to a cached response. This
-     * can be handy when debugging.
+     * This setting determines if a http header named with the cache time
+     * should be added to a cached response. This can be handy when
+     * debugging.
      */
     'add_cache_time_header' => env('APP_DEBUG', true),
+
+    /*
+     * This setting determines the name of the http header that contains
+     * the time at which the response was cached
+     */
+    'cache_time_header_name' => env('RESPONSE_CACHE_HEADER_NAME', 'laravel-responsecache'),
 
     /*
      * Here you may define the cache store that should be used to store
