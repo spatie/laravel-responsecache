@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\Test\CacheProfiles;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Spatie\ResponseCache\Test\User;
 use Spatie\ResponseCache\Test\TestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,6 +51,16 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
         $shouldCacheResponse = $this->cacheProfile->shouldCacheResponse($response);
 
         $this->assertFalse($shouldCacheResponse);
+    }
+
+    /** @test */
+    public function it_will_determine_that_a_json_response_should_be_cached()
+    {
+        $response = new JsonResponse(['a' => 'b']);
+
+        $shouldCacheResponse = $this->cacheProfile->shouldCacheResponse($response);
+
+        $this->assertTrue($shouldCacheResponse);
     }
 
     /** @test */
