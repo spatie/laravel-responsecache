@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.0.2 - 2019-07-31
+
+- make json responses cacheable
+
 ## 6.0.1 - 2019-07-09
 
 - use Rfc2822S formatted date in cache time header
