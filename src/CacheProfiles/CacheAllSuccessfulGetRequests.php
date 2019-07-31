@@ -47,10 +47,18 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile
         return false;
     }
 
-    public function hasCacheableContentType(Response $response)
+    public function hasCacheableContentType(Response $response): bool
     {
         $contentType = $response->headers->get('Content-Type', '');
 
-        return Str::startsWith($contentType, 'text') || Str::contains($contentType, 'application/json');
+        if (Str::startsWith($contentType, 'text')) {
+            return true;
+        }
+
+        if (Str::contains($contentType, 'application/json')) {
+            return true;
+        }
+
+        return false;
     }
 }
