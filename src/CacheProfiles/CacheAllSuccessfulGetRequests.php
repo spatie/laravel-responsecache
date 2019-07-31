@@ -51,6 +51,6 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile
     {
         $contentType = $response->headers->get('Content-Type', '');
 
-        return Str::startsWith($contentType, 'text');
+        return Str::startsWith($contentType, 'text') || Str::contains($contentType, 'application/json');
     }
 }
