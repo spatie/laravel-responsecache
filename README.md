@@ -283,6 +283,46 @@ Route::group(function() {
 })->middleware('cacheResponse:600');
 ```
 
+### Tagging Routes
+
+If the [cache driver you configured supports tags](https://laravel.com/docs/5.8/cache#cache-tags), you can specify a list of tags when applying the middleware.
+
+```php
+// add a "foo" tag to this route with a 300 second lifetime
+Route::get('/test1', 'SnowflakeController@index')->middleware('cacheResponse:300,foo');
+
+// add a "bar" tag to this route
+Route::get('/test2', 'SnowflakeController@index')->middleware('cacheResponse:bar');
+
+// add both "foo" and "bar" tags to these routes
+Route::group(function() {
+   Route::get('/test3', 'AnotherSnowflakeController@index');
+
+   Route::get('/test4', 'YetAnotherSnowflakeController@index');
+})->middleware('cacheResponse:foo,bar');
+```
+
+#### Clearing Tagged Routes
+
+You can clear responses which are assigned a tag or list of tags. For example, this statement would remove all routes 
+specified above:
+
+```php
+ResponseCache::clear(['foo', 'bar']);
+```
+
+In contrast, this statement would all of the routes except the `'/test1'` route:
+
+```php
+ResponseCache::clear(['bar']);
+```
+
+Note that this uses [Laravel's built in cache tags](https://laravel.com/docs/master/cache#cache-tags) functionality, meaning 
+routes can also be cleared in the usual way:
+
+```php
+Cache::tags('special')->flush();
+
 ### Events
 
 There are several events you can use to monitor and debug response caching in your application.

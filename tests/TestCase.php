@@ -133,6 +133,14 @@ abstract class TestCase extends Orchestra
             Route::any('/image', function () {
                 return response()->file(__DIR__.'/User.php');
             });
+
+            Route::any('/tagged/1', function () {
+                return Str::random();
+            })->middleware('cacheResponse:,foo');
+
+            Route::any('/tagged/2', function () {
+                return Str::random();
+            })->middleware('cacheResponse:,foo,bar');
         });
 
         Route::any('/cache-for-given-lifetime', function () {
