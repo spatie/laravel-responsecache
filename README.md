@@ -214,7 +214,6 @@ class UserController extends Controller
 }
 ```
 
-
 ### Creating a custom cache profile
 To determine which requests should be cached, and for how long, a cache profile class is used.
 The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests`.
@@ -283,7 +282,7 @@ Route::group(function() {
 })->middleware('cacheResponse:600');
 ```
 
-### Tagging Routes
+### Using tags
 
 If the [cache driver you configured supports tags](https://laravel.com/docs/5.8/cache#cache-tags), you can specify a list of tags when applying the middleware.
 
@@ -302,7 +301,7 @@ Route::group(function() {
 })->middleware('cacheResponse:foo,bar');
 ```
 
-#### Clearing Tagged Routes
+#### Clearing tagged content
 
 You can clear responses which are assigned a tag or list of tags. For example, this statement would remove all routes 
 specified above:

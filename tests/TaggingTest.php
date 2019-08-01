@@ -4,14 +4,6 @@ namespace Spatie\ResponseCache\Test;
 
 class TaggingTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     */
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);

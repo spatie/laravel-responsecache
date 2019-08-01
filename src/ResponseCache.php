@@ -92,15 +92,6 @@ class ResponseCache
         return $clonedResponse;
     }
 
-    protected function taggedCache(array $tags = []): ResponseCacheRepository
-    {
-        if (empty($tags)) {
-            return $this->cache;
-        }
-
-        return $this->cache->tags($tags);
-    }
-
     /**
      * @param string|array $uris
      * @param string[]        $tags
@@ -121,5 +112,14 @@ class ResponseCache
         });
 
         return $this;
+    }
+
+    protected function taggedCache(array $tags = []): ResponseCacheRepository
+    {
+        if (empty($tags)) {
+            return $this->cache;
+        }
+
+        return $this->cache->tags($tags);
     }
 }
