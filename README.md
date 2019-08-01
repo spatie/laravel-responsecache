@@ -310,7 +310,7 @@ specified above:
 ResponseCache::clear(['foo', 'bar']);
 ```
 
-In contrast, this statement would all of the routes except the `'/test1'` route:
+In contrast, this statement would remove all of the routes except the `'/test1'` route:
 
 ```php
 ResponseCache::clear(['bar']);
