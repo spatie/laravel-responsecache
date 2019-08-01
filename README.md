@@ -321,6 +321,7 @@ routes can also be cleared in the usual way:
 
 ```php
 Cache::tags('special')->flush();
+```
 
 ### Events
 
