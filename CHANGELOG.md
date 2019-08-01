@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.1.0 - 2019-08-01
+
+- add support for cache tags
+
 ## 6.0.2 - 2019-07-31
 
 - make json responses cacheable
