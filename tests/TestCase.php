@@ -150,7 +150,7 @@ abstract class TestCase extends Orchestra
 
     public function getTempDirectory($suffix = '')
     {
-        return __DIR__.'/temp'.($suffix == '' ? '' : '/'.$suffix);
+        return __DIR__.DIRECTORY_SEPARATOR.'temp'.($suffix == '' ? '' : DIRECTORY_SEPARATOR.$suffix);
     }
 
     protected function initializeDirectory($directory)
