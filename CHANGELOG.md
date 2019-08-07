@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.1.1 - 2019-08-08
+
+- restore laravel 5.7 compatibility
+
 ## 6.1.0 - 2019-08-01
 
 - add support for cache tags
