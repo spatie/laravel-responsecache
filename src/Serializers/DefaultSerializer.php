@@ -1,16 +1,16 @@
 <?php
 
-namespace Spatie\ResponseCache\Serializer;
+namespace Spatie\ResponseCache\Serializers;
 
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Response as IlluminateResponse;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class DefaultSerializer implements Serializable
+class DefaultSerializer implements Serializer
 {
-    public const RESPONSE_TYPE_NORMAL = 'response_type_normal';
-    public const RESPONSE_TYPE_FILE = 'response_type_file';
+    public const RESPONSE_TYPE_NORMAL = 'normal';
+    public const RESPONSE_TYPE_FILE = 'file';
 
     public function serialize(Response $response): string
     {
@@ -39,13 +39,13 @@ class DefaultSerializer implements Serializable
 
         if ($response instanceof BinaryFileResponse) {
             $content = $response->getFile()->getPathname();
-            $type = self::RESPONSE_TYPE_FILE;
+            $type = static::RESPONSE_TYPE_FILE;
 
             return compact('statusCode', 'headers', 'content', 'type');
         }
 
         $content = $response->getContent();
-        $type = self::RESPONSE_TYPE_NORMAL;
+        $type = static::RESPONSE_TYPE_NORMAL;
 
         return compact('statusCode', 'headers', 'content', 'type');
     }
@@ -65,9 +65,9 @@ class DefaultSerializer implements Serializable
 
     protected function buildResponse(array $responseProperties): Response
     {
-        $type = $responseProperties['type'] ?? self::RESPONSE_TYPE_NORMAL;
+        $type = $responseProperties['type'] ?? static::RESPONSE_TYPE_NORMAL;
 
-        if ($type === self::RESPONSE_TYPE_FILE) {
+        if ($type === static::RESPONSE_TYPE_FILE) {
             return new BinaryFileResponse(
                 $responseProperties['content'],
                 $responseProperties['statusCode']

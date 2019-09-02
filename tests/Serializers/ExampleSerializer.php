@@ -1,8 +1,10 @@
 <?php
 
-namespace Spatie\ResponseCache\Serializer;
+namespace Spatie\ResponseCache\Test\Serializers;
 
 use Illuminate\Http\JsonResponse;
+use Spatie\ResponseCache\Serializers\DefaultSerializer;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ExampleSerializer extends DefaultSerializer
@@ -19,7 +21,6 @@ class ExampleSerializer extends DefaultSerializer
             return compact('statusCode', 'headers', 'content', 'type');
         }
 
-        // If you return it with JsonResponse, save the content as JSON
         $content = $response instanceof JsonResponse
             ? $response->getData()
             : $response->getContent();

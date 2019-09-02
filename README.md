@@ -393,26 +393,27 @@ Afterwards you can define your replacer in the `responsecache.php` config file:
 ],
 ```
 
-### Customizing Serializer
+### Customizing the serializer
 
-In order to keep the response data as a cache, it has serialized data inside.
-The default provided serializer `Spatie\ResponseCache\Serializer\DefaultSerializer` will often work satisfactorily.
+A serializer is responsible from serializing a response so it can be stored in the cache. It is also responsible for rebuilding the response from the cache.
 
-However, you may want to serialize according to your requirements.
-As an example, in `ExampleSerializer`, the response data returned by your service is cached in strict type.
+The default serializer `Spatie\ResponseCache\Serializer\DefaultSerializer` will just work in most cases.
 
-By inheriting `DefaultSerializer` and changing only the necessary parts, you can easily customize it.
-Of course, you can implement it from scratch.
+If you have some special serialization needs you can specify a custom serializer in the `serializer` key of the config file. Any class that implements `Spatie\ResponseCache\Serializers\Serializer` can be used. This is how that interface looks like:
 
-Once you have implemented the Serializable interface in your serializer, specify it in the config file.
+```php
+namespace Spatie\ResponseCache\Serializers;
 
+use Symfony\Component\HttpFoundation\Response;
+
+interface Serializer
+{
+    public function serialize(Response $response): string;
+
+    public function unserialize(string $serializedResponse): Response;
+}
 ```
-/*
- * This class serializes cache data and expands it.
- * Serialization can save the data to be returned in an appropriate form.
- */
-'serializer' => \Spatie\ResponseCache\Serializer\ExampleSerializer::class,
-```
+
 
 ## Changelog
 

@@ -7,7 +7,7 @@ use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Commands\ClearCommand;
-use Spatie\ResponseCache\Serializer\Serializable;
+use Spatie\ResponseCache\Serializers\Serializer;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCacheServiceProvider extends ServiceProvider
@@ -26,7 +26,7 @@ class ResponseCacheServiceProvider extends ServiceProvider
             return $app->make(config('responsecache.hasher'));
         });
 
-        $this->app->bind(Serializable::class, function (Container $app) {
+        $this->app->bind(Serializer::class, function (Container $app) {
             return $app->make(config('responsecache.serializer'));
         });
 

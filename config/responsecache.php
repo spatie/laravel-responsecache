@@ -65,8 +65,7 @@ return [
     'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,
 
     /*
-     * This class serializes cache data and expands it.
-     * Serialization can save the data to be returned in an appropriate form.
+     * This class is responsible for serializing responses.
      */
-    'serializer' => \Spatie\ResponseCache\Serializer\DefaultSerializer::class,
+    'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
 ];

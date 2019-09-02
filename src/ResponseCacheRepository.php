@@ -4,7 +4,7 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Cache\Repository;
 use Symfony\Component\HttpFoundation\Response;
-use Spatie\ResponseCache\Serializer\Serializable;
+use Spatie\ResponseCache\Serializers\Serializer;
 
 class ResponseCacheRepository
 {
@@ -14,7 +14,7 @@ class ResponseCacheRepository
     /** @var \Spatie\ResponseCache\ResponseSerializer */
     protected $responseSerializer;
 
-    public function __construct(Serializable $responseSerializer, Repository $cache)
+    public function __construct(Serializer $responseSerializer, Repository $cache)
     {
         $this->cache = $cache;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\ResponseCache\Serializer;
+namespace Spatie\ResponseCache\Serializers;
 
 use Symfony\Component\HttpFoundation\Response;
 
-interface Serializable
+interface Serializer
 {
     public function serialize(Response $response): string;
 
