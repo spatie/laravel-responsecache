@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.3.0 - 2019-09-01
+
+- add support for custom serializers
+
 ## 6.2.0 - 2019-09-01
 
 - make compatible with Laravel 6

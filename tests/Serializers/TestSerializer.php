@@ -7,7 +7,7 @@ use Spatie\ResponseCache\Serializers\DefaultSerializer;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class ExampleSerializer extends DefaultSerializer
+class TestSerializer extends DefaultSerializer
 {
     protected function getResponseData(Response $response): array
     {
@@ -27,7 +27,6 @@ class ExampleSerializer extends DefaultSerializer
 
         $type = self::RESPONSE_TYPE_NORMAL;
 
-        // Save class name
         $class = get_class($response);
 
         return compact('statusCode', 'headers', 'content', 'type', 'class');
@@ -46,7 +45,6 @@ class ExampleSerializer extends DefaultSerializer
 
         $class = $responseProperties['class'];
 
-        // Restore as saved class
         return new $class($responseProperties['content'], $responseProperties['statusCode']);
     }
 }

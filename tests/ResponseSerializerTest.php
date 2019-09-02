@@ -6,7 +6,7 @@ use Config;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Spatie\ResponseCache\Serializers\Serializer;
-use Spatie\ResponseCache\Test\Serializers\ExampleSerializer;
+use Spatie\ResponseCache\Test\Serializers\TestSerializer;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 
 class ResponseSerializerTest extends TestCase
@@ -58,7 +58,7 @@ class ResponseSerializerTest extends TestCase
     public function it_can_customized_serialize_and_unserialize_a_response()
     {
         // Set config dynamically for test
-        Config::set('responsecache.serializer', ExampleSerializer::class);
+        Config::set('responsecache.serializer', TestSerializer::class);
 
         // Instantiate a custom serializer according to config
         $responseSerializer = app(Serializer::class);
