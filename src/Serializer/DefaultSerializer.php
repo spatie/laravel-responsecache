@@ -1,13 +1,13 @@
 <?php
 
-namespace Spatie\ResponseCache;
+namespace Spatie\ResponseCache\Serializer;
 
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Response as IlluminateResponse;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class ResponseSerializer
+class DefaultSerializer implements Serializable
 {
     public const RESPONSE_TYPE_NORMAL = 'response_type_normal';
     public const RESPONSE_TYPE_FILE = 'response_type_file';
