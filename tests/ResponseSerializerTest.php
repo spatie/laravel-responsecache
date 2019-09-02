@@ -6,8 +6,8 @@ use Config;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Spatie\ResponseCache\Serializers\Serializer;
-use Spatie\ResponseCache\Test\Serializers\TestSerializer;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
+use Spatie\ResponseCache\Test\Serializers\TestSerializer;
 
 class ResponseSerializerTest extends TestCase
 {

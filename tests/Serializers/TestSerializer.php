@@ -3,9 +3,9 @@
 namespace Spatie\ResponseCache\Test\Serializers;
 
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Serializers\DefaultSerializer;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class TestSerializer extends DefaultSerializer
 {
