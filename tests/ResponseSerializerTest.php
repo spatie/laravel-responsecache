@@ -2,17 +2,20 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Spatie\ResponseCache\ResponseSerializer;
-use Symfony\Component\HttpFoundation\Response;
+use Config;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Spatie\ResponseCache\Serializer\Serializable;
+use Spatie\ResponseCache\Serializer\ExampleSerializer;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 
 class ResponseSerializerTest extends TestCase
 {
-    /** @var \Spatie\ResponseCache\ResponseSerializer */
-    protected $responseSerializer;
+    /** @var string */
+    protected $textContent;
 
     /** @var string */
-    protected $content;
+    protected $jsonContent;
 
     /** @var string */
     protected $statusCode;
@@ -21,9 +24,8 @@ class ResponseSerializerTest extends TestCase
     {
         parent::setUp();
 
-        $this->responseSerializer = new ResponseSerializer();
-
-        $this->content = '<html>This is a response</html>';
+        $this->textContent = '<html>This is a response</html>';
+        $this->jsonContent = json_encode(['text' => 'This is a response']);
 
         $this->statusCode = 500;
     }
@@ -31,17 +33,48 @@ class ResponseSerializerTest extends TestCase
     /** @test */
     public function it_can_serialize_and_unserialize_a_response()
     {
-        $testResponse = Response::create($this->content, $this->statusCode, ['testHeader' => 'testValue']);
+        // Instantiate a default serializer
+        $responseSerializer = app(Serializable::class);
 
-        $serializedResponse = $this->responseSerializer->serialize($testResponse);
+        $testResponse = Response::create(
+            $this->textContent, $this->statusCode, ['testHeader' => 'testValue']);
+
+        $serializedResponse = $responseSerializer->serialize($testResponse);
 
         $this->assertTrue(is_string($serializedResponse));
 
-        $unserializedResponse = $this->responseSerializer->unserialize($serializedResponse);
+        $unserializedResponse = $responseSerializer->unserialize($serializedResponse);
 
         $this->assertInstanceOf(Response::class, $unserializedResponse);
 
-        $this->assertEquals($this->content, $unserializedResponse->getContent());
+        $this->assertEquals($this->textContent, $unserializedResponse->getContent());
+
+        $this->assertEquals($this->statusCode, $unserializedResponse->getStatusCode());
+
+        $this->assertEquals('testValue', $unserializedResponse->headers->get('testHeader'));
+    }
+
+    /** @test */
+    public function it_can_customized_serialize_and_unserialize_a_response()
+    {
+        // Set config dynamically for test
+        Config::set('responsecache.serializer', ExampleSerializer::class);
+
+        // Instantiate a custom serializer according to config
+        $responseSerializer = app(Serializable::class);
+
+        $testResponse = JsonResponse::create(
+            $this->jsonContent, $this->statusCode, ['testHeader' => 'testValue']);
+
+        $serializedResponse = $responseSerializer->serialize($testResponse);
+
+        $this->assertTrue(is_string($serializedResponse));
+
+        $unserializedResponse = $responseSerializer->unserialize($serializedResponse);
+
+        $this->assertInstanceOf(JsonResponse::class, $unserializedResponse);
+
+        $this->assertEquals($this->jsonContent, $unserializedResponse->getData());
 
         $this->assertEquals($this->statusCode, $unserializedResponse->getStatusCode());
 
@@ -53,6 +86,6 @@ class ResponseSerializerTest extends TestCase
     {
         $this->expectException(CouldNotUnserialize::class);
 
-        $this->responseSerializer->unserialize('b:0;');
+        app(Serializable::class)->unserialize('b:0;');
     }
 }
