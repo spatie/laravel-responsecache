@@ -56,7 +56,7 @@ class ResponseCache
         $this->taggedCache($tags)->put(
             $this->hasher->getHashFor($request),
             $response,
-            $lifetimeInSeconds ?? $this->cacheProfile->cacheRequestUntil($request),
+            $lifetimeInSeconds ?? $this->cacheProfile->cacheRequestUntil($request)
         );
 
         return $response;
@@ -85,7 +85,7 @@ class ResponseCache
 
         $clonedResponse->headers->set(
             config('responsecache.cache_time_header_name'),
-            now()->toRfc2822String(),
+            now()->toRfc2822String()
         );
 
         return $clonedResponse;
