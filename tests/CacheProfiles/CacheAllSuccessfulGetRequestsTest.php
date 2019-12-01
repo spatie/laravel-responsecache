@@ -2,12 +2,12 @@
 
 namespace Spatie\ResponseCache\Test\CacheProfiles;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Spatie\ResponseCache\Test\User;
-use Spatie\ResponseCache\Test\TestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
+use Spatie\ResponseCache\Test\TestCase;
+use Spatie\ResponseCache\Test\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequestsTest extends TestCase
 {

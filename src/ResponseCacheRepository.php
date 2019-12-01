@@ -3,8 +3,8 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Cache\Repository;
-use Symfony\Component\HttpFoundation\Response;
 use Spatie\ResponseCache\Serializers\Serializer;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCacheRepository
 {

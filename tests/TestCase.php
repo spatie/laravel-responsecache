@@ -3,16 +3,16 @@
 namespace Spatie\ResponseCache\Test;
 
 use File;
-use Route;
-use Illuminate\Support\Str;
-use Illuminate\Routing\Router;
 use Illuminate\Database\Schema\Blueprint;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Str;
+use Orchestra\Testbench\TestCase as Orchestra;
+use Route;
 use Spatie\ResponseCache\Facades\ResponseCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
-use Spatie\ResponseCache\ResponseCacheServiceProvider;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
+use Spatie\ResponseCache\ResponseCacheServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
