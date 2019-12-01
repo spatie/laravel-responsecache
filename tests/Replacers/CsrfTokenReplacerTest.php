@@ -2,8 +2,8 @@
 
 namespace Spatie\ResponseCache\Test\Replacers;
 
-use Spatie\ResponseCache\Test\TestCase;
 use Spatie\ResponseCache\Replacers\CsrfTokenReplacer;
+use Spatie\ResponseCache\Test\TestCase;
 
 class CsrfTokenReplacerTest extends TestCase
 {

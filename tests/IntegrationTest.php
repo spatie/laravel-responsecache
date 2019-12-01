@@ -2,10 +2,10 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use DateTime;
 use Carbon\Carbon;
-use ResponseCache;
+use DateTime;
 use Illuminate\Support\Facades\Event;
+use ResponseCache;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 

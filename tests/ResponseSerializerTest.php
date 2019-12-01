@@ -3,11 +3,11 @@
 namespace Spatie\ResponseCache\Test;
 
 use Config;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Spatie\ResponseCache\Serializers\Serializer;
 use Spatie\ResponseCache\Test\Serializers\TestSerializer;
-use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 
 class ResponseSerializerTest extends TestCase
 {

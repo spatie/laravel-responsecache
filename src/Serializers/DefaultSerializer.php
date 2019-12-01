@@ -2,10 +2,10 @@
 
 namespace Spatie\ResponseCache\Serializers;
 
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Response as IlluminateResponse;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultSerializer implements Serializer
 {
