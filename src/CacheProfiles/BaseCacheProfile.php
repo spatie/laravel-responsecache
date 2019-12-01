@@ -23,11 +23,9 @@ abstract class BaseCacheProfile implements CacheProfile
 
     public function useCacheNameSuffix(Request $request): string
     {
-        if (Auth::check()) {
-            return Auth::id();
-        }
-
-        return '';
+        return Auth::check()
+            ? Auth::id()
+            : '';
     }
 
     public function isRunningInConsole(): bool
