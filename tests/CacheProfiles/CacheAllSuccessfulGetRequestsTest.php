@@ -11,8 +11,7 @@ use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 
 class CacheAllSuccessfulGetRequestsTest extends TestCase
 {
-    /** @var \Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests */
-    protected $cacheProfile;
+    protected CacheAllSuccessfulGetRequests $cacheProfile;
 
     public function setUp(): void
     {

@@ -9,14 +9,11 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseHasherTest extends TestCase
 {
-    /** @var \Spatie\ResponseCache\Hasher\DefaultHasher */
-    protected $requestHasher;
+    protected DefaultHasher $requestHasher;
 
-    /** @var \Spatie\ResponseCache\CacheProfiles\CacheProfile */
-    protected $cacheProfile;
+    protected CacheProfile $cacheProfile;
 
-    /** @var \Illuminate\Http\Request */
-    protected $request;
+    protected Request $request;
 
     public function setUp(): void
     {

@@ -13,8 +13,7 @@ use Spatie\ResponseCache\Events\ResponseCacheHit;
 
 class CacheResponse
 {
-    /** @var \Spatie\ResponseCache\ResponseCache */
-    protected $responseCache;
+    protected ResponseCache $responseCache;
 
     public function __construct(ResponseCache $responseCache)
     {

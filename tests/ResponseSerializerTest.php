@@ -11,14 +11,11 @@ use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 
 class ResponseSerializerTest extends TestCase
 {
-    /** @var string */
-    protected $textContent;
+    protected string $textContent;
 
-    /** @var string */
-    protected $jsonContent;
+    protected string $jsonContent;
 
-    /** @var string */
-    protected $statusCode;
+    protected string $statusCode;
 
     public function setUp(): void
     {

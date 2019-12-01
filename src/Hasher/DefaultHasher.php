@@ -7,8 +7,7 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class DefaultHasher implements RequestHasher
 {
-    /** @var \Spatie\ResponseCache\CacheProfiles\CacheProfile */
-    protected $cacheProfile;
+    protected CacheProfile $cacheProfile;
 
     public function __construct(CacheProfile $cacheProfile)
     {

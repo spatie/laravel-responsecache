@@ -8,11 +8,9 @@ use Spatie\ResponseCache\Serializers\Serializer;
 
 class ResponseCacheRepository
 {
-    /** @var \Illuminate\Cache\Repository */
-    protected $cache;
+    protected Repository $cache;
 
-    /** @var \Spatie\ResponseCache\ResponseSerializer */
-    protected $responseSerializer;
+    protected Serializer $responseSerializer;
 
     public function __construct(Serializer $responseSerializer, Repository $cache)
     {

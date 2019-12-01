@@ -9,14 +9,11 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class ResponseCache
 {
-    /** @var \Spatie\ResponseCache\ResponseCacheRepository */
-    protected $cache;
+    protected ResponseCacheRepository $cache;
 
-    /** @var RequestHasher */
-    protected $hasher;
+    protected RequestHasher $hasher;
 
-    /** @var \Spatie\ResponseCache\CacheProfiles\CacheProfile */
-    protected $cacheProfile;
+    protected CacheProfile $cacheProfile;
 
     public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
     {
