@@ -77,8 +77,20 @@ class CacheResponse
 
     protected function getLifetime(array $args): ?int
     {
-        if (count($args) >= 1 && is_numeric($args[0])) {
+        if (count($args) === 0) {
+            return null;
+        }
+
+        /** @var int|string $lifetime */
+        $lifetime = $args[0];
+
+        if (is_numeric($lifetime)) {
             return (int) $args[0];
+        }
+
+        if (is_string($lifetime)) {
+            /** @see http://php.net/manual/en/datetime.formats.relative.php */
+            return now()->modify($lifetime)->diffInSeconds() ;
         }
 
         return null;

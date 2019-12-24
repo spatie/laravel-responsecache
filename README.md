@@ -279,6 +279,8 @@ When using the route middleware you can specify the number of seconds these rout
 ```php
 // cache this route for 5 minutes
 Route::get('/my-special-snowflake', 'SnowflakeController@index')->middleware('cacheResponse:300');
+// or the same using date modifier syntax
+Route::get('/my-special-snowflake', 'SnowflakeController@index')->middleware('cacheResponse:5mins');
 
 // cache all these routes for 10 minutes
 Route::group(function() {
