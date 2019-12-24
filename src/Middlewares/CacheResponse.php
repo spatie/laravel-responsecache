@@ -89,8 +89,8 @@ class CacheResponse
         }
 
         if (is_string($lifetime)) {
-            /** @see http://php.net/manual/en/datetime.formats.relative.php */
-            return now()->modify($lifetime)->diffInSeconds() ;
+            /* @see http://php.net/manual/en/datetime.formats.relative.php */
+            return now()->modify($lifetime)->diffInSeconds();
         }
 
         return null;
