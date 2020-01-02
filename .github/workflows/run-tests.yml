@@ -44,7 +44,7 @@ jobs:
               run: vendor/bin/phpunit
 
             - name: Send Slack notification
-              uses: rtCamp/action-slack-notify@master
+              uses: rtCamp/action-slack-notify@v1
               if: failure()
               env:
                 SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
