@@ -23,7 +23,7 @@ class IntegrationTest extends TestCase
         $secondResponse = $this->call('get', '/random');
 
         $this->assertRegularResponse($firstResponse);
-        $this->assertCachedResponse($secondResponse);
+        $this->assertRegularResponse($secondResponse);
 
         $this->assertSameResponse($firstResponse, $secondResponse);
     }
