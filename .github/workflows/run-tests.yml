@@ -43,7 +43,7 @@ jobs:
             - name: Execute tests
               run: vendor/bin/phpunit
 
-            - name: Upload artifacts
+            - name: Send Slack notification
               uses: rtCamp/action-slack-notify@master
               if: failure()
               env:
