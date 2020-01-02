@@ -42,3 +42,10 @@ jobs:
 
             - name: Execute tests
               run: vendor/bin/phpunit
+
+            - name: Upload artifacts
+              uses: rtCamp/action-slack-notify@master
+              if: failure()
+              env:
+                SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+                SLACK_COLOR: 'red'
