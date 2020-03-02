@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.0.0 - 2020-03-02
+
+- drop support for Laravel 6 to fix the test suite (namespace of `TestResponse` has changed)
+
 ## 6.5.0 - 2020-03-02
 
 - add support for Laravel 7
