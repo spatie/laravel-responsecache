@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.5.0 - 2020-03-02
+
+- add support for Laravel 7
+
 ## 6.4.0 - 2019-12-01
 
 - drop support for all non-current PHP and Laravel versions
