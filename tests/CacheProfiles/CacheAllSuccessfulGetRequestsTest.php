@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequestsTest extends TestCase
 {
-    protected CacheAllSuccessfulGetRequests $cacheProfile;
+    /**
+     * @var CacheAllSuccessfulGetRequests
+     */
+    protected $cacheProfile;
 
     public function setUp(): void
     {
@@ -110,6 +113,7 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
      * Create a new response with the given statusCode.
      *
      * @param int $statusCode
+     * @param string $contentType
      *
      * @return \Symfony\Component\HttpFoundation\Response;
      */
