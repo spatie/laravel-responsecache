@@ -18,6 +18,10 @@ All notable changes to `laravel-responsecache` will be documented in this file.
 
 - add support for custom serializers
 
+## 6.2.1 - 2020-03-07
+
+- make compatible with Laravel 7, so the package can be used on PHP 7.3
+
 ## 6.2.0 - 2019-09-01
 
 - make compatible with Laravel 6
