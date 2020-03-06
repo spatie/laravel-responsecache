@@ -5,10 +5,10 @@ namespace Spatie\ResponseCache\Test\Commands;
 use Event;
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Artisan;
-use Spatie\ResponseCache\Test\TestCase;
-use Spatie\ResponseCache\ResponseCacheRepository;
 use Spatie\ResponseCache\Events\ClearedResponseCache;
 use Spatie\ResponseCache\Events\ClearingResponseCache;
+use Spatie\ResponseCache\ResponseCacheRepository;
+use Spatie\ResponseCache\Test\TestCase;
 
 class ClearCommandTest extends TestCase
 {

@@ -2,10 +2,10 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Mockery;
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\Hasher\DefaultHasher;
+use Mockery;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
+use Spatie\ResponseCache\Hasher\DefaultHasher;
 
 class ResponseHasherTest extends TestCase
 {

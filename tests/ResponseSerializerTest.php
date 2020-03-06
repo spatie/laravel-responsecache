@@ -2,9 +2,9 @@
 
 namespace Spatie\ResponseCache\Test;
 
+use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Spatie\ResponseCache\ResponseSerializer;
 use Symfony\Component\HttpFoundation\Response;
-use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 
 class ResponseSerializerTest extends TestCase
 {
