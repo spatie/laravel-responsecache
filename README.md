@@ -315,14 +315,13 @@ Route::group(function() {
 
 #### Clearing tagged content
 
-You can clear responses which are assigned a tag or list of tags. For example, this statement would remove all routes 
-specified above:
+You can clear responses which are assigned a tag or list of tags. For example, this statement would remove the `'/test3'` and `'/test4'` routes above:
 
 ```php
 ResponseCache::clear(['foo', 'bar']);
 ```
 
-In contrast, this statement would remove all of the routes except the `'/test1'` route:
+In contrast, this statement would remove only the `'/test2'` route:
 
 ```php
 ResponseCache::clear(['bar']);
