@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Event;
 use ResponseCache;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
+use URL;
 
 class IntegrationTest extends TestCase
 {
@@ -102,7 +103,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_forget_a_specific_cached_request_with_full_path()
     {
-        config()->set('app.url', 'http://spatie.be');
+        URL::forceRootUrl('http://spatie.be');
 
         $firstResponse = $this->call('GET', '/random');
         $this->assertRegularResponse($firstResponse);
