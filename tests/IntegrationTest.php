@@ -107,6 +107,7 @@ class IntegrationTest extends TestCase
         $firstResponse = $this->call('GET', '/random');
         $this->assertRegularResponse($firstResponse);
 
+        /// Fails because URLGenerator is not using the updated app.url to build URLs
         ResponseCache::forget('http://spatie.be/random');
 
         $secondResponse = $this->call('GET', '/random');

@@ -9,11 +9,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCache
 {
-    protected ResponseCacheRepository $cache;
+    /**
+     * @var \Spatie\ResponseCache\ResponseCacheRepository
+     */
+    protected $cache;
 
-    protected RequestHasher $hasher;
+    /**
+     * @var \Spatie\ResponseCache\Hasher\RequestHasher
+     */
+    protected $hasher;
 
-    protected CacheProfile $cacheProfile;
+    /**
+     * @var \Spatie\ResponseCache\CacheProfiles\CacheProfile
+     */
+    protected $cacheProfile;
 
     public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
     {

@@ -8,9 +8,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCacheRepository
 {
-    protected Repository $cache;
+    /**
+     * @var \Illuminate\Cache\Repository
+     */
+    protected $cache;
 
-    protected Serializer $responseSerializer;
+    /**
+     * @var \Spatie\ResponseCache\Serializers\Serializer
+     */
+    protected $responseSerializer;
 
     public function __construct(Serializer $responseSerializer, Repository $cache)
     {

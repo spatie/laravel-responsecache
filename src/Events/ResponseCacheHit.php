@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 
 class ResponseCacheHit
 {
-    public Request $request;
+    /**
+     * @var \Illuminate\Http\Request
+     */
+    public $request;
 
     public function __construct(Request $request)
     {

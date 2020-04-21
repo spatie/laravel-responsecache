@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequestsTest extends TestCase
 {
-    protected CacheAllSuccessfulGetRequests $cacheProfile;
+    /**
+     * @var \Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests
+     */
+    protected $cacheProfile;
 
     public function setUp(): void
     {
