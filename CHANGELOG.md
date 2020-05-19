@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.6.1 - 2020-04-22
+
+- change to the proper way of setting app URL on runtime (#290)
+
 ## 6.6.0 - 2020-03-02
 
 - drop support for Laravel 6 to fix the test suite (namespace of `TestResponse` has changed)

@@ -56,7 +56,7 @@ return [
      * When using the default CacheRequestFilter this setting controls the
      * default number of seconds responses must be cached.
      */
-    'cache_lifetime_in_seconds' => env('RESPONSE_CACHE_LIFETIME', 60 * 24 * 7),
+    'cache_lifetime_in_seconds' => env('RESPONSE_CACHE_LIFETIME', 60 * 60 * 24 * 7),
 
     /*
      * This setting determines if a http header named with the cache time
@@ -315,14 +315,13 @@ Route::group(function() {
 
 #### Clearing tagged content
 
-You can clear responses which are assigned a tag or list of tags. For example, this statement would remove all routes 
-specified above:
+You can clear responses which are assigned a tag or list of tags. For example, this statement would remove the `'/test3'` and `'/test4'` routes above:
 
 ```php
 ResponseCache::clear(['foo', 'bar']);
 ```
 
-In contrast, this statement would remove all of the routes except the `'/test1'` route:
+In contrast, this statement would remove only the `'/test2'` route:
 
 ```php
 ResponseCache::clear(['bar']);
