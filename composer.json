@@ -27,7 +27,8 @@
     "require-dev": {
         "phpunit/phpunit" : "^9.0",
         "orchestra/testbench": "^5.0",
-        "mockery/mockery": "^1.3"
+        "mockery/mockery": "^1.3",
+        "vimeo/psalm": "^3.11"
     },
     "autoload": {
         "psr-4": {
@@ -40,6 +41,7 @@
         }
     },
     "scripts": {
+        "psalm": "vendor/bin/psalm",
         "test": "vendor/bin/phpunit"
     },
     "extra": {
