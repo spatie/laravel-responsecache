@@ -92,6 +92,8 @@ class CacheResponse
             $tags = array_slice($args, 1);
         }
 
+        $hey = 'test';
+
         return array_filter($tags);
     }
 }
