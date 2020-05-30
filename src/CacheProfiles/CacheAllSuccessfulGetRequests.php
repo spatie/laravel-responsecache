@@ -2,7 +2,6 @@
 
 namespace Spatie\ResponseCache\CacheProfiles;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
