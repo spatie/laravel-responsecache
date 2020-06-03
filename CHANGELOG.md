@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.6.2 - 2020-06-03
+
+- support JSON types other than application/json (#299)
+
 ## 6.6.1 - 2020-04-22
 
 - change to the proper way of setting app URL on runtime (#290)
