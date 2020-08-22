@@ -21,10 +21,15 @@
     ],
     "require": {
         "php": "^7.4",
-        "laravel/framework": "^7.13",
+        "illuminate/cache": "^7.13",
+        "illuminate/container": "^7.13",
+        "illuminate/console": "^7.13",
+        "illuminate/http": "^7.13",
+        "illuminate/support": "^7.13",
         "nesbot/carbon": "^2.35"
     },
     "require-dev": {
+        "laravel/framework": "^7.13",
         "phpunit/phpunit" : "^9.1.5",
         "orchestra/testbench": "^5.2",
         "mockery/mockery": "^1.4",
