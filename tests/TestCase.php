@@ -57,9 +57,9 @@ abstract class TestCase extends Orchestra
     {
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => $this->getTempDirectory().'/database.sqlite',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
 
         $app['config']->set('app.key', '6rE9Nz59bGRbeMATftriyQjrpF7DcOQm');
@@ -84,8 +84,8 @@ abstract class TestCase extends Orchestra
         foreach (range(1, 10) as $index) {
             User::create(
                 [
-                    'name'     => "user{$index}",
-                    'email'    => "user{$index}@spatie.be",
+                    'name' => "user{$index}",
+                    'email' => "user{$index}@spatie.be",
                     'password' => "password{$index}",
                 ]
             );

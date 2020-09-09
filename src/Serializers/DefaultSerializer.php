@@ -21,7 +21,7 @@ class DefaultSerializer implements Serializer
     {
         $responseProperties = unserialize($serializedResponse);
 
-        if (!$this->containsValidResponseProperties($responseProperties)) {
+        if (! $this->containsValidResponseProperties($responseProperties)) {
             throw CouldNotUnserialize::serializedResponse($serializedResponse);
         }
 
@@ -52,11 +52,11 @@ class DefaultSerializer implements Serializer
 
     protected function containsValidResponseProperties($properties): bool
     {
-        if (!is_array($properties)) {
+        if (! is_array($properties)) {
             return false;
         }
 
-        if (!isset($properties['content'], $properties['statusCode'])) {
+        if (! isset($properties['content'], $properties['statusCode'])) {
             return false;
         }
 

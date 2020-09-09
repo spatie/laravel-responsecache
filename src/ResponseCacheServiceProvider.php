@@ -34,7 +34,7 @@ class ResponseCacheServiceProvider extends ServiceProvider
             ->needs(Repository::class)
             ->give(function (): Repository {
                 $repository = app('cache')->store(config('responsecache.cache_store'));
-                if (!empty(config('responsecache.cache_tag'))) {
+                if (! empty(config('responsecache.cache_tag'))) {
                     return $repository->tags(config('responsecache.cache_tag'));
                 }
 
