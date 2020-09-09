@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Event;
 use ResponseCache;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
-use URL;
 
 class IntegrationTest extends TestCase
 {

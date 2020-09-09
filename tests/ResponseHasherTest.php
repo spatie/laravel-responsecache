@@ -31,8 +31,10 @@ class ResponseHasherTest extends TestCase
     {
         $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
 
-        $this->assertEquals('responsecache-467d6e9cb7425ed9d3e114e44eb7117f',
-            $this->requestHasher->getHashFor($this->request));
+        $this->assertEquals(
+            'responsecache-467d6e9cb7425ed9d3e114e44eb7117f',
+            $this->requestHasher->getHashFor($this->request)
+        );
     }
 
     /** @test */
@@ -43,7 +45,9 @@ class ResponseHasherTest extends TestCase
         $request = Request::create('https://spatie.be/example-page');
         $requestForSubdomain = Request::create('https://de.spatie.be/example-page');
 
-        $this->assertNotEquals($this->requestHasher->getHashFor($request),
-            $this->requestHasher->getHashFor($requestForSubdomain));
+        $this->assertNotEquals(
+            $this->requestHasher->getHashFor($request),
+            $this->requestHasher->getHashFor($requestForSubdomain)
+        );
     }
 }
