@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.6.4 - 2020-09-09
+
+- Support Laravel 8
+
 ## 6.6.3 - 2020-08-24
 
 - replace Laravel/framework with individual packages (#304)

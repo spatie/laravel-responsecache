@@ -21,19 +21,18 @@
     ],
     "require": {
         "php": "^7.4",
-        "illuminate/cache": "^7.13",
-        "illuminate/container": "^7.13",
-        "illuminate/console": "^7.13",
-        "illuminate/http": "^7.13",
-        "illuminate/support": "^7.13",
+        "illuminate/cache": "^7.13|^8.0",
+        "illuminate/container": "^7.13|^8.0",
+        "illuminate/console": "^7.13|^8.0",
+        "illuminate/http": "^7.13|^8.0",
+        "illuminate/support": "^7.13|^8.0",
         "nesbot/carbon": "^2.35"
     },
     "require-dev": {
-        "laravel/framework": "^7.13",
+        "laravel/framework": "^7.13|^8.0",
         "phpunit/phpunit" : "^9.1.5",
-        "orchestra/testbench": "^5.2",
-        "mockery/mockery": "^1.4",
-        "vimeo/psalm": "^3.11"
+        "orchestra/testbench": "^5.2|^6.0",
+        "mockery/mockery": "^1.4"
     },
     "autoload": {
         "psr-4": {
