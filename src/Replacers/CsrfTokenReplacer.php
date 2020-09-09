@@ -10,7 +10,7 @@ class CsrfTokenReplacer implements Replacer
 
     public function prepareResponseToCache(Response $response): void
     {
-        if (! $response->getContent()) {
+        if (!$response->getContent()) {
             return;
         }
 
@@ -23,7 +23,7 @@ class CsrfTokenReplacer implements Replacer
 
     public function replaceInCachedResponse(Response $response): void
     {
-        if (! $response->getContent()) {
+        if (!$response->getContent()) {
             return;
         }
 

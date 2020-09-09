@@ -34,7 +34,7 @@ class ResponseCache
             return false;
         }
 
-        if (! $this->cacheProfile->shouldCacheRequest($request)) {
+        if (!$this->cacheProfile->shouldCacheRequest($request)) {
             return false;
         }
 
@@ -91,7 +91,7 @@ class ResponseCache
 
     /**
      * @param string|array $uris
-     * @param string[]        $tags
+     * @param string[]     $tags
      *
      * @return \Spatie\ResponseCache\ResponseCache
      */

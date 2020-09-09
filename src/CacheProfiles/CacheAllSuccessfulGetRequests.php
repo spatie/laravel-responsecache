@@ -23,11 +23,11 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile
 
     public function shouldCacheResponse(Response $response): bool
     {
-        if (! $this->hasCacheableResponseCode($response)) {
+        if (!$this->hasCacheableResponseCode($response)) {
             return false;
         }
 
-        if (! $this->hasCacheableContentType($response)) {
+        if (!$this->hasCacheableContentType($response)) {
             return false;
         }
 
