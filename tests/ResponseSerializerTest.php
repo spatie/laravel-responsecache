@@ -34,7 +34,10 @@ class ResponseSerializerTest extends TestCase
         $responseSerializer = app(Serializer::class);
 
         $testResponse = Response::create(
-            $this->textContent, $this->statusCode, ['testHeader' => 'testValue']);
+            $this->textContent,
+            $this->statusCode,
+            ['testHeader' => 'testValue']
+        );
 
         $serializedResponse = $responseSerializer->serialize($testResponse);
 
@@ -61,7 +64,10 @@ class ResponseSerializerTest extends TestCase
         $responseSerializer = app(Serializer::class);
 
         $testResponse = JsonResponse::create(
-            $this->jsonContent, $this->statusCode, ['testHeader' => 'testValue']);
+            $this->jsonContent,
+            $this->statusCode,
+            ['testHeader' => 'testValue']
+        );
 
         $serializedResponse = $responseSerializer->serialize($testResponse);
 
