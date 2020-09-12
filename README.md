@@ -9,7 +9,7 @@ This Laravel package can cache an entire response. By default it will cache all 
 
 So the first time a request comes in the package will save the response before sending it to the users. When the same request comes in again we're not going through the entire application but just respond with the saved response.
 
-Are you a visual learner? Then watch [this video](https://spatie.be/videos/spatie-package-source-dives/laravel-responsecache) that covers how you can use laravel-responsecache and how it works under the hood.
+Are you a visual learner? Then watch [this video](https://spatie.be/videos/laravel-package-training/laravel-responsecache) that covers how you can use laravel-responsecache and how it works under the hood.
 
 ## Support us
 
