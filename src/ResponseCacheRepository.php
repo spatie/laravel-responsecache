@@ -41,6 +41,10 @@ class ResponseCacheRepository
 
     public function clear()
     {
+        if (! empty(config('responsecache.cache_tag'))) {
+            return $this->cache->tags(config('responsecache.cache_tag'))->flush();
+        }
+
         $this->cache->clear();
     }
 
