@@ -17,13 +17,13 @@ class CsrfTokenReplacerTest extends TestCase
         ]);
 
         $firstToken = csrf_token();
-        $firstResponse = $this->call('get', '/csrf_token');
+        $firstResponse = $this->get('/csrf_token');
         $firstResponse->assertSee($firstToken);
 
         session()->regenerateToken();
 
         $secondToken = csrf_token();
-        $secondResponse = $this->call('get', '/csrf_token');
+        $secondResponse = $this->get('/csrf_token');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertCachedResponse($secondResponse);

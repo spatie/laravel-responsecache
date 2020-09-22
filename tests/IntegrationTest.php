@@ -33,7 +33,7 @@ class IntegrationTest extends TestCase
     {
         Event::fake();
 
-        $this->call('get', '/random');
+        $this->get('/random');
 
         Event::assertDispatched(CacheMissed::class);
     }
@@ -43,8 +43,8 @@ class IntegrationTest extends TestCase
     {
         Event::fake();
 
-        $this->call('get', '/random');
-        $this->call('get', '/random');
+        $this->get('/random');
+        $this->get('/random');
 
         Event::assertDispatched(ResponseCacheHit::class);
     }
@@ -52,8 +52,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_cache_redirects()
     {
-        $firstResponse = $this->call('GET', '/redirect');
-        $secondResponse = $this->call('GET', '/redirect');
+        $firstResponse = $this->get('/redirect');
+        $secondResponse = $this->get('/redirect');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertCachedResponse($secondResponse);
@@ -64,8 +64,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_cache_errors()
     {
-        $firstResponse = $this->call('GET', '/notfound');
-        $secondResponse = $this->call('GET', '/notfound');
+        $firstResponse = $this->get('/notfound');
+        $secondResponse = $this->get('/notfound');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertRegularResponse($secondResponse);
@@ -88,12 +88,12 @@ class IntegrationTest extends TestCase
     {
         config()->set('app.url', 'http://spatie.be');
 
-        $firstResponse = $this->call('GET', '/random');
+        $firstResponse = $this->get('/random');
         $this->assertRegularResponse($firstResponse);
 
         ResponseCache::forget('/random');
 
-        $secondResponse = $this->call('GET', '/random');
+        $secondResponse = $this->get('/random');
         $this->assertRegularResponse($secondResponse);
 
         $this->assertDifferentResponse($firstResponse, $secondResponse);
@@ -102,18 +102,18 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_forget_several_specific_cached_requests_at_once()
     {
-        $firstResponseFirstCall = $this->call('GET', '/random/1');
+        $firstResponseFirstCall = $this->get('/random/1');
         $this->assertRegularResponse($firstResponseFirstCall);
 
-        $secondResponseFirstCall = $this->call('GET', '/random/2');
+        $secondResponseFirstCall = $this->get('/random/2');
         $this->assertRegularResponse($secondResponseFirstCall);
 
         ResponseCache::forget(['/random/1', '/random/2']);
 
-        $firstResponseSecondCall = $this->call('GET', '/random/1');
+        $firstResponseSecondCall = $this->get('/random/1');
         $this->assertRegularResponse($firstResponseSecondCall);
 
-        $secondResponseSecondCall = $this->call('GET', '/random/2');
+        $secondResponseSecondCall = $this->get('/random/2');
         $this->assertRegularResponse($secondResponseSecondCall);
 
         $this->assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
@@ -123,15 +123,15 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_cache_responses_for_each_logged_in_user_separately()
     {
-        $this->call('GET', '/login/1');
-        $firstUserFirstCall = $this->call('GET', '/');
-        $firstUserSecondCall = $this->call('GET', '/');
-        $this->call('GET', 'logout');
+        $this->get('/login/1');
+        $firstUserFirstCall = $this->get('/');
+        $firstUserSecondCall = $this->get('/');
+        $this->get('logout');
 
-        $this->call('GET', '/login/2');
-        $secondUserFirstCall = $this->call('GET', '/');
-        $secondUserSecondCall = $this->call('GET', '/');
-        $this->call('GET', 'logout');
+        $this->get('/login/2');
+        $secondUserFirstCall = $this->get('/');
+        $secondUserSecondCall = $this->get('/');
+        $this->get('logout');
 
         $this->assertRegularResponse($firstUserFirstCall);
         $this->assertCachedResponse($firstUserSecondCall);
@@ -149,8 +149,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_cache_routes_with_the_doNotCacheResponse_middleware()
     {
-        $firstResponse = $this->call('GET', '/uncacheable');
-        $secondResponse = $this->call('GET', '/uncacheable');
+        $firstResponse = $this->get('/uncacheable');
+        $secondResponse = $this->get('/uncacheable');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertRegularResponse($secondResponse);
@@ -163,8 +163,8 @@ class IntegrationTest extends TestCase
     {
         $this->app['config']->set('responsecache.enabled', false);
 
-        $firstResponse = $this->call('GET', '/random');
-        $secondResponse = $this->call('GET', '/random');
+        $firstResponse = $this->get('/random');
+        $secondResponse = $this->get('/random');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertRegularResponse($secondResponse);
@@ -175,11 +175,11 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_not_serve_cached_requests_when_it_is_disabled_in_the_config_file()
     {
-        $firstResponse = $this->call('GET', '/random');
+        $firstResponse = $this->get('/random');
 
         $this->app['config']->set('responsecache.enabled', false);
 
-        $secondResponse = $this->call('GET', '/random');
+        $secondResponse = $this->get('/random');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertRegularResponse($secondResponse);
@@ -190,8 +190,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_will_cache_file_responses()
     {
-        $firstResponse = $this->call('get', '/image');
-        $secondResponse = $this->call('get', '/image');
+        $firstResponse = $this->get('/image');
+        $secondResponse = $this->get('/image');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertCachedResponse($secondResponse);
@@ -204,8 +204,8 @@ class IntegrationTest extends TestCase
     {
         $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
-        $firstResponse = $this->call('get', '/');
-        $secondResponse = $this->call('get', '/');
+        $firstResponse = $this->get('/');
+        $secondResponse = $this->get('/');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertRegularResponse($secondResponse);
@@ -217,8 +217,8 @@ class IntegrationTest extends TestCase
         // Set default lifetime as 0 to check if it will cache for given lifetime
         $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
-        $firstResponse = $this->call('get', '/cache-for-given-lifetime');
-        $secondResponse = $this->call('get', '/cache-for-given-lifetime');
+        $firstResponse = $this->get('/cache-for-given-lifetime');
+        $secondResponse = $this->get('/cache-for-given-lifetime');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertCachedResponse($secondResponse);
@@ -231,14 +231,14 @@ class IntegrationTest extends TestCase
         $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
         Carbon::setTestNow(Carbon::now()->subMinutes(6));
-        $firstResponse = $this->call('get', '/cache-for-given-lifetime');
+        $firstResponse = $this->get('/cache-for-given-lifetime');
         $this->assertRegularResponse($firstResponse);
 
-        $secondResponse = $this->call('get', '/cache-for-given-lifetime');
+        $secondResponse = $this->get('/cache-for-given-lifetime');
         $this->assertCachedResponse($secondResponse);
 
         Carbon::setTestNow();
-        $thirdResponse = $this->call('get', '/cache-for-given-lifetime');
+        $thirdResponse = $this->get('/cache-for-given-lifetime');
         $this->assertRegularResponse($thirdResponse);
     }
 
@@ -248,8 +248,8 @@ class IntegrationTest extends TestCase
         $this->app['config']->set('responsecache.add_cache_time_header', true);
         $this->app['config']->set('responsecache.cache_time_header_name', 'X-Cached-At');
 
-        $firstResponse = $this->call('get', '/random');
-        $secondResponse = $this->call('get', '/random');
+        $firstResponse = $this->get('/random');
+        $secondResponse = $this->get('/random');
 
         $this->assertFalse($firstResponse->headers->has('X-Cached-At'));
         $this->assertTrue($secondResponse->headers->has('X-Cached-At'));

@@ -16,17 +16,17 @@ class TaggingTest extends TestCase
     /** @test */
     public function it_can_cache_requests_using_route_cache_tags()
     {
-        $firstResponse = $this->call('GET', '/tagged/1');
+        $firstResponse = $this->get('/tagged/1');
         $this->assertRegularResponse($firstResponse);
 
-        $secondResponse = $this->call('GET', '/tagged/1');
+        $secondResponse = $this->get('/tagged/1');
         $this->assertCachedResponse($secondResponse);
         $this->assertSameResponse($firstResponse, $secondResponse);
 
-        $thirdResponse = $this->call('GET', '/tagged/2');
+        $thirdResponse = $this->get('/tagged/2');
         $this->assertRegularResponse($thirdResponse);
 
-        $fourthResponse = $this->call('GET', '/tagged/2');
+        $fourthResponse = $this->get('/tagged/2');
         $this->assertCachedResponse($fourthResponse);
         $this->assertSameResponse($thirdResponse, $fourthResponse);
     }
@@ -34,18 +34,18 @@ class TaggingTest extends TestCase
     /** @test */
     public function it_can_forget_requests_using_route_cache_tags()
     {
-        $firstResponse = $this->call('GET', '/tagged/1');
+        $firstResponse = $this->get('/tagged/1');
         $this->assertRegularResponse($firstResponse);
 
         $this->app['responsecache']->clear(['foo']);
 
-        $secondResponse = $this->call('GET', '/tagged/1');
+        $secondResponse = $this->get('/tagged/1');
         $this->assertRegularResponse($secondResponse);
         $this->assertDifferentResponse($firstResponse, $secondResponse);
 
         $this->app['responsecache']->clear();
 
-        $thirdResponse = $this->call('GET', '/tagged/1');
+        $thirdResponse = $this->get('/tagged/1');
         $this->assertRegularResponse($thirdResponse);
         $this->assertDifferentResponse($secondResponse, $thirdResponse);
     }
@@ -53,12 +53,12 @@ class TaggingTest extends TestCase
     /** @test */
     public function it_can_forget_requests_using_route_cache_tags_from_global_cache()
     {
-        $firstResponse = $this->call('GET', '/tagged/1');
+        $firstResponse = $this->get('/tagged/1');
         $this->assertRegularResponse($firstResponse);
 
         $this->app['cache']->store(config('responsecache.cache_store'))->tags('laravel-responsecache')->clear('foo');
 
-        $secondResponse = $this->call('GET', '/tagged/1');
+        $secondResponse = $this->get('/tagged/1');
         $this->assertRegularResponse($secondResponse);
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
@@ -66,12 +66,12 @@ class TaggingTest extends TestCase
     /** @test */
     public function it_can_forget_requests_using_multiple_route_cache_tags()
     {
-        $firstResponse = $this->call('GET', '/tagged/2');
+        $firstResponse = $this->get('/tagged/2');
         $this->assertRegularResponse($firstResponse);
 
         $this->app['responsecache']->clear(['bar']);
 
-        $secondResponse = $this->call('GET', '/tagged/2');
+        $secondResponse = $this->get('/tagged/2');
         $this->assertRegularResponse($secondResponse);
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }

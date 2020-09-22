@@ -15,11 +15,11 @@ class ClearCommandTest extends TestCase
     /** @test */
     public function it_will_clear_the_cache()
     {
-        $firstResponse = $this->call('GET', '/random');
+        $firstResponse = $this->get('/random');
 
         Artisan::call('responsecache:clear');
 
-        $secondResponse = $this->call('GET', '/random');
+        $secondResponse = $this->get('/random');
 
         $this->assertRegularResponse($firstResponse);
         $this->assertRegularResponse($secondResponse);
