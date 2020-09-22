@@ -55,14 +55,14 @@ abstract class TestCase extends Orchestra
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite', [
+        config()->set('database.default', 'sqlite');
+        config()->set('database.connections.sqlite', [
             'driver' => 'sqlite',
             'database' => $this->getTempDirectory().'/database.sqlite',
             'prefix' => '',
         ]);
 
-        $app['config']->set('app.key', '6rE9Nz59bGRbeMATftriyQjrpF7DcOQm');
+        config()->set('app.key', '6rE9Nz59bGRbeMATftriyQjrpF7DcOQm');
     }
 
     /**
