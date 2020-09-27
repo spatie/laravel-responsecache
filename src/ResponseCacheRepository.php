@@ -40,13 +40,17 @@ class ResponseCacheRepository
         return $this->responseSerializer->unserialize($this->cache->get($key));
     }
 
-    public function clear()
+    public function clear(): void
     {
-        if (! $this->isTagged($this->cache) && ! empty(config('responsecache.cache_tag'))) {
-            return $this->cache->tags(config('responsecache.cache_tag'))->flush();
+        if ($this->isTagged($this->cache) {
+            $this->cache->clear();
+        }
+            
+        if (empty(config('responsecache.cache_tag')) {
+            $this->cache->clear();
         }
 
-        $this->cache->clear();
+        $this->cache->tags(config('responsecache.cache_tag'))->flush()
     }
 
     public function forget(string $key): bool
