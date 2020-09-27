@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache;
 
 use Illuminate\Cache\Repository;
+use Illuminate\Cache\TaggedCache;
 use Spatie\ResponseCache\Serializers\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,7 +42,7 @@ class ResponseCacheRepository
 
     public function clear()
     {
-        if (! empty(config('responsecache.cache_tag'))) {
+        if (! $this->isTagged($this->cache) && ! empty(config('responsecache.cache_tag'))) {
             return $this->cache->tags(config('responsecache.cache_tag'))->flush();
         }
 
@@ -56,5 +57,10 @@ class ResponseCacheRepository
     public function tags(array $tags): self
     {
         return new self($this->responseSerializer, $this->cache->tags($tags));
+    }
+
+    public function isTagged($repository): bool
+    {
+        return $repository instanceof TaggedCache && ! empty($repository->getTags());
     }
 }
