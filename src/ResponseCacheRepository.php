@@ -44,10 +44,14 @@ class ResponseCacheRepository
     {
         if ($this->isTagged($this->cache)) {
             $this->cache->clear();
+
+            return;
         }
-            
+
         if (empty(config('responsecache.cache_tag'))) {
             $this->cache->clear();
+
+            return;
         }
 
         $this->cache->tags(config('responsecache.cache_tag'))->flush();
