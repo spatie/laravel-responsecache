@@ -50,7 +50,7 @@ class ResponseCacheRepository
             $this->cache->clear();
         }
 
-        $this->cache->tags(config('responsecache.cache_tag'))->flush()
+        $this->cache->tags(config('responsecache.cache_tag'))->flush();
     }
 
     public function forget(string $key): bool
