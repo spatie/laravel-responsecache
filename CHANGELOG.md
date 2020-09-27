@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.6.6 - 2020-09-27
+
+- fix clearing tagged cache
+
 ## 6.6.5 - 2020-09-22
 
 - fix tagged responsecache:clear (#316)
