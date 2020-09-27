@@ -46,7 +46,7 @@ class ResponseCacheRepository
             $this->cache->clear();
         }
             
-        if (empty(config('responsecache.cache_tag')) {
+        if (empty(config('responsecache.cache_tag'))) {
             $this->cache->clear();
         }
 
