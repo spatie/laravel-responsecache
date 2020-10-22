@@ -1,3 +1,5 @@
+<p align="center"><img src="/art/socialcard.png" alt="Social Card of Laravel Response Cache"></p>
+
 # Speed up an app by caching the entire response
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
@@ -200,7 +202,7 @@ ResponseCache::forget(['/some-uri', '/other-uri']);
 ResponseCache::forget('/some-uri', '/other-uri');
 ```
 
-The `forget` method only works when you're not using a `cacheNameSuffix` in your cache profile. 
+The `forget` method only works when you're not using a `cacheNameSuffix` in your cache profile.
 
 ### Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware.
@@ -327,7 +329,7 @@ In contrast, this statement would remove only the `'/test2'` route:
 ResponseCache::clear(['bar']);
 ```
 
-Note that this uses [Laravel's built in cache tags](https://laravel.com/docs/master/cache#cache-tags) functionality, meaning 
+Note that this uses [Laravel's built in cache tags](https://laravel.com/docs/master/cache#cache-tags) functionality, meaning
 routes can also be cleared in the usual way:
 
 ```php
@@ -447,6 +449,8 @@ If you discover any security related issues, please email freek@spatie.be instea
 
 - [Freek Van der Herten](https://github.com/freekmurze)
 - [All Contributors](../../contributors)
+
+And a special thanks to [Caneco](https://twitter.com/caneco) for the logo ✨
 
 ## License
 
