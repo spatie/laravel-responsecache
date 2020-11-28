@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.6.7 - 2020-11-28
+
+- add support for PHP 8
+
 ## 6.6.6 - 2020-09-27
 
 - fix clearing tagged cache
