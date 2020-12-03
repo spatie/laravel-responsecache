@@ -42,7 +42,7 @@ class ResponseCacheRepository
 
     public function clear(): void
     {
-        if ($this->isTagged($this->cache)) {
+        if (!$this->isTagged($this->cache)) {
             $this->cache->clear();
 
             return;
