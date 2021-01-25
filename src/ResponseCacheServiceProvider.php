@@ -4,7 +4,6 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Cache\Repository;
 use Illuminate\Container\Container;
-use Illuminate\Support\ServiceProvider;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
