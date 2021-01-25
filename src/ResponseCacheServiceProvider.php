@@ -5,19 +5,27 @@ namespace Spatie\ResponseCache;
 use Illuminate\Cache\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Commands\ClearCommand;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Serializers\Serializer;
 
-class ResponseCacheServiceProvider extends ServiceProvider
+class ResponseCacheServiceProvider extends PackageServiceProvider
 {
-    public function boot()
+    public function configurePackage(Package $package): void
     {
-        $this->publishes([
-            __DIR__.'/../config/responsecache.php' => config_path('responsecache.php'),
-        ], 'config');
+        $package
+            ->name('laravel-responsecache')
+            ->hasConfigFile()
+            ->hasCommands([
+                ClearCommand::class,
+            ]);
+    }
 
+    public function packageBooted()
+    {
         $this->app->bind(CacheProfile::class, function (Container $app) {
             return $app->make(config('responsecache.cache_profile'));
         });
@@ -42,16 +50,5 @@ class ResponseCacheServiceProvider extends ServiceProvider
             });
 
         $this->app->singleton('responsecache', ResponseCache::class);
-
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                ClearCommand::class,
-            ]);
-        }
-    }
-
-    public function register()
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/responsecache.php', 'responsecache');
     }
 }
