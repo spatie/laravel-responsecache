@@ -64,6 +64,10 @@ class ResponseCacheRepository
 
     public function tags(array $tags): self
     {
+        if ($this->isTagged($this->cache)) {
+            $tags = array_merge($this->cache->getTags()->getNames(), $tags);
+        }
+
         return new self($this->responseSerializer, $this->cache->tags($tags));
     }
 
