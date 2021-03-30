@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 6.6.9 - 2021-03-30
+
+- fix for issue #331 (#344)
+
 ## 6.6.8 - 2020-01-25
 
 - use package service provider
