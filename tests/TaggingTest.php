@@ -64,6 +64,24 @@ class TaggingTest extends TestCase
     }
 
     /** @test */
+    public function it_can_forget_requests_using_route_cache_tags_without_deleting_unrelated_cache()
+    {
+        $this->app['cache']->store(config('responsecache.cache_store'))->tags('unrelated-cache')->put('baz', true);
+
+        $firstResponse = $this->get('/tagged/1');
+        $this->assertRegularResponse($firstResponse);
+
+        $this->app['responsecache']->clear();
+
+        $secondResponse = $this->get('/tagged/1');
+        $this->assertRegularResponse($secondResponse);
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
+
+        $cacheValue = $this->app['cache']->store(config('responsecache.cache_store'))->tags('unrelated-cache')->get('baz');
+        self::assertThat($cacheValue, self::isTrue(), 'Failed to assert that a cached value is present');
+    }
+
+    /** @test */
     public function it_can_forget_requests_using_multiple_route_cache_tags()
     {
         $firstResponse = $this->get('/tagged/2');
