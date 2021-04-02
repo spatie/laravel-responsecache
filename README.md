@@ -373,12 +373,12 @@ You can create your own replacers by implementing the `Spatie\ResponseCache\Repl
 interface Replacer
 {
     /*
-     * Transform the initial response before it gets cached.
+     * Prepare the initial response before it gets cached.
      *
      * For example: replace a generated csrf_token by '<csrf-token-here>' that you can
      * replace with its dynamic counterpart when the cached response is returned.
      */
-    public function transformInitialResponse(Response $response): void;
+    public function prepareResponseToCache(Response $response): void;
 
     /*
      * Replace any data you want in the cached response before it gets
@@ -386,7 +386,7 @@ interface Replacer
      *
      * For example: replace '<csrf-token-here>' by a call to csrf_token()
      */
-    public function replaceCachedResponse(Response $response): void;
+    public function replaceInCachedResponse(Response $response): void;
 }
 ```
 
