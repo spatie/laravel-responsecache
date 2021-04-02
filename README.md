@@ -23,8 +23,10 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 
 ## Installation
 
+> If you're using PHP 7, install v6.x of this package.
+
 You can install the package via composer:
-``` bash
+```bash
 composer require spatie/laravel-responsecache
 ```
 
@@ -371,12 +373,12 @@ You can create your own replacers by implementing the `Spatie\ResponseCache\Repl
 interface Replacer
 {
     /*
-     * Transform the initial response before it gets cached.
+     * Prepare the initial response before it gets cached.
      *
      * For example: replace a generated csrf_token by '<csrf-token-here>' that you can
      * replace with its dynamic counterpart when the cached response is returned.
      */
-    public function transformInitialResponse(Response $response): void;
+    public function prepareResponseToCache(Response $response): void;
 
     /*
      * Replace any data you want in the cached response before it gets
@@ -384,7 +386,7 @@ interface Replacer
      *
      * For example: replace '<csrf-token-here>' by a call to csrf_token()
      */
-    public function replaceCachedResponse(Response $response): void;
+    public function replaceInCachedResponse(Response $response): void;
 }
 ```
 
@@ -420,11 +422,6 @@ interface Serializer
     public function unserialize(string $serializedResponse): Response;
 }
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
 ## Testing
 
 You can run the tests with:
@@ -437,9 +434,13 @@ composer test
 - [Barry Vd. Heuvel](https://twitter.com/barryvdh) made [a package that caches responses by leveraging HttpCache](https://github.com/barryvdh/laravel-httpcache).
 - [Joseph Silber](https://twitter.com/joseph_silber) created [Laravel Page Cache](https://github.com/JosephSilber/page-cache) that can write it's cache to disk and let Nginx read them, so PHP doesn't even have to start up anymore.
 
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
 ## Security
 
