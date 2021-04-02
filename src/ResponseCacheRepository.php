@@ -16,12 +16,7 @@ class ResponseCacheRepository
         //
     }
 
-    /**
-     * @param string $key
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     * @param \DateTime|int $seconds
-     */
-    public function put(string $key, $response, \DateTime | int $seconds): void
+    public function put(string $key, Response $response, \DateTime | int $seconds): void
     {
         $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
     }
