@@ -23,8 +23,10 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 
 ## Installation
 
+> If you're using PHP 7, install v6.x of this package.
+
 You can install the package via composer:
-``` bash
+```bash
 composer require spatie/laravel-responsecache
 ```
 
