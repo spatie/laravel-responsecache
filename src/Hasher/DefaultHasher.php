@@ -7,11 +7,10 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 
 class DefaultHasher implements RequestHasher
 {
-    protected CacheProfile $cacheProfile;
-
-    public function __construct(CacheProfile $cacheProfile)
-    {
-        $this->cacheProfile = $cacheProfile;
+    public function __construct(
+        protected CacheProfile $cacheProfile,
+    ) {
+        //
     }
 
     public function getHashFor(Request $request): string

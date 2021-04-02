@@ -9,15 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCacheRepository
 {
-    protected Repository $cache;
-
-    protected Serializer $responseSerializer;
-
-    public function __construct(Serializer $responseSerializer, Repository $cache)
-    {
-        $this->cache = $cache;
-
-        $this->responseSerializer = $responseSerializer;
+    public function __construct(
+        protected Serializer $responseSerializer,
+        protected Repository $cache,
+    ) {
+        //
     }
 
     /**
@@ -25,7 +21,7 @@ class ResponseCacheRepository
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @param \DateTime|int $seconds
      */
-    public function put(string $key, $response, $seconds)
+    public function put(string $key, $response, \DateTime | int $seconds): void
     {
         $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
     }

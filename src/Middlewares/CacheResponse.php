@@ -60,9 +60,7 @@ class CacheResponse
     ): void {
         $cachedResponse = clone $response;
 
-        $this->getReplacers()->each(function (Replacer $replacer) use ($cachedResponse) {
-            $replacer->prepareResponseToCache($cachedResponse);
-        });
+        $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
 
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }
@@ -70,9 +68,7 @@ class CacheResponse
     protected function getReplacers(): Collection
     {
         return collect(config('responsecache.replacers'))
-            ->map(function (string $replacerClass) {
-                return app($replacerClass);
-            });
+            ->map(fn (string $replacerClass) => app($replacerClass));
     }
 
     protected function getLifetime(array $args): ?int

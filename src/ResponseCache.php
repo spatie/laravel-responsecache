@@ -10,17 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCache
 {
-    protected ResponseCacheRepository $cache;
-
-    protected RequestHasher $hasher;
-
-    protected CacheProfile $cacheProfile;
-
-    public function __construct(ResponseCacheRepository $cache, RequestHasher $hasher, CacheProfile $cacheProfile)
-    {
-        $this->cache = $cache;
-        $this->hasher = $hasher;
-        $this->cacheProfile = $cacheProfile;
+    public function __construct(
+        protected ResponseCacheRepository $cache,
+        protected RequestHasher $hasher,
+        protected CacheProfile $cacheProfile,
+    ) {
+        //
     }
 
     public function enabled(Request $request): bool
@@ -72,7 +67,7 @@ class ResponseCache
         return $this->taggedCache($tags)->get($this->hasher->getHashFor($request));
     }
 
-    public function clear(array $tags = [])
+    public function clear(array $tags = []): void
     {
         $this->taggedCache($tags)->clear();
     }
@@ -89,13 +84,7 @@ class ResponseCache
         return $clonedResponse;
     }
 
-    /**
-     * @param string|array $uris
-     * @param string[]        $tags
-     *
-     * @return \Spatie\ResponseCache\ResponseCache
-     */
-    public function forget($uris, array $tags = []): self
+    public function forget(string | array $uris, array $tags = []): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
 
