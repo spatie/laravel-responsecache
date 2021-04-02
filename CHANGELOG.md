@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
-## 7.0.0 - unreleased
+## 7.0.0 - 2021-04-02
 
 - require PHP 8+
 - drop support for PHP 7.x
