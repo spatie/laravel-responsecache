@@ -3,9 +3,10 @@
 namespace Spatie\ResponseCache\Commands;
 
 use Illuminate\Console\Command;
+use Spatie\ResponseCache\Facades\ResponseCache;
+use Spatie\ResponseCache\ResponseCacheRepository;
 use Spatie\ResponseCache\Events\ClearedResponseCache;
 use Spatie\ResponseCache\Events\ClearingResponseCache;
-use Spatie\ResponseCache\ResponseCacheRepository;
 
 class ClearCommand extends Command
 {
@@ -18,9 +19,9 @@ class ClearCommand extends Command
         event(new ClearingResponseCache());
 
         if ($url = $this->option('url')) {
-            $cache->forget($url);
+            ResponseCache::forget($url);
         } else {
-            $this->clear($cache);
+            $cache->clear();
         }
 
         event(new ClearedResponseCache());
