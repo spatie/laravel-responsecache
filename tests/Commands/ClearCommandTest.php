@@ -28,6 +28,26 @@ class ClearCommandTest extends TestCase
     }
 
     /** @test */
+    public function it_will_clear_only_one_page_from_cache()
+    {
+        $firstResponse = $this->get('/random/1');
+        $firstAlternativeResponse = $this->get('/random/2');
+
+        Artisan::call('responsecache:clear --url=/random/1');
+
+        $secondResponse = $this->get('/random/1');
+        $secondAlternativeResponse = $this->get('/random/2');
+
+        $this->assertRegularResponse($firstResponse);
+        $this->assertRegularResponse($secondResponse);
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
+
+        $this->assertRegularResponse($firstAlternativeResponse);
+        $this->assertCachedResponse($secondAlternativeResponse);
+        $this->assertSameResponse($firstAlternativeResponse, $secondAlternativeResponse);
+    }
+
+    /** @test */
     public function it_will_fire_events_when_clearing_the_cache()
     {
         Event::fake();
