@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.0.1 - 2021-04-13
+
+- add `url` option to `ClearCommand` (#348)
+
 ## 7.0.0 - 2021-04-02
 
 - require PHP 8+
