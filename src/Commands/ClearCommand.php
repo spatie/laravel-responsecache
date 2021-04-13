@@ -9,7 +9,7 @@ use Spatie\ResponseCache\ResponseCacheRepository;
 
 class ClearCommand extends Command
 {
-    protected $signature = 'responsecache:clear';
+    protected $signature = 'responsecache:clear {--url=}';
 
     protected $description = 'Clear the response cache';
 
@@ -17,7 +17,11 @@ class ClearCommand extends Command
     {
         event(new ClearingResponseCache());
 
-        $cache->clear();
+        if ($url = $this->option('url')) {
+            $cache->forget($url);
+        } else {
+            $this->clear($cache);
+        }
 
         event(new ClearedResponseCache());
 
