@@ -219,7 +219,11 @@ ResponseCache::cacheCleaner()
 
 ```
 
-The `cacheNameSuffix` depends by your cache profile, by default is the user ID or an empty string if not authenticated
+The `ResponseCache::forget` method only works when you're not using a `cacheNameSuffix` in your cache profile, 
+use `ResponseCache::cacheCleaner` to deal with `cacheNameSuffix`.
+
+The `cacheNameSuffix` depends by your cache profile, by default is the user ID or an empty string if not authenticated.
+
 
 ### Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware.
