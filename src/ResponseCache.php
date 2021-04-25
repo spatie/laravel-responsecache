@@ -29,7 +29,7 @@ class ResponseCache
             return false;
         }
 
-        if (! $this->cacheProfile->shouldCacheRequest($request)) {
+        if (!$this->cacheProfile->shouldCacheRequest($request)) {
             return false;
         }
 
@@ -84,6 +84,7 @@ class ResponseCache
         return $clonedResponse;
     }
 
+    /** @deprecated use cacheCleaner() instead */
     public function forget(string | array $uris, array $tags = []): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
@@ -98,6 +99,11 @@ class ResponseCache
         });
 
         return $this;
+    }
+
+    public function cacheCleaner(): CacheCleaner
+    {
+        return new CacheCleaner($this->hasher, $this->cache);
     }
 
     protected function taggedCache(array $tags = []): ResponseCacheRepository
