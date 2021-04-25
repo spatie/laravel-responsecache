@@ -45,6 +45,7 @@ class CacheCleanerIntegrationTest extends TestCase
 
         $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
+
     /** @test */
     public function it_can_forget_a_specific_cached_request_using_cache_cleaner_post()
     {
@@ -101,6 +102,34 @@ class CacheCleanerIntegrationTest extends TestCase
 
         $this->assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
         $this->assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
+    }
+
+
+    /** @test */
+    public function it_can_forget_a_specific_cached_request_using_cache_cleaner_suffix()
+    {
+        config()->set('app.url', 'http://spatie.be');
+
+        $user_id = 1;
+
+        $this->actingAs(User::findOrFail($user_id));
+        $firstResponse = $this->get('/random?foo=bar');
+        $this->assertRegularResponse($firstResponse);
+        auth()->logout();
+
+        ResponseCache::cacheCleaner()
+            ->setParameters(['foo' => 'bar'])
+            // BaseCacheProfile an user is logged in
+            // use user id as suffix
+            ->setCacheNameSuffix((string)$user_id)
+            ->forget('/random');
+
+        $this->actingAs(User::findOrFail(1));
+        $secondResponse = $this->get('/random?foo=bar');
+        auth()->logout();
+
+        $this->assertRegularResponse($secondResponse);
+        $this->assertDifferentResponse($firstResponse, $secondResponse);
     }
 }
 

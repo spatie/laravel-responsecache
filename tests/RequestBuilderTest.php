@@ -24,11 +24,14 @@ class RequestBuilderTest extends TestCase
             'Param2' => 'Param2_value',
         ];
 
+        $cacheNameSuffix = 'suffix';
+
         $request = (new RequestBuilder)
             ->setParameters($parameters)
             ->setHeaders($headers)
             ->setCookies($cookies)
             ->setRemoteAddress('127.0.1.1')
+            ->setCacheNameSuffix($cacheNameSuffix)
             ->build($uri);
 
         foreach ($parameters as $key => $value) {
@@ -43,6 +46,7 @@ class RequestBuilderTest extends TestCase
         $this->assertEquals($request->getRequestUri(), $uri . '?' . http_build_query($parameters));
         $this->assertEquals($request->getMethod(), 'GET');
         $this->assertEquals($request->ip(), '127.0.1.1');
+        $this->assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
 
 
         $request = (new RequestBuilder)
@@ -51,6 +55,7 @@ class RequestBuilderTest extends TestCase
             ->setHeaders($headers)
             ->setCookies($cookies)
             ->setRemoteAddress('127.0.1.1')
+            ->setCacheNameSuffix($cacheNameSuffix)
             ->build($uri);
 
         foreach ($parameters as $key => $value) {
@@ -65,5 +70,6 @@ class RequestBuilderTest extends TestCase
         $this->assertEquals($request->getRequestUri(), $uri);
         $this->assertEquals($request->getMethod(), 'POST');
         $this->assertEquals($request->ip(), '127.0.1.1');
+        $this->assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
     }
 }

@@ -19,9 +19,7 @@ class CacheCleaner extends AbstractRequestBuilder
      */
     public function forget(string | array $uris,  $tags = [])
     {
-        if (!is_array($uris)) {
-            $uris = [$uris];
-        }
+        $uris = is_array($uris) ? $uris : func_get_args();
 
         $cache = $this->cache;
         if (!empty($tags)) {

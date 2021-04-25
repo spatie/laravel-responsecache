@@ -200,11 +200,26 @@ ResponseCache::forget('/some-uri');
 // Forget several URIs
 ResponseCache::forget(['/some-uri', '/other-uri']);
 
+// Using Tags (the cache driver you configured must supports tags)
+ResponseCache::forget(['/some-uri', '/other-uri'], ['tag1', 'tag2']);
+
 // Alternatively
 ResponseCache::forget('/some-uri', '/other-uri');
+
+
+// Advanced
+ResponseCache::cacheCleaner()
+    ->setMethod('PUT')
+    ->setHeaders(['foo'=>'bar'])
+    ->setCacheNameSuffix('100') 
+    //
+    //... any methods from Spatie\ResponseCache\CacheCleaner\AbstractRequestBuilder
+    //
+    ->forget('/some-uri');//same options as ResponseCache::forget()
+
 ```
 
-The `forget` method only works when you're not using a `cacheNameSuffix` in your cache profile.
+The `cacheNameSuffix` depends by your cache profile, by default is the user ID or an empty string if not authenticated
 
 ### Preventing a request from being cached
 Requests can be ignored by using the `doNotCacheResponse`-middleware.

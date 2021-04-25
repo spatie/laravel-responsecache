@@ -85,20 +85,11 @@ class ResponseCache
         return $clonedResponse;
     }
 
-    /** @deprecated use cacheCleaner() instead */
+
     public function forget(string | array $uris, array $tags = []): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
-
-        collect($uris)->each(function ($uri) use ($tags) {
-            $request = Request::create(url($uri));
-            $hash = $this->hasher->getHashFor($request);
-
-            if ($this->taggedCache($tags)->has($hash)) {
-                $this->taggedCache($tags)->forget($hash);
-            }
-        });
-
+        $this->cacheCleaner()->forget($uris, $tags ?? []);
         return $this;
     }
 

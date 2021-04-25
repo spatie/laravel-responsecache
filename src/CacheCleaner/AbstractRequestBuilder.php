@@ -12,6 +12,7 @@ abstract class AbstractRequestBuilder
     protected array $parameters = [];
     protected array $cookies = [];
     protected array $server = [];
+    protected ?string $cacheNameSuffix = null;
 
     /**
      * Set the value of method
@@ -80,13 +81,25 @@ abstract class AbstractRequestBuilder
         return $this;
     }
 
+    /**
+     * Set the value of cacheNameSuffix
+     *
+     * @return  static
+     */
+    public function setCacheNameSuffix($cacheNameSuffix): static
+    {
+        $this->cacheNameSuffix = $cacheNameSuffix;
+
+        return $this;
+    }
+
 
     /**
      * @return Request
      */
     protected function _build(string $uri): Request
     {
-        return Request::create(
+        $request =  Request::create(
             $uri,
             $this->method,
             $this->parameters,
@@ -94,5 +107,11 @@ abstract class AbstractRequestBuilder
             [],
             $this->server
         );
+
+        if (isset($this->cacheNameSuffix)) {
+            $request->attributes->add(['responsecache.cacheNameSuffix' => $this->cacheNameSuffix]);
+        }
+
+        return $request;
     }
 }
