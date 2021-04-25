@@ -4,6 +4,7 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Spatie\ResponseCache\CacheCleaner\CacheCleaner;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
