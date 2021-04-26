@@ -14,23 +14,17 @@ class CacheCleaner extends AbstractRequestBuilder
     ) {
     }
 
-
-    public function forget(string | array $uris,  $tags = []): void
+    public function forget(string | array $uris): void
     {
         $uris = is_array($uris) ? $uris : func_get_args();
-
-        $cache = $this->cache;
-        if (!empty($tags)) {
-            $cache = $cache->tags($tags);
-        }
 
         collect($uris)->map(function ($uri) {
             $request = $this->_build($uri);
             $hash = $this->hasher->getHashFor($request);
             return $hash;
-        })->each(function ($hash) use ($cache) {
-            if ($cache->has($hash)) {
-                $cache->forget($hash);
+        })->each(function ($hash) {
+            if ($this->cache->has($hash)) {
+                $this->cache->forget($hash);
             }
         });
     }

@@ -86,10 +86,10 @@ class ResponseCache
     }
 
 
-    public function forget(string | array $uris, array $tags = []): self
+    public function forget(string | array $uris): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
-        $this->cacheCleaner()->forget($uris, $tags ?? []);
+        $this->cacheCleaner()->forget($uris);
         return $this;
     }
 
