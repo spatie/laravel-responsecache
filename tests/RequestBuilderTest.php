@@ -2,7 +2,7 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Spatie\ResponseCache\CacheCleaner\RequestBuilder;
+use Spatie\ResponseCache\CacheItemSelector\RequestBuilder;
 
 class RequestBuilderTest extends TestCase
 {

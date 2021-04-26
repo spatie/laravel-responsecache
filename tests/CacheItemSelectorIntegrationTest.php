@@ -6,7 +6,7 @@ use ResponseCache;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Illuminate\Http\Request;
 
-class CacheCleanerIntegrationTest extends TestCase
+class CacheItemSelectorIntegrationTest extends TestCase
 {
     public function setUp(): void
     {

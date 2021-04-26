@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\ResponseCache\CacheCleaner;
+namespace Spatie\ResponseCache\CacheItemSelector;
 
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\ResponseCacheRepository;
 
-class CacheCleaner extends AbstractRequestBuilder
+class CacheItemSelector extends AbstractRequestBuilder
 {
     public function __construct(
         protected RequestHasher $hasher,

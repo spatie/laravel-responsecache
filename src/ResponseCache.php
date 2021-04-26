@@ -4,7 +4,7 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Spatie\ResponseCache\CacheCleaner\CacheCleaner;
+use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,9 +93,9 @@ class ResponseCache
         return $this;
     }
 
-    public function cacheCleaner(): CacheCleaner
+    public function cacheCleaner(): CacheItemSelector
     {
-        return new CacheCleaner($this->hasher, $this->cache);
+        return new CacheItemSelector($this->hasher, $this->cache);
     }
 
     protected function taggedCache(array $tags = []): ResponseCacheRepository

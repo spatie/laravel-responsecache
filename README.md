@@ -210,7 +210,7 @@ ResponseCache::cacheCleaner()
     ->setHeaders(['foo'=>'bar'])
     ->setCacheNameSuffix('100') 
     //
-    //... any methods from Spatie\ResponseCache\CacheCleaner\AbstractRequestBuilder
+    //... any methods from Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder
     //
     ->forget('/some-uri');//same options as ResponseCache::forget()
 
@@ -245,7 +245,7 @@ ResponseCache::cacheCleaner()
     ->setHeaders(['foo'=>'bar'])
     ->setCacheNameSuffix('100') 
     //
-    //... any methods from Spatie\ResponseCache\CacheCleaner\AbstractRequestBuilder
+    //... any methods from Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder
     //
     ->forget('/some-uri');
 

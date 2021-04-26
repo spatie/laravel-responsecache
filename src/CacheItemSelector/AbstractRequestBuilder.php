@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\ResponseCache\CacheCleaner;
+namespace Spatie\ResponseCache\CacheItemSelector;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
