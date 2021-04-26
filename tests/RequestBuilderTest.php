@@ -2,7 +2,8 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Spatie\ResponseCache\CacheItemSelector\RequestBuilder;
+use Illuminate\Http\Request;
+use Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder;
 
 class RequestBuilderTest extends TestCase
 {
@@ -71,5 +72,14 @@ class RequestBuilderTest extends TestCase
         $this->assertEquals($request->getMethod(), 'POST');
         $this->assertEquals($request->ip(), '127.0.1.1');
         $this->assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
+    }
+}
+
+
+class RequestBuilder extends AbstractRequestBuilder
+{
+    public function build(string $uri): Request
+    {
+        return $this->_build($uri);
     }
 }
