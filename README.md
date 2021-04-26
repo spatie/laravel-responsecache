@@ -203,21 +203,10 @@ ResponseCache::forget(['/some-uri', '/other-uri']);
 // Alternatively
 ResponseCache::forget('/some-uri', '/other-uri');
 
-
-// Advanced
-ResponseCache::cacheCleaner()
-    ->setMethod('PUT')
-    ->setHeaders(['foo'=>'bar'])
-    ->setCacheNameSuffix('100') 
-    //
-    //... any methods from Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder
-    //
-    ->forget('/some-uri');//same options as ResponseCache::forget()
-
 ```
 
 The `ResponseCache::forget` method only works when you're not using a `cacheNameSuffix` in your cache profile, 
-use `ResponseCache::cacheCleaner` to deal with `cacheNameSuffix`.
+use `ResponseCache::selectCachedItems` to deal with `cacheNameSuffix`.
 
 ### Forget Cache items using advanced options
 
@@ -226,28 +215,29 @@ This section is usefull expecially if you are using a custom advanced cache prof
 ```php
 
 //forget uri cached with PUT http method
-ResponseCache::cacheCleaner()->setMethod('PUT')->forget('/some-uri');
+ResponseCache::selectCachedItems()->withPutMethod()->forUrls('/some-uri')->forget();
 
 //forget many uri cached with PUT http method
-ResponseCache::cacheCleaner()->setMethod('PUT')->forget(['/some-uri','/other-uri']);
+ResponseCache::selectCachedItems()->withPutMethod()->forUrls(['/some-uri','/other-uri'])->forget();
 
 // Alternatively
-ResponseCache::cacheCleaner()->setMethod('PUT')->forget('/some-uri','/other-uri');
-
+ResponseCache::selectCachedItems()->withPutMethod()->forUrls('/some-uri','/other-uri')->forget();
 
 //forget uri cached with "100" suffix (by default suffix is user->id or "")
-ResponseCache::cacheCleaner()->setCacheNameSuffix('100')->forget('/some-uri');
+ResponseCache::selectCachedItems()->usingSuffix('100')->forUrls('/some-uri')->forget();
 
 // You can use many request options to match the cached request
 // (the logic depends by your RequestHasher)
-ResponseCache::cacheCleaner()
-    ->setMethod('PUT')
-    ->setHeaders(['foo'=>'bar'])
-    ->setCacheNameSuffix('100') 
-    //
-    //... any methods from Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder
-    //
-    ->forget('/some-uri');
+ResponseCache::selectCachedItems()
+    ->withPutMethod()
+    ->withHeaders(['foo'=>'bar'])
+    ->withCookies(['cookie1' => 'value'])
+    ->withParameters(['param1' => 'value'])
+    ->withRemoteAddress('127.0.0.1')
+    ->usingSuffix('100') 
+    ->usingTags('tag1', 'tag2')
+    ->forUrls('/some-uri', '/other-uri')
+    ->forget();
 
 ```
 

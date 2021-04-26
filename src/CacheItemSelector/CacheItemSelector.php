@@ -8,24 +8,45 @@ use Spatie\ResponseCache\ResponseCacheRepository;
 
 class CacheItemSelector extends AbstractRequestBuilder
 {
+    protected array $urls;
+    protected array $tags = [];
+
     public function __construct(
         protected RequestHasher $hasher,
         protected ResponseCacheRepository $cache,
     ) {
     }
 
-    public function forget(string | array $uris): void
+    public function usingTags(string | array $tags): static
     {
-        $uris = is_array($uris) ? $uris : func_get_args();
+        $this->tags = is_array($tags) ? $tags : func_get_args();
+        return $this;
+    }
 
-        collect($uris)->map(function ($uri) {
+    public function forUrls(string | array $urls): static
+    {
+        $this->urls = is_array($urls) ? $urls : func_get_args();
+        return $this;
+    }
+
+    public function forget(): void
+    {
+        collect($this->urls)->map(function ($uri) {
             $request = $this->_build($uri);
             $hash = $this->hasher->getHashFor($request);
             return $hash;
+        })->filter(function ($hash) {
+            return $this->taggedCache($this->tags)->has($hash);
         })->each(function ($hash) {
-            if ($this->cache->has($hash)) {
-                $this->cache->forget($hash);
-            }
+            $this->taggedCache($this->tags)->forget($hash);
         });
+    }
+
+    protected function taggedCache(array $tags = []): ResponseCacheRepository
+    {
+        if (empty($tags)) {
+            return $this->cache;
+        }
+        return $this->cache->tags($tags);
     }
 }

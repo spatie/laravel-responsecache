@@ -86,14 +86,20 @@ class ResponseCache
     }
 
 
-    public function forget(string | array $uris): self
+    /**
+     * @param string|array $uris
+     * @param string[] $tags
+     *
+     * @return \Spatie\ResponseCache\ResponseCache
+     */
+    public function forget(string|array $uris, array $tags = []): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
-        $this->cacheCleaner()->forget($uris);
+        $this->selectCachedItems()->forUrls($uris)->forget();
         return $this;
     }
 
-    public function cacheCleaner(): CacheItemSelector
+    public function selectCachedItems(): CacheItemSelector
     {
         return new CacheItemSelector($this->hasher, $this->cache);
     }
@@ -103,7 +109,6 @@ class ResponseCache
         if (empty($tags)) {
             return $this->cache;
         }
-
         return $this->cache->tags($tags);
     }
 }

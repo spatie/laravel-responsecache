@@ -28,11 +28,11 @@ class RequestBuilderTest extends TestCase
         $cacheNameSuffix = 'suffix';
 
         $request = (new RequestBuilder)
-            ->setParameters($parameters)
-            ->setHeaders($headers)
-            ->setCookies($cookies)
-            ->setRemoteAddress('127.0.1.1')
-            ->setCacheNameSuffix($cacheNameSuffix)
+            ->withParameters($parameters)
+            ->withHeaders($headers)
+            ->withCookies($cookies)
+            ->withRemoteAddress('127.0.1.1')
+            ->usingSuffix($cacheNameSuffix)
             ->build($uri);
 
         foreach ($parameters as $key => $value) {
@@ -51,12 +51,12 @@ class RequestBuilderTest extends TestCase
 
 
         $request = (new RequestBuilder)
-            ->setMethod('POST')
-            ->setParameters($parameters)
-            ->setHeaders($headers)
-            ->setCookies($cookies)
-            ->setRemoteAddress('127.0.1.1')
-            ->setCacheNameSuffix($cacheNameSuffix)
+            ->withPostMethod()
+            ->withParameters($parameters)
+            ->withHeaders($headers)
+            ->withCookies($cookies)
+            ->withRemoteAddress('127.0.1.1')
+            ->usingSuffix($cacheNameSuffix)
             ->build($uri);
 
         foreach ($parameters as $key => $value) {

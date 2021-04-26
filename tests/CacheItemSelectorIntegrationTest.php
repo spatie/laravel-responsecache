@@ -38,7 +38,8 @@ class CacheItemSelectorIntegrationTest extends TestCase
         $firstResponse = $this->get('/random?foo=bar');
         $this->assertRegularResponse($firstResponse);
 
-        ResponseCache::cacheCleaner()->setParameters(['foo' => 'bar'])->forget('/random');
+        ResponseCache::selectCachedItems()->withParameters(['foo' => 'bar'])
+            ->forUrls('/random')->forget();
 
         $secondResponse = $this->get('/random?foo=bar');
         $this->assertRegularResponse($secondResponse);
@@ -54,7 +55,7 @@ class CacheItemSelectorIntegrationTest extends TestCase
         $firstResponse = $this->post('/random');
         $this->assertRegularResponse($firstResponse);
 
-        ResponseCache::cacheCleaner()->setMethod('POST')->forget('/random');
+        ResponseCache::selectCachedItems()->withPostMethod()->forUrls('/random')->forget();
 
         $secondResponse = $this->post('/random');
         $this->assertRegularResponse($secondResponse);
@@ -71,8 +72,8 @@ class CacheItemSelectorIntegrationTest extends TestCase
         $secondResponseFirstCall = $this->get('/random/2?foo=bar');
         $this->assertRegularResponse($secondResponseFirstCall);
 
-        ResponseCache::cacheCleaner()->setParameters(['foo' => 'bar'])
-            ->forget(['/random/1', '/random/2']);
+        ResponseCache::selectCachedItems()->withParameters(['foo' => 'bar'])
+            ->forUrls(['/random/1', '/random/2'])->forget();
 
         $firstResponseSecondCall = $this->get('/random/1?foo=bar');
         $this->assertRegularResponse($firstResponseSecondCall);
@@ -92,7 +93,7 @@ class CacheItemSelectorIntegrationTest extends TestCase
         $secondResponseFirstCall = $this->post('/random/2');
         $this->assertRegularResponse($secondResponseFirstCall);
 
-        ResponseCache::cacheCleaner()->setMethod('POST')->forget(['/random/1', '/random/2']);
+        ResponseCache::selectCachedItems()->withPostMethod()->forUrls(['/random/1', '/random/2'])->forget();
 
         $firstResponseSecondCall = $this->post('/random/1');
         $this->assertRegularResponse($firstResponseSecondCall);
@@ -117,12 +118,12 @@ class CacheItemSelectorIntegrationTest extends TestCase
         $this->assertRegularResponse($firstResponse);
         auth()->logout();
 
-        ResponseCache::cacheCleaner()
-            ->setParameters(['foo' => 'bar'])
+        ResponseCache::selectCachedItems()
+            ->withParameters(['foo' => 'bar'])
             // BaseCacheProfile an user is logged in
             // use user id as suffix
-            ->setCacheNameSuffix((string)$userId)
-            ->forget('/random');
+            ->usingSuffix((string)$userId)
+            ->forUrls('/random')->forget();
 
         $this->actingAs(User::findOrFail(1));
         $secondResponse = $this->get('/random?foo=bar');
