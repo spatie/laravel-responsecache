@@ -15,14 +15,18 @@ class DefaultHasher implements RequestHasher
 
     public function getHashFor(Request $request): string
     {
-        if ($request->attributes->has('responsecache.cacheNameSuffix')) {
-            $cacheNameSuffix = $request->attributes->get('responsecache.cacheNameSuffix');
-        } else {
-            $cacheNameSuffix = $this->cacheProfile->useCacheNameSuffix($request);
-        }
+        $cacheNameSuffix = $this->getCacheNameSuffix($request);
 
         return 'responsecache-' . md5(
             "{$request->getHost()}-{$request->getRequestUri()}-{$request->getMethod()}/$cacheNameSuffix"
         );
+    }
+
+    protected function getCacheNameSuffix(Request $request)
+    {
+        if ($request->attributes->has('responsecache.cacheNameSuffix')) {
+            return $request->attributes->get('responsecache.cacheNameSuffix');
+        }
+        return $this->cacheProfile->useCacheNameSuffix($request);
     }
 }

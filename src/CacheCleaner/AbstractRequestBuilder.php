@@ -14,11 +14,7 @@ abstract class AbstractRequestBuilder
     protected array $server = [];
     protected ?string $cacheNameSuffix = null;
 
-    /**
-     * Set the value of method
-     *
-     * @return  static
-     */
+
     public function setMethod(string $method): static
     {
         $this->method = strtoupper($method);
@@ -27,10 +23,8 @@ abstract class AbstractRequestBuilder
     }
 
     /**
-     * Set parameters value
      * if method is GET then will be converted to query
      * otherwise it will became part of request input
-     * @return  static
      */
     public function setParameters(array $parameters): static
     {
@@ -39,11 +33,7 @@ abstract class AbstractRequestBuilder
         return $this;
     }
 
-    /**
-     * Set the value of cookies
-     *
-     * @return  static
-     */
+
     public function setCookies(array $cookies): static
     {
         $this->cookies = $cookies;
@@ -51,11 +41,7 @@ abstract class AbstractRequestBuilder
         return $this;
     }
 
-    /**
-     * Set the value of headers
-     *
-     * @return  static
-     */
+
     public function setHeaders(array $headers): static
     {
         $this->server = collect($this->server)
@@ -70,22 +56,14 @@ abstract class AbstractRequestBuilder
         return $this;
     }
 
-    /**
-     * Set the value of remoteAddress
-     *
-     * @return  static
-     */
+
     public function setRemoteAddress($remoteAddress): static
     {
         $this->server['REMOTE_ADDR'] = $remoteAddress;
         return $this;
     }
 
-    /**
-     * Set the value of cacheNameSuffix
-     *
-     * @return  static
-     */
+
     public function setCacheNameSuffix($cacheNameSuffix): static
     {
         $this->cacheNameSuffix = $cacheNameSuffix;
@@ -94,9 +72,6 @@ abstract class AbstractRequestBuilder
     }
 
 
-    /**
-     * @return Request
-     */
     protected function _build(string $uri): Request
     {
         $request =  Request::create(

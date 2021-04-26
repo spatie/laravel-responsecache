@@ -14,10 +14,8 @@ class CacheCleaner extends AbstractRequestBuilder
     ) {
     }
 
-    /**
-     * @return void
-     */
-    public function forget(string | array $uris,  $tags = [])
+
+    public function forget(string | array $uris,  $tags = []): void
     {
         $uris = is_array($uris) ? $uris : func_get_args();
 
@@ -36,5 +34,4 @@ class CacheCleaner extends AbstractRequestBuilder
             }
         });
     }
-
 }

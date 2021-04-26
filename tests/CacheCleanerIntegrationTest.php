@@ -14,7 +14,7 @@ class CacheCleanerIntegrationTest extends TestCase
 
         config()->set(
             'responsecache.cache_profile',
-            CacheSuccessfulGetAndPostRequests::class // declared at the ends of this file
+            CacheSuccessfulGetAndPostRequests::class
         );
     }
 
@@ -110,9 +110,9 @@ class CacheCleanerIntegrationTest extends TestCase
     {
         config()->set('app.url', 'http://spatie.be');
 
-        $user_id = 1;
+        $userId = 1;
 
-        $this->actingAs(User::findOrFail($user_id));
+        $this->actingAs(User::findOrFail($userId));
         $firstResponse = $this->get('/random?foo=bar');
         $this->assertRegularResponse($firstResponse);
         auth()->logout();
@@ -121,7 +121,7 @@ class CacheCleanerIntegrationTest extends TestCase
             ->setParameters(['foo' => 'bar'])
             // BaseCacheProfile an user is logged in
             // use user id as suffix
-            ->setCacheNameSuffix((string)$user_id)
+            ->setCacheNameSuffix((string)$userId)
             ->forget('/random');
 
         $this->actingAs(User::findOrFail(1));

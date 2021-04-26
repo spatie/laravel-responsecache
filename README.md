@@ -200,9 +200,6 @@ ResponseCache::forget('/some-uri');
 // Forget several URIs
 ResponseCache::forget(['/some-uri', '/other-uri']);
 
-// Using Tags (the cache driver you configured must supports tags)
-ResponseCache::forget(['/some-uri', '/other-uri'], ['tag1', 'tag2']);
-
 // Alternatively
 ResponseCache::forget('/some-uri', '/other-uri');
 
@@ -222,7 +219,39 @@ ResponseCache::cacheCleaner()
 The `ResponseCache::forget` method only works when you're not using a `cacheNameSuffix` in your cache profile, 
 use `ResponseCache::cacheCleaner` to deal with `cacheNameSuffix`.
 
-The `cacheNameSuffix` depends by your cache profile, by default is the user ID or an empty string if not authenticated.
+### Forget Cache items using advanced options
+
+This section is usefull expecially if you are using a custom advanced cache profile.
+
+```php
+
+//forget uri cached with PUT http method
+ResponseCache::cacheCleaner()->setMethod('PUT')->forget('/some-uri');
+
+//forget many uri cached with PUT http method
+ResponseCache::cacheCleaner()->setMethod('PUT')->forget(['/some-uri','/other-uri']);
+
+// Alternatively
+ResponseCache::cacheCleaner()->setMethod('PUT')->forget('/some-uri','/other-uri');
+
+
+//forget uri cached with "100" suffix (by default suffix is user->id or "")
+ResponseCache::cacheCleaner()->setCacheNameSuffix('100')->forget('/some-uri');
+
+// You can use many request options to match the cached request
+// (the logic depends by your RequestHasher)
+ResponseCache::cacheCleaner()
+    ->setMethod('PUT')
+    ->setHeaders(['foo'=>'bar'])
+    ->setCacheNameSuffix('100') 
+    //
+    //... any methods from Spatie\ResponseCache\CacheCleaner\AbstractRequestBuilder
+    //
+    ->forget('/some-uri');
+
+```
+
+Note: the `cacheNameSuffix` depends by your cache profile, by default is the user ID or an empty string if not authenticated.
 
 
 ### Preventing a request from being cached
