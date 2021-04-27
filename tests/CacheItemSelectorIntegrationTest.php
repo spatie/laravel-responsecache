@@ -2,9 +2,9 @@
 
 namespace Spatie\ResponseCache\Test;
 
+use Illuminate\Http\Request;
 use ResponseCache;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
-use Illuminate\Http\Request;
 
 class CacheItemSelectorIntegrationTest extends TestCase
 {
@@ -84,6 +84,7 @@ class CacheItemSelectorIntegrationTest extends TestCase
         $this->assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
         $this->assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
     }
+
     /** @test */
     public function it_can_forget_several_specific_cached_requests_at_once_using_cache_cleaner_post()
     {
@@ -104,7 +105,6 @@ class CacheItemSelectorIntegrationTest extends TestCase
         $this->assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
         $this->assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
     }
-
 
     /** @test */
     public function it_can_forget_a_specific_cached_request_using_cache_cleaner_suffix()
@@ -145,6 +145,7 @@ class CacheSuccessfulGetAndPostRequests extends CacheAllSuccessfulGetRequests
         if ($this->isRunningInConsole()) {
             return false;
         }
+
         return $request->isMethod('get') || $request->isMethod('post');
     }
 }

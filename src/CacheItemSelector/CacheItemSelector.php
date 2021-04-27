@@ -2,7 +2,6 @@
 
 namespace Spatie\ResponseCache\CacheItemSelector;
 
-use Illuminate\Http\Request;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\ResponseCacheRepository;
 
@@ -20,12 +19,14 @@ class CacheItemSelector extends AbstractRequestBuilder
     public function usingTags(string | array $tags): static
     {
         $this->tags = is_array($tags) ? $tags : func_get_args();
+
         return $this;
     }
 
     public function forUrls(string | array $urls): static
     {
         $this->urls = is_array($urls) ? $urls : func_get_args();
+
         return $this;
     }
 
@@ -34,6 +35,7 @@ class CacheItemSelector extends AbstractRequestBuilder
         collect($this->urls)->map(function ($uri) {
             $request = $this->_build($uri);
             $hash = $this->hasher->getHashFor($request);
+
             return $hash;
         })->filter(function ($hash) {
             return $this->taggedCache($this->tags)->has($hash);
@@ -47,6 +49,7 @@ class CacheItemSelector extends AbstractRequestBuilder
         if (empty($tags)) {
             return $this->cache;
         }
+
         return $this->cache->tags($tags);
     }
 }

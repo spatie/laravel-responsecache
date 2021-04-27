@@ -27,6 +27,7 @@ class DefaultHasher implements RequestHasher
         if ($request->attributes->has('responsecache.cacheNameSuffix')) {
             return $request->attributes->get('responsecache.cacheNameSuffix');
         }
+
         return $this->cacheProfile->useCacheNameSuffix($request);
     }
 }

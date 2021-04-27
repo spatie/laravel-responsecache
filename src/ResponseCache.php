@@ -30,7 +30,7 @@ class ResponseCache
             return false;
         }
 
-        if (!$this->cacheProfile->shouldCacheRequest($request)) {
+        if (! $this->cacheProfile->shouldCacheRequest($request)) {
             return false;
         }
 
@@ -85,17 +85,17 @@ class ResponseCache
         return $clonedResponse;
     }
 
-
     /**
      * @param string|array $uris
      * @param string[] $tags
      *
      * @return \Spatie\ResponseCache\ResponseCache
      */
-    public function forget(string|array $uris, array $tags = []): self
+    public function forget(string | array $uris, array $tags = []): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
         $this->selectCachedItems()->forUrls($uris)->forget();
+
         return $this;
     }
 
@@ -109,6 +109,7 @@ class ResponseCache
         if (empty($tags)) {
             return $this->cache;
         }
+
         return $this->cache->tags($tags);
     }
 }

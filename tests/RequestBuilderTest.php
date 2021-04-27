@@ -7,7 +7,6 @@ use Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder;
 
 class RequestBuilderTest extends TestCase
 {
-
     /** @test */
     public function request_builder_works()
     {

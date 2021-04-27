@@ -5,7 +5,6 @@ namespace Spatie\ResponseCache\CacheItemSelector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-
 abstract class AbstractRequestBuilder
 {
     protected string $method = 'GET';
@@ -14,20 +13,24 @@ abstract class AbstractRequestBuilder
     protected array $server = [];
     protected ?string $cacheNameSuffix = null;
 
-
     public function withPutMethod(): static
     {
         $this->method = 'PUT';
+
         return $this;
     }
+
     public function withPatchMethod(): static
     {
         $this->method = 'PATCH';
+
         return $this;
     }
+
     public function withPostMethod(): static
     {
         $this->method = 'POST';
+
         return $this;
     }
 
@@ -38,22 +41,22 @@ abstract class AbstractRequestBuilder
     public function withParameters(array $parameters): static
     {
         $this->parameters = $parameters;
+
         return $this;
     }
-
 
     public function withCookies(array $cookies): static
     {
         $this->cookies = $cookies;
+
         return $this;
     }
-
 
     public function withHeaders(array $headers): static
     {
         $this->server = collect($this->server)
             ->filter(function (string $val, string $key) {
-                return !Str::startsWith($key, 'HTTP_');
+                return ! Str::startsWith($key, 'HTTP_');
             })->merge(collect($headers)
                 ->mapWithKeys(function (string $val, string $key) {
                     return ['HTTP_' . str_replace('-', '_', Str::upper($key)) => $val];
@@ -63,24 +66,23 @@ abstract class AbstractRequestBuilder
         return $this;
     }
 
-
     public function withRemoteAddress($remoteAddress): static
     {
         $this->server['REMOTE_ADDR'] = $remoteAddress;
+
         return $this;
     }
-
 
     public function usingSuffix($cacheNameSuffix): static
     {
         $this->cacheNameSuffix = $cacheNameSuffix;
+
         return $this;
     }
 
-
     protected function _build(string $uri): Request
     {
-        $request =  Request::create(
+        $request = Request::create(
             $uri,
             $this->method,
             $this->parameters,
