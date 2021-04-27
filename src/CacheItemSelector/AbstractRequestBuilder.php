@@ -55,7 +55,7 @@ abstract class AbstractRequestBuilder
     public function withHeaders(array $headers): self
     {
         $this->server = collect($this->server)
-            ->filter(fn(string $val, string $key) => !str_starts_with($key, 'HTTP_'))
+            ->filter(fn (string $val, string $key) => ! str_starts_with($key, 'HTTP_'))
             ->merge(collect($headers)
                 ->mapWithKeys(function (string $val, string $key) {
                     return ['HTTP_' . str_replace('-', '_', Str::upper($key)) => $val];
@@ -92,7 +92,7 @@ abstract class AbstractRequestBuilder
 
         if (isset($this->cacheNameSuffix)) {
             $request->attributes->add([
-                'responsecache.cacheNameSuffix' => $this->cacheNameSuffix
+                'responsecache.cacheNameSuffix' => $this->cacheNameSuffix,
             ]);
         }
 

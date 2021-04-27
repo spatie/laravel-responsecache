@@ -14,18 +14,17 @@ class CacheItemSelector extends AbstractRequestBuilder
     public function __construct(
         protected RequestHasher $hasher,
         protected ResponseCacheRepository $cache,
-    )
-    {
+    ) {
     }
 
-    public function usingTags(string|array $tags): static
+    public function usingTags(string | array $tags): static
     {
         $this->tags = is_array($tags) ? $tags : func_get_args();
 
         return $this;
     }
 
-    public function forUrls(string|array $urls): static
+    public function forUrls(string | array $urls): static
     {
         $this->urls = is_array($urls) ? $urls : func_get_args();
 
@@ -40,8 +39,8 @@ class CacheItemSelector extends AbstractRequestBuilder
 
                 return $this->hasher->getHashFor($request);
             })
-            ->filter(fn($hash) => $this->taggedCache($this->tags)->has($hash))
-            ->each(fn($hash) => $this->taggedCache($this->tags)->forget($hash));
+            ->filter(fn ($hash) => $this->taggedCache($this->tags)->has($hash))
+            ->each(fn ($hash) => $this->taggedCache($this->tags)->forget($hash));
     }
 
     protected function taggedCache(array $tags = []): ResponseCacheRepository
