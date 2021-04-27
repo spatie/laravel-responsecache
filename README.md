@@ -190,44 +190,42 @@ trait ClearsResponseCache
 }
 ```
 
-### Forget one or several specific URI(s)
+### Forget one or several specific URIs
 
 You can forget specific URIs with:
 ```php
-// Forget one URI
+// Forget one
 ResponseCache::forget('/some-uri');
 
-// Forget several URIs
+// Forget several
 ResponseCache::forget(['/some-uri', '/other-uri']);
 
-// Alternatively
+// Equivalent to the example above
 ResponseCache::forget('/some-uri', '/other-uri');
-
 ```
 
 The `ResponseCache::forget` method only works when you're not using a `cacheNameSuffix` in your cache profile, 
 use `ResponseCache::selectCachedItems` to deal with `cacheNameSuffix`.
 
-### Forget Cache items using advanced options
+### Forgetting a selection of cached items
 
-This section is usefull expecially if you are using a custom advanced cache profile.
+You can use `ResponseCache::selectCachedItems()` to specify which cached items should be forgotten.
 
 ```php
 
-//forget uri cached with PUT http method
+// forgetting all PUT responses of /some-uri
 ResponseCache::selectCachedItems()->withPutMethod()->forUrls('/some-uri')->forget();
 
-//forget many uri cached with PUT http method
+// forgetting all PUT responses of multiple endpoints
 ResponseCache::selectCachedItems()->withPutMethod()->forUrls(['/some-uri','/other-uri'])->forget();
 
-// Alternatively
+// this is equivalent to the example above
 ResponseCache::selectCachedItems()->withPutMethod()->forUrls('/some-uri','/other-uri')->forget();
 
-//forget uri cached with "100" suffix (by default suffix is user->id or "")
+// forget /some-uri cached with "100" suffix (by default suffix is user->id or "")
 ResponseCache::selectCachedItems()->usingSuffix('100')->forUrls('/some-uri')->forget();
 
-// You can use many request options to match the cached request
-// (the logic depends by your RequestHasher)
+// all options combined
 ResponseCache::selectCachedItems()
     ->withPutMethod()
     ->withHeaders(['foo'=>'bar'])
@@ -241,10 +239,10 @@ ResponseCache::selectCachedItems()
 
 ```
 
-Note: the `cacheNameSuffix` depends by your cache profile, by default is the user ID or an empty string if not authenticated.
-
+The `cacheNameSuffix` depends by your cache profile, by default is the user ID or an empty string if not authenticated.
 
 ### Preventing a request from being cached
+
 Requests can be ignored by using the `doNotCacheResponse`-middleware.
 This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
