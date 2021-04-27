@@ -4,6 +4,7 @@ namespace Spatie\ResponseCache;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +30,7 @@ class ResponseCache
             return false;
         }
 
-        if (! $this->cacheProfile->shouldCacheRequest($request)) {
+        if (!$this->cacheProfile->shouldCacheRequest($request)) {
             return false;
         }
 
@@ -84,20 +85,23 @@ class ResponseCache
         return $clonedResponse;
     }
 
-    public function forget(string | array $uris, array $tags = []): self
+
+    /**
+     * @param string|array $uris
+     * @param string[] $tags
+     *
+     * @return \Spatie\ResponseCache\ResponseCache
+     */
+    public function forget(string|array $uris, array $tags = []): self
     {
         $uris = is_array($uris) ? $uris : func_get_args();
-
-        collect($uris)->each(function ($uri) use ($tags) {
-            $request = Request::create(url($uri));
-            $hash = $this->hasher->getHashFor($request);
-
-            if ($this->taggedCache($tags)->has($hash)) {
-                $this->taggedCache($tags)->forget($hash);
-            }
-        });
-
+        $this->selectCachedItems()->forUrls($uris)->forget();
         return $this;
+    }
+
+    public function selectCachedItems(): CacheItemSelector
+    {
+        return new CacheItemSelector($this->hasher, $this->cache);
     }
 
     protected function taggedCache(array $tags = []): ResponseCacheRepository
@@ -105,7 +109,6 @@ class ResponseCache
         if (empty($tags)) {
             return $this->cache;
         }
-
         return $this->cache->tags($tags);
     }
 }

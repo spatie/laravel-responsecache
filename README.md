@@ -190,23 +190,59 @@ trait ClearsResponseCache
 }
 ```
 
-### Forget one or several specific URI(s)
+### Forget one or several specific URIs
 
 You can forget specific URIs with:
 ```php
-// Forget one URI
+// Forget one
 ResponseCache::forget('/some-uri');
 
-// Forget several URIs
+// Forget several
 ResponseCache::forget(['/some-uri', '/other-uri']);
 
-// Alternatively
+// Equivalent to the example above
 ResponseCache::forget('/some-uri', '/other-uri');
 ```
 
-The `forget` method only works when you're not using a `cacheNameSuffix` in your cache profile.
+The `ResponseCache::forget` method only works when you're not using a `cacheNameSuffix` in your cache profile, 
+use `ResponseCache::selectCachedItems` to deal with `cacheNameSuffix`.
+
+### Forgetting a selection of cached items
+
+You can use `ResponseCache::selectCachedItems()` to specify which cached items should be forgotten.
+
+```php
+
+// forgetting all PUT responses of /some-uri
+ResponseCache::selectCachedItems()->withPutMethod()->forUrls('/some-uri')->forget();
+
+// forgetting all PUT responses of multiple endpoints
+ResponseCache::selectCachedItems()->withPutMethod()->forUrls(['/some-uri','/other-uri'])->forget();
+
+// this is equivalent to the example above
+ResponseCache::selectCachedItems()->withPutMethod()->forUrls('/some-uri','/other-uri')->forget();
+
+// forget /some-uri cached with "100" suffix (by default suffix is user->id or "")
+ResponseCache::selectCachedItems()->usingSuffix('100')->forUrls('/some-uri')->forget();
+
+// all options combined
+ResponseCache::selectCachedItems()
+    ->withPutMethod()
+    ->withHeaders(['foo'=>'bar'])
+    ->withCookies(['cookie1' => 'value'])
+    ->withParameters(['param1' => 'value'])
+    ->withRemoteAddress('127.0.0.1')
+    ->usingSuffix('100') 
+    ->usingTags('tag1', 'tag2')
+    ->forUrls('/some-uri', '/other-uri')
+    ->forget();
+
+```
+
+The `cacheNameSuffix` depends by your cache profile, by default is the user ID or an empty string if not authenticated.
 
 ### Preventing a request from being cached
+
 Requests can be ignored by using the `doNotCacheResponse`-middleware.
 This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
