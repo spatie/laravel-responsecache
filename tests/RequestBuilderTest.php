@@ -11,14 +11,17 @@ class RequestBuilderTest extends TestCase
     public function request_builder_works()
     {
         $uri = '/foo';
+
         $cookies = [
             'cookie1' => 'cookie1_value',
             'cookie2' => 'cookie2_value',
         ];
+
         $headers = [
             'Header1' => 'Header1_value',
             'Header2' => 'Header2_value',
         ];
+
         $parameters = [
             'Param1' => 'Param1_value',
             'Param2' => 'Param2_value',
@@ -32,14 +35,16 @@ class RequestBuilderTest extends TestCase
             ->withCookies($cookies)
             ->withRemoteAddress('127.0.1.1')
             ->usingSuffix($cacheNameSuffix)
-            ->build($uri);
+            ->testBuild($uri);
 
         foreach ($parameters as $key => $value) {
             $this->assertEquals($request->query($key), $value);
         }
+
         foreach ($headers as $key => $value) {
             $this->assertEquals($request->header($key), $value);
         }
+
         foreach ($cookies as $key => $value) {
             $this->assertEquals($request->cookie($key), $value);
         }
@@ -56,7 +61,7 @@ class RequestBuilderTest extends TestCase
             ->withCookies($cookies)
             ->withRemoteAddress('127.0.1.1')
             ->usingSuffix($cacheNameSuffix)
-            ->build($uri);
+            ->testBuild($uri);
 
         foreach ($parameters as $key => $value) {
             $this->assertEquals($request->input($key), $value);
@@ -77,8 +82,8 @@ class RequestBuilderTest extends TestCase
 
 class RequestBuilder extends AbstractRequestBuilder
 {
-    public function build(string $uri): Request
+    public function testBuild(string $uri): Request
     {
-        return $this->_build($uri);
+        return $this->build($uri);
     }
 }
