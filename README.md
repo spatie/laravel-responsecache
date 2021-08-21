@@ -104,7 +104,7 @@ return [
      * This class is responsible for generating a hash for a request. This hash
      * is used as a key to look up a cached response.
      */
-    'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,
+    'hasher' => \Spatie\ResponseCache\Hasher\DefaultRequestHasher::class,
 
     /*
      * This class serializes cache data and expands it.

@@ -2,23 +2,24 @@
 
 namespace Spatie\ResponseCache;
 
+use DateTime;
 use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
-use Spatie\ResponseCache\Serializers\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCacheRepository
 {
     public function __construct(
-        protected Serializer $responseSerializer,
+        protected ResponseCacheConfig $config,
         protected Repository $cache,
     ) {
         //
     }
 
-    public function put(string $key, Response $response, \DateTime | int $seconds): void
+    public function put(string $key, Response $response, DateTime|int $seconds): void
     {
-        $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
+        $this->cache->put($key, $this->config->serializer->serialize($response),
+            is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
     }
 
     public function has(string $key): bool
@@ -28,7 +29,7 @@ class ResponseCacheRepository
 
     public function get(string $key): Response
     {
-        return $this->responseSerializer->unserialize($this->cache->get($key));
+        return $this->config->serializer->unserialize($this->cache->get($key));
     }
 
     public function clear(): void
@@ -39,13 +40,18 @@ class ResponseCacheRepository
             return;
         }
 
-        if (empty(config('responsecache.cache_tag'))) {
+        if (empty($this->config->cache_tag)) {
             $this->cache->clear();
 
             return;
         }
 
-        $this->cache->tags(config('responsecache.cache_tag'))->flush();
+        $this->cache->tags($this->config->cache_tag)->flush();
+    }
+
+    public function isTagged($repository): bool
+    {
+        return $repository instanceof TaggedCache && !empty($repository->getTags());
     }
 
     public function forget(string $key): bool
@@ -59,11 +65,6 @@ class ResponseCacheRepository
             $tags = array_merge($this->cache->getTags()->getNames(), $tags);
         }
 
-        return new self($this->responseSerializer, $this->cache->tags($tags));
-    }
-
-    public function isTagged($repository): bool
-    {
-        return $repository instanceof TaggedCache && ! empty($repository->getTags());
+        return new self($this->config, $this->cache->tags($tags));
     }
 }

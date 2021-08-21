@@ -3,8 +3,9 @@
 namespace Spatie\ResponseCache\Test;
 
 use Illuminate\Http\Request;
-use ResponseCache;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
+use Spatie\ResponseCache\Facades\ResponseCache;
+use Spatie\ResponseCache\ResponseCacheConfig;
 
 class CacheItemSelectorIntegrationTest extends TestCase
 {
@@ -122,7 +123,7 @@ class CacheItemSelectorIntegrationTest extends TestCase
             ->withParameters(['foo' => 'bar'])
             // BaseCacheProfile an user is logged in
             // use user id as suffix
-            ->usingSuffix((string)$userId)
+            ->usingSuffix((string) $userId)
             ->forUrls('/random')->forget();
 
         $this->actingAs(User::findOrFail(1));
@@ -137,11 +138,12 @@ class CacheItemSelectorIntegrationTest extends TestCase
 
 class CacheSuccessfulGetAndPostRequests extends CacheAllSuccessfulGetRequests
 {
-    public function shouldCacheRequest(Request $request): bool
+    public function shouldCacheRequest(Request $request, ResponseCacheConfig $cacheConfig): bool
     {
         if ($request->ajax()) {
             return false;
         }
+
         if ($this->isRunningInConsole()) {
             return false;
         }

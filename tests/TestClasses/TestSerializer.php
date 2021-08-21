@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\ResponseCache\Test\Serializers;
+namespace Spatie\ResponseCache\Test\TestClasses;
 
 use Illuminate\Http\JsonResponse;
 use Spatie\ResponseCache\Serializers\DefaultSerializer;

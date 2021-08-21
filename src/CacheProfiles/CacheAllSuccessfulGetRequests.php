@@ -4,11 +4,12 @@ namespace Spatie\ResponseCache\CacheProfiles;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\ResponseCache\ResponseCacheConfig;
 use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequests extends BaseCacheProfile
 {
-    public function shouldCacheRequest(Request $request): bool
+    public function shouldCacheRequest(Request $request, ResponseCacheConfig $cacheConfig): bool
     {
         if ($request->ajax()) {
             return false;
@@ -21,13 +22,13 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile
         return $request->isMethod('get');
     }
 
-    public function shouldCacheResponse(Response $response): bool
+    public function shouldCacheResponse(Response $response, ResponseCacheConfig $cacheConfig): bool
     {
-        if (! $this->hasCacheableResponseCode($response)) {
+        if (!$this->hasCacheableResponseCode($response)) {
             return false;
         }
 
-        if (! $this->hasCacheableContentType($response)) {
+        if (!$this->hasCacheableContentType($response)) {
             return false;
         }
 

@@ -2,19 +2,26 @@
 
 namespace Spatie\ResponseCache\Test\Replacers;
 
+use Spatie\ResponseCache\Exceptions\InvalidConfig;
 use Spatie\ResponseCache\Replacers\CsrfTokenReplacer;
+use Spatie\ResponseCache\ResponseCacheConfig;
 use Spatie\ResponseCache\Test\TestCase;
 
 class CsrfTokenReplacerTest extends TestCase
 {
-    /** @test */
+    /** @test
+     * @throws InvalidConfig
+     */
     public function it_will_refresh_csrf_token_on_cached_response()
     {
-        session()->regenerateToken();
-
-        config()->set('responsecache.replacers', [
+        $config = $this->getConfig();
+        $config['replacers'] = [
             CsrfTokenReplacer::class,
-        ]);
+        ];
+        $cacheConfig = new ResponseCacheConfig($config);
+        app()->instance(ResponseCacheConfig::class, $cacheConfig);
+
+        session()->regenerateToken();
 
         $firstToken = csrf_token();
         $firstResponse = $this->get('/csrf_token');

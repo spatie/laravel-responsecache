@@ -49,8 +49,8 @@ class RequestBuilderTest extends TestCase
             $this->assertEquals($request->cookie($key), $value);
         }
         $this->assertEquals($request->getRequestUri(), $uri . '?' . http_build_query($parameters));
-        $this->assertEquals($request->getMethod(), 'GET');
-        $this->assertEquals($request->ip(), '127.0.1.1');
+        $this->assertEquals('GET', $request->getMethod());
+        $this->assertEquals('127.0.1.1', $request->ip());
         $this->assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
 
 
@@ -73,12 +73,11 @@ class RequestBuilderTest extends TestCase
             $this->assertEquals($request->cookie($key), $value);
         }
         $this->assertEquals($request->getRequestUri(), $uri);
-        $this->assertEquals($request->getMethod(), 'POST');
-        $this->assertEquals($request->ip(), '127.0.1.1');
+        $this->assertEquals('POST', $request->getMethod());
+        $this->assertEquals('127.0.1.1', $request->ip());
         $this->assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
     }
 }
-
 
 class RequestBuilder extends AbstractRequestBuilder
 {

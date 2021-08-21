@@ -4,7 +4,6 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Spatie\ResponseCache\Replacers\Replacer;
@@ -22,8 +21,9 @@ class CacheResponse
 
     public function handle(Request $request, Closure $next, ...$args): Response
     {
-        $lifetimeInSeconds = $this->getLifetime($args);
-        $tags = $this->getTags($args);
+        $arguments = $this->getCacheArgs($args);
+        $lifetimeInSeconds = $this->getLifetime($arguments);
+        $tags = $this->getTags($arguments);
 
         if ($this->responseCache->enabled($request)) {
             if ($this->responseCache->hasBeenCached($request, $tags)) {
@@ -31,9 +31,11 @@ class CacheResponse
 
                 $response = $this->responseCache->getCachedResponseFor($request, $tags);
 
-                $this->getReplacers()->each(function (Replacer $replacer) use ($response) {
-                    $replacer->replaceInCachedResponse($response);
-                });
+                $this->responseCache
+                    ->getReplacers()
+                    ->each(function (Replacer $replacer) use ($response) {
+                        $replacer->replaceInCachedResponse($response);
+                    });
 
                 return $response;
             }
@@ -60,15 +62,11 @@ class CacheResponse
     ): void {
         $cachedResponse = clone $response;
 
-        $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
+        $this->responseCache
+            ->getReplacers()
+            ->each(fn(Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
 
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
-    }
-
-    protected function getReplacers(): Collection
-    {
-        return collect(config('responsecache.replacers'))
-            ->map(fn (string $replacerClass) => app($replacerClass));
     }
 
     protected function getLifetime(array $args): ?int
@@ -89,5 +87,17 @@ class CacheResponse
         }
 
         return array_filter($tags);
+    }
+
+    /**
+     * Removes config name from middleware args
+     * @param  array  $args
+     * @return array
+     */
+    protected function getCacheArgs(array $args): array
+    {
+        $arguments = $args;
+
+        return count($arguments) >= 1 ? array_slice($arguments, 1) : [];
     }
 }

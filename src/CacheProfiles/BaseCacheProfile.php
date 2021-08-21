@@ -6,22 +6,23 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\ResponseCache\ResponseCacheConfig;
 
 abstract class BaseCacheProfile implements CacheProfile
 {
-    public function enabled(Request $request): bool
+    public function enabled(Request $request, ResponseCacheConfig $cacheConfig): bool
     {
-        return config('responsecache.enabled');
+        return $cacheConfig->enabled;
     }
 
-    public function cacheRequestUntil(Request $request): DateTime
+    public function cacheRequestUntil(Request $request, ResponseCacheConfig $cacheConfig): DateTime
     {
         return Carbon::now()->addSeconds(
-            config('responsecache.cache_lifetime_in_seconds')
+            $cacheConfig->cache_lifetime_in_seconds
         );
     }
 
-    public function useCacheNameSuffix(Request $request): string
+    public function useCacheNameSuffix(Request $request, ResponseCacheConfig $cacheConfig): string
     {
         return Auth::check()
             ? (string) Auth::id()

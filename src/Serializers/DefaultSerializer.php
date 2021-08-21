@@ -7,7 +7,7 @@ use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultSerializer implements Serializer
+class DefaultSerializer extends BaseSerializer
 {
     public const RESPONSE_TYPE_NORMAL = 'normal';
     public const RESPONSE_TYPE_FILE = 'file';
@@ -15,21 +15,6 @@ class DefaultSerializer implements Serializer
     public function serialize(Response $response): string
     {
         return serialize($this->getResponseData($response));
-    }
-
-    public function unserialize(string $serializedResponse): Response
-    {
-        $responseProperties = unserialize($serializedResponse);
-
-        if (! $this->containsValidResponseProperties($responseProperties)) {
-            throw CouldNotUnserialize::serializedResponse($serializedResponse);
-        }
-
-        $response = $this->buildResponse($responseProperties);
-
-        $response->headers = $responseProperties['headers'];
-
-        return $response;
     }
 
     protected function getResponseData(Response $response): array
@@ -50,13 +35,31 @@ class DefaultSerializer implements Serializer
         return compact('statusCode', 'headers', 'content', 'type');
     }
 
+    /**
+     * @throws CouldNotUnserialize
+     */
+    public function unserialize(string $serializedResponse): Response
+    {
+        $responseProperties = unserialize($serializedResponse);
+
+        if (!$this->containsValidResponseProperties($responseProperties)) {
+            throw CouldNotUnserialize::serializedResponse($serializedResponse);
+        }
+
+        $response = $this->buildResponse($responseProperties);
+
+        $response->headers = $responseProperties['headers'];
+
+        return $response;
+    }
+
     protected function containsValidResponseProperties($properties): bool
     {
-        if (! is_array($properties)) {
+        if (!is_array($properties)) {
             return false;
         }
 
-        if (! isset($properties['content'], $properties['statusCode'])) {
+        if (!isset($properties['content'], $properties['statusCode'])) {
             return false;
         }
 

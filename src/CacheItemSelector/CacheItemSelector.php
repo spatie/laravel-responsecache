@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\CacheItemSelector;
 
 use Spatie\ResponseCache\Hasher\RequestHasher;
+use Spatie\ResponseCache\ResponseCacheConfig;
 use Spatie\ResponseCache\ResponseCacheRepository;
 
 class CacheItemSelector extends AbstractRequestBuilder
@@ -12,7 +13,7 @@ class CacheItemSelector extends AbstractRequestBuilder
     protected array $tags = [];
 
     public function __construct(
-        protected RequestHasher $hasher,
+        protected ResponseCacheConfig $cacheConfig,
         protected ResponseCacheRepository $cache,
     ) {
     }
@@ -37,7 +38,7 @@ class CacheItemSelector extends AbstractRequestBuilder
             ->map(function ($uri) {
                 $request = $this->build($uri);
 
-                return $this->hasher->getHashFor($request);
+                return $this->cacheConfig->hasher->getHashFor($request,$this->cacheConfig);
             })
             ->filter(fn ($hash) => $this->taggedCache($this->tags)->has($hash))
             ->each(fn ($hash) => $this->taggedCache($this->tags)->forget($hash));

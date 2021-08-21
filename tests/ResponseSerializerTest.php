@@ -2,12 +2,13 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Config;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
+use Spatie\ResponseCache\Exceptions\InvalidConfig;
+use Spatie\ResponseCache\ResponseCacheConfig;
 use Spatie\ResponseCache\Serializers\Serializer;
-use Spatie\ResponseCache\Test\Serializers\TestSerializer;
+use Spatie\ResponseCache\Test\TestClasses\TestSerializer;
 
 class ResponseSerializerTest extends TestCase
 {
@@ -15,25 +16,35 @@ class ResponseSerializerTest extends TestCase
 
     protected string $jsonContent;
 
-    protected string $statusCode;
+    protected int $statusCode;
+
+    protected ResponseCacheConfig $config;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->textContent = '<html>This is a response</html>';
+        $this->textContent = '<html lang="en">This is a response</html>';
         $this->jsonContent = json_encode(['text' => 'This is a response']);
 
         $this->statusCode = 500;
+
+
     }
 
-    /** @test */
+    /** @test
+     * @throws InvalidConfig
+     */
     public function it_can_serialize_and_unserialize_a_response()
     {
+        // Instantiate a default config
+        $cacheConfig = new ResponseCacheConfig($this->getConfig());
+        app()->instance(ResponseCacheConfig::class, $cacheConfig);
+
         // Instantiate a default serializer
         $responseSerializer = app(Serializer::class);
 
-        $testResponse = Response::create(
+        $testResponse = new Response(
             $this->textContent,
             $this->statusCode,
             ['testHeader' => 'testValue']
@@ -54,16 +65,21 @@ class ResponseSerializerTest extends TestCase
         $this->assertEquals('testValue', $unserializedResponse->headers->get('testHeader'));
     }
 
-    /** @test */
-    public function it_can_customized_serialize_and_unserialize_a_response()
+    /** @test
+     * @throws InvalidConfig
+     */
+    public function it_can_use_custom_response_serializer()
     {
-        // Set config dynamically for test
-        Config::set('responsecache.serializer', TestSerializer::class);
+        // setup config
+        $config = $this->getConfig();
+        $config['serializer'] = TestSerializer::class;
+        $cacheConfig = new ResponseCacheConfig($config);
+        app()->instance(ResponseCacheConfig::class, $cacheConfig);
 
         // Instantiate a custom serializer according to config
         $responseSerializer = app(Serializer::class);
 
-        $testResponse = JsonResponse::create(
+        $testResponse = new JsonResponse(
             $this->jsonContent,
             $this->statusCode,
             ['testHeader' => 'testValue']

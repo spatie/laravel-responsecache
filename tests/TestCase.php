@@ -9,10 +9,14 @@ use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Route;
+use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Spatie\ResponseCache\Facades\ResponseCache;
+use Spatie\ResponseCache\Hasher\DefaultRequestHasher;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
+use Spatie\ResponseCache\ResponseCacheConfigRepository;
 use Spatie\ResponseCache\ResponseCacheServiceProvider;
+use Spatie\ResponseCache\Serializers\DefaultSerializer;
 
 abstract class TestCase extends Orchestra
 {
@@ -136,11 +140,11 @@ abstract class TestCase extends Orchestra
 
             Route::any('/tagged/1', function () {
                 return Str::random();
-            })->middleware('cacheResponse:,foo');
+            })->middleware('cacheResponse:default,,foo');
 
             Route::any('/tagged/2', function () {
                 return Str::random();
-            })->middleware('cacheResponse:,foo,bar');
+            })->middleware('cacheResponse:default,,foo,bar');
         });
 
         Route::any('/cache-for-given-lifetime', function () {
@@ -185,5 +189,22 @@ abstract class TestCase extends Orchestra
     {
         $this->app[Router::class]->aliasMiddleware('doNotCacheResponse', DoNotCacheResponse::class);
         $this->app[Router::class]->aliasMiddleware('cacheResponse', CacheResponse::class);
+    }
+
+    protected function getConfig(): array
+    {
+        return [
+            'name' => 'default',
+            'enabled' => true,
+            'add_cache_time_header' => true,
+            'cache_time_header_name' => 'X-RESPONSE-CACHE-TIME',
+            'cache_lifetime_in_seconds' => 60 * 60 * 24 * 7,
+            'cache_store' => 'file',
+            'replacers' => [],
+            'cache_tag' => '',
+            'hasher' => DefaultRequestHasher::class,
+            'serializer' => DefaultSerializer::class,
+            'cache_profile' => CacheAllSuccessfulGetRequests::class,
+        ];
     }
 }
