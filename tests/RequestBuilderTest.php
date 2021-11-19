@@ -29,7 +29,7 @@ class RequestBuilderTest extends TestCase
 
         $cacheNameSuffix = 'suffix';
 
-        $request = (new RequestBuilder)
+        $request = (new RequestBuilder())
             ->withParameters($parameters)
             ->withHeaders($headers)
             ->withCookies($cookies)
@@ -54,7 +54,7 @@ class RequestBuilderTest extends TestCase
         $this->assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
 
 
-        $request = (new RequestBuilder)
+        $request = (new RequestBuilder())
             ->withPostMethod()
             ->withParameters($parameters)
             ->withHeaders($headers)
