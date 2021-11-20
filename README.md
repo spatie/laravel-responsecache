@@ -141,9 +141,9 @@ protected $routeMiddleware = [
 
 ### Basic usage
 
-By default, the package will cache all successful `get`-requests for a week.
+By default, the package will cache all successful `GET` requests for a week.
 Logged in users will each have their own separate cache. If this behaviour is what you
- need, you're done: installing the `ResponseCacheServerProvider` was enough.
+ need, you're done: installing the `ResponseCacheServiceProvider` was enough.
 
 ### Clearing the cache
 
@@ -153,7 +153,7 @@ The entire cache can be cleared with:
 ```php
 ResponseCache::clear();
 ```
-This will clear everything from the cache store specified in the config-file.
+This will clear everything from the cache store specified in the config file.
 
 #### Using a console command
 
@@ -243,7 +243,7 @@ The `cacheNameSuffix` depends by your cache profile, by default is the user ID o
 
 ### Preventing a request from being cached
 
-Requests can be ignored by using the `doNotCacheResponse`-middleware.
+Requests can be ignored by using the `doNotCacheResponse` middleware.
 This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
 Using the middleware are route could be exempt from being cached.
@@ -271,7 +271,7 @@ To determine which requests should be cached, and for how long, a cache profile 
 The default class that handles these questions is `Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests`.
 
 You can create your own cache profile class by implementing the `
-Spatie\ResponseCache\CacheProfiles\CacheProfile`-interface. Let's take a look at the interface:
+Spatie\ResponseCache\CacheProfiles\CacheProfile` interface. Let's take a look at the interface:
 
 ```php
 interface CacheProfile
@@ -403,7 +403,7 @@ These events are fired respectively when the `responsecache:clear` is started an
 To replace cached content by dynamic content, you can create a replacer.
 By default we add a `CsrfTokenReplacer` in the config file.
 
-You can create your own replacers by implementing the `Spatie\ResponseCache\Replacers\Replacer`-interface. Let's take a look at the interface:
+You can create your own replacers by implementing the `Spatie\ResponseCache\Replacers\Replacer` interface. Let's take a look at the interface:
 
 ```php
 interface Replacer
