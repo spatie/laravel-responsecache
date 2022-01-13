@@ -2,9 +2,9 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Config;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Spatie\ResponseCache\Serializers\Serializer;
 use Spatie\ResponseCache\Test\Serializers\TestSerializer;
@@ -33,7 +33,7 @@ class ResponseSerializerTest extends TestCase
         // Instantiate a default serializer
         $responseSerializer = app(Serializer::class);
 
-        $testResponse = Response::create(
+        $testResponse = new Response(
             $this->textContent,
             $this->statusCode,
             ['testHeader' => 'testValue']
@@ -55,7 +55,7 @@ class ResponseSerializerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_customized_serialize_and_unserialize_a_response()
+    public function it_can_customize_serialize_and_unserialize_a_response()
     {
         // Set config dynamically for test
         Config::set('responsecache.serializer', TestSerializer::class);
@@ -63,7 +63,7 @@ class ResponseSerializerTest extends TestCase
         // Instantiate a custom serializer according to config
         $responseSerializer = app(Serializer::class);
 
-        $testResponse = JsonResponse::create(
+        $testResponse = new JsonResponse(
             $this->jsonContent,
             $this->statusCode,
             ['testHeader' => 'testValue']
