@@ -21,20 +21,19 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/cache": "^8.71",
-        "illuminate/container": "^8.71",
-        "illuminate/console": "^8.71",
-        "illuminate/http": "^8.71",
-        "illuminate/support": "^8.71",
+        "illuminate/cache": "^8.71|^9.0",
+        "illuminate/container": "^8.71|^9.0",
+        "illuminate/console": "^8.71|^9.0",
+        "illuminate/http": "^8.71|^9.0",
+        "illuminate/support": "^8.71|^9.0",
         "nesbot/carbon": "^2.35",
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
-        "laravel/framework": "^8.0",
+        "laravel/framework": "^8.0|^9.0",
         "phpunit/phpunit" : "^9.4",
-        "orchestra/testbench": "^6.23",
-        "mockery/mockery": "^1.4",
-        "vimeo/psalm": "^4.4"
+        "orchestra/testbench": "^6.23|^7.0",
+        "mockery/mockery": "^1.4"
     },
     "autoload": {
         "psr-4": {
@@ -47,7 +46,6 @@
         }
     },
     "scripts": {
-        "psalm": "vendor/bin/psalm",
         "test": "vendor/bin/phpunit"
     },
     "config": {
