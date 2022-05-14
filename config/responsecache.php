@@ -40,7 +40,7 @@ return [
      * debugging.
      * ONLY works when "add_cache_time_header" is also active!
      */
-    'add_cache_age_header' => env('APP_DEBUG', false),
+    'add_cache_age_header' => env('RESPONSE_CACHE_AGE_HEADER', false),
 
     /*
      * This setting determines the name of the http header that contains
