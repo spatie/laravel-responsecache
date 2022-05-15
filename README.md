@@ -80,6 +80,20 @@ return [
     'cache_time_header_name' => env('RESPONSE_CACHE_HEADER_NAME', 'laravel-responsecache'),
 
     /*
+     * This setting determines if a http header named with the cache age
+     * should be added to a cached response. This can be handy when
+     * debugging.
+     * ONLY works when "add_cache_time_header" is also active!
+     */
+    'add_cache_age_header' => env('RESPONSE_CACHE_AGE_HEADER', false),
+
+    /*
+     * This setting determines the name of the http header that contains
+     * the age of cache
+     */
+    'cache_age_header_name' => env('RESPONSE_CACHE_AGE_HEADER_NAME', 'laravel-responsecache-age'),
+
+    /*
      * Here you may define the cache store that should be used to store
      * requests. This can be the name of any store that is
      * configured in app/config/cache.php
@@ -105,15 +119,14 @@ return [
 
     /*
      * This class is responsible for generating a hash for a request. This hash
-     * is used as a key to look up a cached response.
+     * is used to look up an cached response.
      */
     'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,
 
     /*
-     * This class serializes cache data and expands it.
-     * Serialization can save the data to be returned in an appropriate form.
+     * This class is responsible for serializing responses.
      */
-    'serializer' => \Spatie\ResponseCache\Serializer\DefaultSerializer::class,
+    'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
 ];
 ```
 
