@@ -32,11 +32,7 @@ class CacheResponse
 
                 $response = $this->responseCache->getCachedResponseFor($request, $tags);
 
-                // Add cache age header
-                if (config('responsecache.add_cache_age_header') and $time = $response->headers->get(config('responsecache.cache_time_header_name'))) {
-                    $ageInSeconds = Carbon::parse($time)->diffInSeconds(Carbon::now());
-                    $response->headers->set(config('responsecache.cache_age_header_name'), $ageInSeconds);
-                }
+                $response = $this->addCacheAgeHeader($response);
 
                 $this->getReplacers()->each(function (Replacer $replacer) use ($response) {
                     $replacer->replaceInCachedResponse($response);
@@ -96,5 +92,16 @@ class CacheResponse
         }
 
         return array_filter($tags);
+    }
+
+    public function addCacheAgeHeader(Response $response): Response
+    {
+        if (config('responsecache.add_cache_age_header') and $time = $response->headers->get(config('responsecache.cache_time_header_name'))) {
+            $ageInSeconds = Carbon::parse($time)->diffInSeconds(Carbon::now());
+
+            $response->headers->set(config('responsecache.cache_age_header_name'), $ageInSeconds);
+        }
+
+        return $response;
     }
 }
