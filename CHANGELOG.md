@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.3.0 - 2022-05-16
+
+## What's Changed
+
+- Add option to output cache age header by @it-can in https://github.com/spatie/laravel-responsecache/pull/385
+
+## New Contributors
+
+- @it-can made their first contribution in https://github.com/spatie/laravel-responsecache/pull/385
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.2.0...7.3.0
+
 ## 7.2.0 - 2022-01-13
 
 - support Laravel 9
