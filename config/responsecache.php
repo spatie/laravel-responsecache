@@ -35,6 +35,20 @@ return [
     'cache_time_header_name' => env('RESPONSE_CACHE_HEADER_NAME', 'laravel-responsecache'),
 
     /*
+     * This setting determines if a http header named with the cache age
+     * should be added to a cached response. This can be handy when
+     * debugging.
+     * ONLY works when "add_cache_time_header" is also active!
+     */
+    'add_cache_age_header' => env('RESPONSE_CACHE_AGE_HEADER', false),
+
+    /*
+     * This setting determines the name of the http header that contains
+     * the age of cache
+     */
+    'cache_age_header_name' => env('RESPONSE_CACHE_AGE_HEADER_NAME', 'laravel-responsecache-age'),
+
+    /*
      * Here you may define the cache store that should be used to store
      * requests. This can be the name of any store that is
      * configured in app/config/cache.php

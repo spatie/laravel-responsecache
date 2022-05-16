@@ -257,4 +257,22 @@ class IntegrationTest extends TestCase
 
         $this->assertSameResponse($firstResponse, $secondResponse);
     }
+
+    /** @test */
+    public function it_can_add_a_cache_age_header()
+    {
+        $this->app['config']->set('responsecache.add_cache_time_header', true);
+        $this->app['config']->set('responsecache.add_cache_age_header', true);
+        $this->app['config']->set('responsecache.cache_age_header_name', 'X-Cached-Age');
+
+        $firstResponse = $this->get('/random');
+        $secondResponse = $this->get('/random');
+
+        $this->assertFalse($firstResponse->headers->has('X-Cached-Age'));
+        $this->assertTrue($secondResponse->headers->has('X-Cached-Age'));
+
+        $this->assertIsNumeric($secondResponse->headers->get('X-Cached-Age'));
+
+        $this->assertSameResponse($firstResponse, $secondResponse);
+    }
 }
