@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.3.1 - 2022-05-30
+
+### What's Changed
+
+- Handle missed cache gracefully by @antennaio in https://github.com/spatie/laravel-responsecache/pull/383
+
+### New Contributors
+
+- @antennaio made their first contribution in https://github.com/spatie/laravel-responsecache/pull/383
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.3.0...7.3.1
+
 ## 7.3.0 - 2022-05-16
 
 ## What's Changed
