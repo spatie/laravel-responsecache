@@ -14,7 +14,7 @@ interface CacheProfile
 
     public function shouldCacheResponse(Response $response): bool;
 
-    public function cacheRequestUntil(Request $request): DateTime;
+    public function cacheRequestUntil(Request $request, Response $response): DateTime;
 
     /*
      * Return a string to differentiate this request from others.

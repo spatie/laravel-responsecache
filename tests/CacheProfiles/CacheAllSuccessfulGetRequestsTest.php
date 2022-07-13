@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache\Test\CacheProfiles;
 
+use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
@@ -85,7 +86,19 @@ class CacheAllSuccessfulGetRequestsTest extends TestCase
     public function it_will_determine_to_cache_responses_for_a_certain_amount_of_time()
     {
         /** @var $expirationDate \Carbon\Carbon */
-        $expirationDate = $this->cacheProfile->cacheRequestUntil($this->createRequest('get'));
+        $expirationDate = $this->cacheProfile->cacheRequestUntil($this->createRequest('get'), $this->createResponse(200));
+
+        $this->assertTrue($expirationDate->isFuture());
+    }
+
+    /** @test */
+    public function it_will_determine_to_cache_responses_based_on_expires_header()
+    {
+        /** @var $expirationDate \Carbon\Carbon */
+        $expirationDate = $this->cacheProfile->cacheRequestUntil(
+            $this->createRequest('get'),
+            $this->createResponse(200)->setExpires((new DateTime())->modify('+30 minutes'))
+        );
 
         $this->assertTrue($expirationDate->isFuture());
     }

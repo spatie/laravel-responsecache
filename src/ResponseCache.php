@@ -50,7 +50,7 @@ class ResponseCache
         $this->taggedCache($tags)->put(
             $this->hasher->getHashFor($request),
             $response,
-            $lifetimeInSeconds ?? $this->cacheProfile->cacheRequestUntil($request),
+            $lifetimeInSeconds ?? $this->cacheProfile->cacheRequestUntil($request, $response),
         );
 
         return $response;
