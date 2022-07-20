@@ -20,10 +20,10 @@ return [
      *  This can be useful to monitor the performance of your applicaton.
      */
     'cache_bypass_header' => [
-        'name' => env('cache_bypass_header_name', null),
-        'value' => env('cache_bypass_header_value', null),
+        'name' => env('CACHE_BYPASS_HEADER_NAME', null),
+        'value' => env('CACHE_BYPASS_HEADER_VALUE', null),
     ],
-    
+
     /*
      * When using the default CacheRequestFilter this setting controls the
      * default number of seconds responses must be cached.
