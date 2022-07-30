@@ -17,7 +17,7 @@ return [
 
     /*
      *  Optionally, you can specify a header that will force a cache bypass.
-     *  This can be useful to monitor the performance of your applicaton.
+     *  This can be useful to monitor the performance of your application.
      */
     'cache_bypass_header' => [
         'name' => env('CACHE_BYPASS_HEADER_NAME', null),
