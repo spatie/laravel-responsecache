@@ -60,6 +60,7 @@ return [
      */
     'cache_profile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
+    /*
      *  Optionally, you can specify a header that will force a cache bypass.
      *  This can be useful to monitor the performance of your application.
      */
