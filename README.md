@@ -61,6 +61,15 @@ return [
     'cache_profile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
     /*
+     *  Optionally, you can specify a header that will force a cache bypass.
+     *  This can be useful to monitor the performance of your application.
+     */
+    'cache_bypass_header' => [
+        'name' => env('CACHE_BYPASS_HEADER_NAME', null),
+        'value' => env('CACHE_BYPASS_HEADER_VALUE', null),
+    ],
+
+    /*
      * When using the default CacheRequestFilter this setting controls the
      * default number of seconds responses must be cached.
      */
@@ -281,6 +290,11 @@ class UserController extends Controller
     }
 }
 ```
+
+### Purposefully bypassing the cache
+
+It's possible to purposefully and securely bypass the cache and ensure you always receive a fresh response. This may be useful in case you want to profile some endpoint or in case you need to debug a response.
+In any case, all you need to do is fill the `CACHE_BYPASS_HEADER_NAME` and `CACHE_BYPASS_HEADER_VALUE` environment variables and then use that custom header when performing the requests.
 
 ### Creating a custom cache profile
 To determine which requests should be cached, and for how long, a cache profile class is used.

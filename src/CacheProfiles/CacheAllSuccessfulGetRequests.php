@@ -18,6 +18,10 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile
             return false;
         }
 
+        if ($this->requestHasCacheBypassHeader($request)) {
+            return false;
+        }
+
         return $request->isMethod('get');
     }
 

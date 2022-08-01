@@ -275,4 +275,17 @@ class IntegrationTest extends TestCase
 
         $this->assertSameResponse($firstResponse, $secondResponse);
     }
+
+    /** @test */
+    public function it_wont_serve_cached_response_if_request_has_bypass_header()
+    {
+        $headerName = 'X-Cache-Bypass';
+        $headerValue = rand(1, 99999);
+        $this->app['config']->set('responsecache.cache_bypass_header.name', $headerName);
+        $this->app['config']->set('responsecache.cache_bypass_header.value', $headerValue);
+
+        $response = $this->get('/', ['X-Cache-Bypass' => $headerValue]);
+
+        $this->assertRegularResponse($response);
+    }
 }

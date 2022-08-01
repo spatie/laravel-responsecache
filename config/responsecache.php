@@ -16,6 +16,15 @@ return [
     'cache_profile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
     /*
+     *  Optionally, you can specify a header that will force a cache bypass.
+     *  This can be useful to monitor the performance of your application.
+     */
+    'cache_bypass_header' => [
+        'name' => env('CACHE_BYPASS_HEADER_NAME', null),
+        'value' => env('CACHE_BYPASS_HEADER_VALUE', null),
+    ],
+
+    /*
      * When using the default CacheRequestFilter this setting controls the
      * default number of seconds responses must be cached.
      */
