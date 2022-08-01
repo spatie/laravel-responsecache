@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.0 - 2022-08-01
+
+### What's Changed
+
+- Add cache bypass header by @fgilio in https://github.com/spatie/laravel-responsecache/pull/406
+
+### New Contributors
+
+- @fgilio made their first contribution in https://github.com/spatie/laravel-responsecache/pull/406
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.3.1...7.4.0
+
 ## 7.3.1 - 2022-05-30
 
 ### What's Changed
