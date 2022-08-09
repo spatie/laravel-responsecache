@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.1 - 2022-08-09
+
+### What's Changed
+
+- Cache bypass header now also prevents an already cached response from being returned by @fgilio in https://github.com/spatie/laravel-responsecache/pull/407
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.4.0...7.4.1
+
 ## 7.4.0 - 2022-08-01
 
 ### What's Changed
