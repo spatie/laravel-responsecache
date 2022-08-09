@@ -36,18 +36,4 @@ abstract class BaseCacheProfile implements CacheProfile
 
         return app()->runningInConsole();
     }
-
-    public function requestHasCacheBypassHeader(Request $request): bool
-    {
-        // Ensure we return if cache_bypass_header is not setup
-        if (! config('responsecache.cache_bypass_header.name')) {
-            return false;
-        }
-        // Ensure we return if cache_bypass_header is not setup
-        if (! config('responsecache.cache_bypass_header.value')) {
-            return false;
-        }
-
-        return $request->header(config('responsecache.cache_bypass_header.name')) === config('responsecache.cache_bypass_header.value');
-    }
 }

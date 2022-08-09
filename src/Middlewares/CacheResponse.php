@@ -26,7 +26,7 @@ class CacheResponse
         $lifetimeInSeconds = $this->getLifetime($args);
         $tags = $this->getTags($args);
 
-        if ($this->responseCache->enabled($request)) {
+        if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
             if ($this->responseCache->hasBeenCached($request, $tags)) {
                 event(new ResponseCacheHit($request));
 
@@ -44,7 +44,7 @@ class CacheResponse
 
         $response = $next($request);
 
-        if ($this->responseCache->enabled($request)) {
+        if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
             if ($this->responseCache->shouldCache($request, $response)) {
                 $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
             }

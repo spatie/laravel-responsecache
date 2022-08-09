@@ -37,6 +37,20 @@ class ResponseCache
         return $this->cacheProfile->shouldCacheResponse($response);
     }
 
+    public function shouldBypass(Request $request): bool
+    {
+        // Ensure we return if cache_bypass_header is not setup
+        if (! config('responsecache.cache_bypass_header.name')) {
+            return false;
+        }
+        // Ensure we return if cache_bypass_header is not setup
+        if (! config('responsecache.cache_bypass_header.value')) {
+            return false;
+        }
+
+        return $request->header(config('responsecache.cache_bypass_header.name')) === (string) config('responsecache.cache_bypass_header.value');
+    }
+
     public function cacheResponse(
         Request $request,
         Response $response,
