@@ -30,8 +30,10 @@ class CacheResponse
 
         if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
             try {
-                if ($response = $this->responseCache->getCachedResponseFor($request, $tags)) {
+                if ($this->responseCache->hasBeenCached($request, $tags)) {
                     event(new ResponseCacheHit($request));
+
+                    $response = $this->responseCache->getCachedResponseFor($request, $tags);
 
                     $response = $this->addCacheAgeHeader($response);
 
