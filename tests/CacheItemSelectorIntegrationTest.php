@@ -33,8 +33,6 @@ class CacheItemSelectorIntegrationTest extends TestCase
     /** @test */
     public function it_can_forget_a_specific_cached_request_using_cache_cleaner()
     {
-        config()->set('app.url', 'http://spatie.be');
-
         $firstResponse = $this->get('/random?foo=bar');
         $this->assertRegularResponse($firstResponse);
 
@@ -50,8 +48,6 @@ class CacheItemSelectorIntegrationTest extends TestCase
     /** @test */
     public function it_can_forget_a_specific_cached_request_using_cache_cleaner_post()
     {
-        config()->set('app.url', 'http://spatie.be');
-
         $firstResponse = $this->post('/random');
         $this->assertRegularResponse($firstResponse);
 
@@ -109,8 +105,6 @@ class CacheItemSelectorIntegrationTest extends TestCase
     /** @test */
     public function it_can_forget_a_specific_cached_request_using_cache_cleaner_suffix()
     {
-        config()->set('app.url', 'http://spatie.be');
-
         $userId = 1;
 
         $this->actingAs(User::findOrFail($userId));

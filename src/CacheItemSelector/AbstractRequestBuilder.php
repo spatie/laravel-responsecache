@@ -82,7 +82,7 @@ abstract class AbstractRequestBuilder
     protected function build(string $uri): Request
     {
         $request = Request::create(
-            $uri,
+            url($uri),
             $this->method,
             $this->parameters,
             $this->cookies,
