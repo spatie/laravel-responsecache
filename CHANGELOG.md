@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.2 - 2022-09-02
+
+### What's Changed
+
+- Always prepend app url to requests by @apeisa in https://github.com/spatie/laravel-responsecache/pull/409
+
+### New Contributors
+
+- @apeisa made their first contribution in https://github.com/spatie/laravel-responsecache/pull/409
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.4.1...7.4.2
+
 ## 7.4.1 - 2022-08-09
 
 ### What's Changed
