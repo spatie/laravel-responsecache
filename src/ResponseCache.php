@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
+use Spatie\ResponseCache\Events\ClearedResponseCache;
+use Spatie\ResponseCache\Events\ClearingResponseCache;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -84,7 +86,11 @@ class ResponseCache
 
     public function clear(array $tags = []): void
     {
+        event(new ClearingResponseCache());
+
         $this->taggedCache($tags)->clear();
+
+        event(new ClearedResponseCache());
     }
 
     protected function addCachedHeader(Response $response): Response
