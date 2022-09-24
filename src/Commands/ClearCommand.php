@@ -3,8 +3,6 @@
 namespace Spatie\ResponseCache\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\ResponseCache\Events\ClearedResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCache;
 use Spatie\ResponseCache\Facades\ResponseCache;
 
 class ClearCommand extends Command
