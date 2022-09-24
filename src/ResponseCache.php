@@ -113,8 +113,12 @@ class ResponseCache
      */
     public function forget(string | array $uris, array $tags = []): self
     {
+        event(new ClearingResponseCache());
+
         $uris = is_array($uris) ? $uris : func_get_args();
         $this->selectCachedItems()->forUrls($uris)->forget();
+
+        event(new ClearedResponseCache());
 
         return $this;
     }

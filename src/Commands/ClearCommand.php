@@ -15,11 +15,7 @@ class ClearCommand extends Command
 
     public function handle()
     {
-        event(new ClearingResponseCache());
-
         $this->clear();
-
-        event(new ClearedResponseCache());
 
         $this->info('Response cache cleared!');
     }
