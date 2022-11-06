@@ -31,9 +31,10 @@
     },
     "require-dev": {
         "laravel/framework": "^9.0",
-        "phpunit/phpunit" : "^9.4",
+        "mockery/mockery": "^1.4",
         "orchestra/testbench": "^6.23|^7.0",
-        "mockery/mockery": "^1.4"
+        "pestphp/pest": "^1.22",
+        "phpunit/phpunit": "^9.4"
     },
     "autoload": {
         "psr-4": {
@@ -46,10 +47,13 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/pest"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {
