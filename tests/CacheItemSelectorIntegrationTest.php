@@ -34,74 +34,74 @@ test('it will cache a post request', function () {
     $firstResponse = $this->call('POST', '/random');
     $secondResponse = $this->call('POST', '/random');
 
-    $this->assertRegularResponse($firstResponse);
-    $this->assertCachedResponse($secondResponse);
+    assertRegularResponse($firstResponse);
+    assertCachedResponse($secondResponse);
 
-    $this->assertSameResponse($firstResponse, $secondResponse);
+    assertSameResponse($firstResponse, $secondResponse);
 });
 
 test('it can forget a specific cached request using cache cleaner', function () {
     $firstResponse = $this->get('/random?foo=bar');
-    $this->assertRegularResponse($firstResponse);
+    assertRegularResponse($firstResponse);
 
     ResponseCache::selectCachedItems()->withParameters(['foo' => 'bar'])
         ->forUrls('/random')->forget();
 
     $secondResponse = $this->get('/random?foo=bar');
-    $this->assertRegularResponse($secondResponse);
+    assertRegularResponse($secondResponse);
 
-    $this->assertDifferentResponse($firstResponse, $secondResponse);
+    assertDifferentResponse($firstResponse, $secondResponse);
 });
 
 test('it can forget a specific cached request using cache cleaner post', function () {
     $firstResponse = $this->post('/random');
-    $this->assertRegularResponse($firstResponse);
+    assertRegularResponse($firstResponse);
 
     ResponseCache::selectCachedItems()->withPostMethod()->forUrls('/random')->forget();
 
     $secondResponse = $this->post('/random');
-    $this->assertRegularResponse($secondResponse);
+    assertRegularResponse($secondResponse);
 
-    $this->assertDifferentResponse($firstResponse, $secondResponse);
+    assertDifferentResponse($firstResponse, $secondResponse);
 });
 
 test('it can forget several specific cached requests at once using cache cleaner', function () {
     $firstResponseFirstCall = $this->get('/random/1?foo=bar');
-    $this->assertRegularResponse($firstResponseFirstCall);
+    assertRegularResponse($firstResponseFirstCall);
 
     $secondResponseFirstCall = $this->get('/random/2?foo=bar');
-    $this->assertRegularResponse($secondResponseFirstCall);
+    assertRegularResponse($secondResponseFirstCall);
 
     ResponseCache::selectCachedItems()->withParameters(['foo' => 'bar'])
         ->forUrls(['/random/1', '/random/2'])->forget();
 
     $firstResponseSecondCall = $this->get('/random/1?foo=bar');
-    $this->assertRegularResponse($firstResponseSecondCall);
+    assertRegularResponse($firstResponseSecondCall);
 
     $secondResponseSecondCall = $this->get('/random/2?foo=bar');
-    $this->assertRegularResponse($secondResponseSecondCall);
+    assertRegularResponse($secondResponseSecondCall);
 
-    $this->assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
-    $this->assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
+    assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
+    assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
 });
 
 test('it can forget several specific cached requests at once using cache cleaner post', function () {
     $firstResponseFirstCall = $this->post('/random/1');
-    $this->assertRegularResponse($firstResponseFirstCall);
+    assertRegularResponse($firstResponseFirstCall);
 
     $secondResponseFirstCall = $this->post('/random/2');
-    $this->assertRegularResponse($secondResponseFirstCall);
+    assertRegularResponse($secondResponseFirstCall);
 
     ResponseCache::selectCachedItems()->withPostMethod()->forUrls(['/random/1', '/random/2'])->forget();
 
     $firstResponseSecondCall = $this->post('/random/1');
-    $this->assertRegularResponse($firstResponseSecondCall);
+    assertRegularResponse($firstResponseSecondCall);
 
     $secondResponseSecondCall = $this->post('/random/2');
-    $this->assertRegularResponse($secondResponseSecondCall);
+    assertRegularResponse($secondResponseSecondCall);
 
-    $this->assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
-    $this->assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
+    assertDifferentResponse($firstResponseFirstCall, $firstResponseSecondCall);
+    assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
 });
 
 test('it can forget a specific cached request using cache cleaner suffix', function () {
@@ -109,7 +109,7 @@ test('it can forget a specific cached request using cache cleaner suffix', funct
 
     $this->actingAs(User::findOrFail($userId));
     $firstResponse = $this->get('/random?foo=bar');
-    $this->assertRegularResponse($firstResponse);
+    assertRegularResponse($firstResponse);
     auth()->logout();
 
     ResponseCache::selectCachedItems()
@@ -123,6 +123,6 @@ test('it can forget a specific cached request using cache cleaner suffix', funct
     $secondResponse = $this->get('/random?foo=bar');
     auth()->logout();
 
-    $this->assertRegularResponse($secondResponse);
-    $this->assertDifferentResponse($firstResponse, $secondResponse);
+    assertRegularResponse($secondResponse);
+    assertDifferentResponse($firstResponse, $secondResponse);
 });

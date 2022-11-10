@@ -7,8 +7,11 @@
 */
 
 use Illuminate\Http\Request;
+use Illuminate\Testing\TestResponse;
 use Spatie\ResponseCache\Test\TestCase;
 use Symfony\Component\HttpFoundation\Response;
+use function PHPUnit\Framework\isFalse;
+use function PHPUnit\Framework\isTrue;
 
 uses(TestCase::class)->in('.');
 
@@ -23,6 +26,26 @@ uses(TestCase::class)->in('.');
 | Functions
 |--------------------------------------------------------------------------
 */
+
+function assertCachedResponse(TestResponse $response)
+{
+    test()->assertThat($response->headers->has('laravel-responsecache'), isTrue(), 'Failed to assert that the response has been cached');
+}
+
+function assertRegularResponse(TestResponse $response)
+{
+    test()->assertThat($response->headers->has('laravel-responsecache'), isFalse(), 'Failed to assert that the response was a regular response');
+}
+
+function assertSameResponse(TestResponse $firstResponse, TestResponse $secondResponse)
+{
+    test()->assertThat($firstResponse->getContent() === $secondResponse->getContent(), isTrue(), 'Failed to assert that two response are the same');
+}
+
+function assertDifferentResponse(TestResponse $firstResponse, TestResponse $secondResponse)
+{
+    test()->assertThat($firstResponse->getContent() !== $secondResponse->getContent(), isTrue(), 'Failed to assert that two response are different');
+}
 
 /**
  * Create a new request with the given method.

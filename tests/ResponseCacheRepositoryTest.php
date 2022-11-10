@@ -15,8 +15,6 @@ test('it handles missed cache gracefully', function () {
     $cacheRepository = Mockery::mock(Repository::class);
     $cacheRepository->shouldReceive('get')->with('missed-cache')->once()->andReturn(null);
 
-    $this->expectException(CouldNotUnserialize::class);
-
     $repository = new ResponseCacheRepository($responseSerializer, $cacheRepository);
     $repository->get('missed-cache');
-});
+})->throws(CouldNotUnserialize::class);

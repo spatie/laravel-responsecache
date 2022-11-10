@@ -30,10 +30,10 @@ test('it will clear the cache', function () {
 
     $secondResponse = $this->get('/random');
 
-    $this->assertRegularResponse($firstResponse);
-    $this->assertRegularResponse($secondResponse);
+    assertRegularResponse($firstResponse);
+    assertRegularResponse($secondResponse);
 
-    $this->assertDifferentResponse($firstResponse, $secondResponse);
+    assertDifferentResponse($firstResponse, $secondResponse);
 });
 
 test('it will clear only one page from cache', function () {
@@ -45,13 +45,13 @@ test('it will clear only one page from cache', function () {
     $secondResponse = $this->get('/random/1');
     $secondAlternativeResponse = $this->get('/random/2');
 
-    $this->assertRegularResponse($firstResponse);
-    $this->assertRegularResponse($secondResponse);
-    $this->assertDifferentResponse($firstResponse, $secondResponse);
+    assertRegularResponse($firstResponse);
+    assertRegularResponse($secondResponse);
+    assertDifferentResponse($firstResponse, $secondResponse);
 
-    $this->assertRegularResponse($firstAlternativeResponse);
-    $this->assertCachedResponse($secondAlternativeResponse);
-    $this->assertSameResponse($firstAlternativeResponse, $secondAlternativeResponse);
+    assertRegularResponse($firstAlternativeResponse);
+    assertCachedResponse($secondAlternativeResponse);
+    assertSameResponse($firstAlternativeResponse, $secondAlternativeResponse);
 });
 
 test('it will fire events when clearing the cache', function () {

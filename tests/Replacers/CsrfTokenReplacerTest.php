@@ -20,11 +20,11 @@ test('it will refresh csrf token on cached response', function () {
     $secondToken = csrf_token();
     $secondResponse = $this->get('/csrf_token');
 
-    $this->assertRegularResponse($firstResponse);
-    $this->assertCachedResponse($secondResponse);
+    assertRegularResponse($firstResponse);
+    assertCachedResponse($secondResponse);
 
     $secondResponse->assertDontSee($firstToken);
     $secondResponse->assertSee($secondToken);
 
-    $this->assertDifferentResponse($firstResponse, $secondResponse);
+    assertDifferentResponse($firstResponse, $secondResponse);
 });
