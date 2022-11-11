@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder;
+
 use function PHPUnit\Framework\assertEquals;
+
+use Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder;
 
 beforeAll(function () {
     class RequestBuilder extends AbstractRequestBuilder
@@ -43,20 +45,20 @@ it('request builder works', function () {
         ->testBuild($uri);
 
     foreach ($parameters as $key => $value) {
-         assertEquals($request->query($key), $value);
+        assertEquals($request->query($key), $value);
     }
 
     foreach ($headers as $key => $value) {
-         assertEquals($request->header($key), $value);
+        assertEquals($request->header($key), $value);
     }
 
     foreach ($cookies as $key => $value) {
-         assertEquals($request->cookie($key), $value);
+        assertEquals($request->cookie($key), $value);
     }
-     assertEquals($request->getRequestUri(), $uri . '?' . http_build_query($parameters));
-     assertEquals($request->getMethod(), 'GET');
-     assertEquals($request->ip(), '127.0.1.1');
-     assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
+    assertEquals($request->getRequestUri(), $uri . '?' . http_build_query($parameters));
+    assertEquals($request->getMethod(), 'GET');
+    assertEquals($request->ip(), '127.0.1.1');
+    assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
 
 
     $request = (new RequestBuilder())
@@ -69,16 +71,16 @@ it('request builder works', function () {
         ->testBuild($uri);
 
     foreach ($parameters as $key => $value) {
-         assertEquals($request->input($key), $value);
+        assertEquals($request->input($key), $value);
     }
     foreach ($headers as $key => $value) {
-         assertEquals($request->header($key), $value);
+        assertEquals($request->header($key), $value);
     }
     foreach ($cookies as $key => $value) {
-         assertEquals($request->cookie($key), $value);
+        assertEquals($request->cookie($key), $value);
     }
-     assertEquals($request->getRequestUri(), $uri);
-     assertEquals($request->getMethod(), 'POST');
-     assertEquals($request->ip(), '127.0.1.1');
-     assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
+    assertEquals($request->getRequestUri(), $uri);
+    assertEquals($request->getMethod(), 'POST');
+    assertEquals($request->ip(), '127.0.1.1');
+    assertEquals($request->attributes->get('responsecache.cacheNameSuffix'), $cacheNameSuffix);
 });

@@ -3,12 +3,14 @@
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
-use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
-use Spatie\ResponseCache\Serializers\Serializer;
-use Spatie\ResponseCache\Test\Serializers\TestSerializer;
+
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertTrue;
+
+use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
+use Spatie\ResponseCache\Serializers\Serializer;
+use Spatie\ResponseCache\Test\Serializers\TestSerializer;
 
 beforeEach(function () {
     $this->textContent = '<html>This is a response</html>';

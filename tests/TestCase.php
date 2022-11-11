@@ -2,13 +2,12 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Str;
-use Illuminate\Testing\TestResponse;
-use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\ResponseCache\Facades\ResponseCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;

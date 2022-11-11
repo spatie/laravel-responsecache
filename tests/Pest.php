@@ -8,10 +8,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Testing\TestResponse;
-use Spatie\ResponseCache\Test\TestCase;
-use Symfony\Component\HttpFoundation\Response;
+
 use function PHPUnit\Framework\isFalse;
 use function PHPUnit\Framework\isTrue;
+
+use Spatie\ResponseCache\Test\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 uses(TestCase::class)->in('.');
 

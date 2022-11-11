@@ -3,15 +3,16 @@
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
-use Spatie\ResponseCache\Events\ClearedResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCache;
-use Spatie\ResponseCache\ResponseCacheRepository;
 
 use function PHPUnit\Framework\assertNull;
 
+use Spatie\ResponseCache\Events\ClearedResponseCache;
+use Spatie\ResponseCache\Events\ClearingResponseCache;
+
+use Spatie\ResponseCache\ResponseCacheRepository;
+
 beforeEach(function () {
-    $this->createTaggableResponseCacheStore = function ($tag): Repository
-    {
+    $this->createTaggableResponseCacheStore = function ($tag): Repository {
         $this->app['config']->set('responsecache.cache_store', 'array');
         $this->app['config']->set('responsecache.cache_tag', $tag);
 

@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Http\Request;
-use Spatie\ResponseCache\CacheProfiles\CacheProfile;
-use Spatie\ResponseCache\Hasher\DefaultHasher;
+
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotEquals;
+
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
+use Spatie\ResponseCache\Hasher\DefaultHasher;
 
 beforeEach(function () {
     $this->cacheProfile = Mockery::mock(CacheProfile::class);

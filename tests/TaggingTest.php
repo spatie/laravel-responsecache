@@ -1,8 +1,9 @@
 <?php
 
-use Spatie\ResponseCache\Test\Concerns\CanChangeCacheStore;
-use function PHPUnit\Framework\isTrue;
 use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\isTrue;
+
+use Spatie\ResponseCache\Test\Concerns\CanChangeCacheStore;
 
 uses(CanChangeCacheStore::class);
 
