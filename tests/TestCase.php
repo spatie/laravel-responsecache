@@ -2,13 +2,13 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use File;
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Route;
+use Illuminate\Support\Facades\Route;
 use Spatie\ResponseCache\Facades\ResponseCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
@@ -16,7 +16,7 @@ use Spatie\ResponseCache\ResponseCacheServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -159,26 +159,6 @@ abstract class TestCase extends Orchestra
             File::deleteDirectory($directory);
         }
         File::makeDirectory($directory);
-    }
-
-    protected function assertCachedResponse(TestResponse $response)
-    {
-        self::assertThat($response->headers->has('laravel-responsecache'), self::isTrue(), 'Failed to assert that the response has been cached');
-    }
-
-    protected function assertRegularResponse(TestResponse $response)
-    {
-        self::assertThat($response->headers->has('laravel-responsecache'), self::isFalse(), 'Failed to assert that the response was a regular response');
-    }
-
-    protected function assertSameResponse(TestResponse $firstResponse, TestResponse $secondResponse)
-    {
-        self::assertThat($firstResponse->getContent() === $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are the same');
-    }
-
-    protected function assertDifferentResponse(TestResponse $firstResponse, TestResponse $secondResponse)
-    {
-        self::assertThat($firstResponse->getContent() !== $secondResponse->getContent(), self::isTrue(), 'Failed to assert that two response are different');
     }
 
     protected function setUpMiddleware()
