@@ -1,10 +1,9 @@
 <?php
 
-namespace Spatie\ResponseCache\Test;
-
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Spatie\ResponseCache\Facades\ResponseCache;
+use Spatie\ResponseCache\Test\User;
 
 beforeAll(function () {
     class CacheSuccessfulGetAndPostRequests extends CacheAllSuccessfulGetRequests
@@ -30,7 +29,7 @@ beforeEach(function () {
     );
 });
 
-test('it will cache a post request', function () {
+it('will cache a post request', function () {
     $firstResponse = $this->call('POST', '/random');
     $secondResponse = $this->call('POST', '/random');
 
@@ -40,7 +39,7 @@ test('it will cache a post request', function () {
     assertSameResponse($firstResponse, $secondResponse);
 });
 
-test('it can forget a specific cached request using cache cleaner', function () {
+it('can forget a specific cached request using cache cleaner', function () {
     $firstResponse = $this->get('/random?foo=bar');
     assertRegularResponse($firstResponse);
 
@@ -53,7 +52,7 @@ test('it can forget a specific cached request using cache cleaner', function () 
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it can forget a specific cached request using cache cleaner post', function () {
+it('can forget a specific cached request using cache cleaner post', function () {
     $firstResponse = $this->post('/random');
     assertRegularResponse($firstResponse);
 
@@ -65,7 +64,7 @@ test('it can forget a specific cached request using cache cleaner post', functio
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it can forget several specific cached requests at once using cache cleaner', function () {
+it('can forget several specific cached requests at once using cache cleaner', function () {
     $firstResponseFirstCall = $this->get('/random/1?foo=bar');
     assertRegularResponse($firstResponseFirstCall);
 
@@ -85,7 +84,7 @@ test('it can forget several specific cached requests at once using cache cleaner
     assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
 });
 
-test('it can forget several specific cached requests at once using cache cleaner post', function () {
+it('can forget several specific cached requests at once using cache cleaner post', function () {
     $firstResponseFirstCall = $this->post('/random/1');
     assertRegularResponse($firstResponseFirstCall);
 
@@ -104,7 +103,7 @@ test('it can forget several specific cached requests at once using cache cleaner
     assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
 });
 
-test('it can forget a specific cached request using cache cleaner suffix', function () {
+it('can forget a specific cached request using cache cleaner suffix', function () {
     $userId = 1;
 
     $this->actingAs(User::findOrFail($userId));

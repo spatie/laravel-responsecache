@@ -1,14 +1,11 @@
 <?php
 
-namespace Spatie\ResponseCache\Test;
-
 use Illuminate\Cache\Repository;
-use Mockery;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Spatie\ResponseCache\ResponseCacheRepository;
 use Spatie\ResponseCache\Serializers\Serializer;
 
-test('it handles missed cache gracefully', function () {
+it('handles missed cache gracefully', function () {
     // Instantiate a default serializer
     $responseSerializer = app(Serializer::class);
 

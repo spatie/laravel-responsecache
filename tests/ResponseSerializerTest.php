@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ResponseCache\Test;
-
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
@@ -19,7 +17,7 @@ beforeEach(function () {
     $this->statusCode = 500;
 });
 
-test('it can serialize and unserialize a response', function () {
+it('can serialize and unserialize a response', function () {
     // Instantiate a default serializer
     $responseSerializer = app(Serializer::class);
 
@@ -44,7 +42,7 @@ test('it can serialize and unserialize a response', function () {
     assertEquals('testValue', $unserializedResponse->headers->get('testHeader'));
 });
 
-test('it can customize serialize and unserialize a response', function () {
+it('can customize serialize and unserialize a response', function () {
     // Set config dynamically for test
     Config::set('responsecache.serializer', TestSerializer::class);
 
@@ -72,6 +70,6 @@ test('it can customize serialize and unserialize a response', function () {
     assertEquals('testValue', $unserializedResponse->headers->get('testHeader'));
 });
 
-test('it throws an exception when something else than a response is unserialized', function () {
+it('throws an exception when something else than a response is unserialized', function () {
     app(Serializer::class)->unserialize('b:0;');
 })->throws(CouldNotUnserialize::class);

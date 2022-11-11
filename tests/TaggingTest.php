@@ -1,14 +1,12 @@
 <?php
 
-namespace Spatie\ResponseCache\Test;
-
 use Spatie\ResponseCache\Test\Concerns\CanChangeCacheStore;
 use function PHPUnit\Framework\isTrue;
 use function PHPUnit\Framework\assertThat;
 
 uses(CanChangeCacheStore::class);
 
-test('it can cache requests using route cache tags', function () {
+it('can cache requests using route cache tags', function () {
     $firstResponse = $this->get('/tagged/1');
     assertRegularResponse($firstResponse);
 
@@ -24,7 +22,7 @@ test('it can cache requests using route cache tags', function () {
     assertSameResponse($thirdResponse, $fourthResponse);
 });
 
-test('it can forget requests using route cache tags', function () {
+it('can forget requests using route cache tags', function () {
     $firstResponse = $this->get('/tagged/1');
     assertRegularResponse($firstResponse);
 
@@ -41,7 +39,7 @@ test('it can forget requests using route cache tags', function () {
     assertDifferentResponse($secondResponse, $thirdResponse);
 });
 
-test('it can forget requests using route cache tags from global cache', function () {
+it('can forget requests using route cache tags from global cache', function () {
     $firstResponse = $this->get('/tagged/1');
     assertRegularResponse($firstResponse);
 
@@ -52,7 +50,7 @@ test('it can forget requests using route cache tags from global cache', function
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it can forget requests using route cache tags without deleting unrelated cache', function () {
+it('can forget requests using route cache tags without deleting unrelated cache', function () {
     $this->app['cache']->store(config('responsecache.cache_store'))->tags('unrelated-cache')->put('baz', true);
 
     $firstResponse = $this->get('/tagged/1');
@@ -68,7 +66,7 @@ test('it can forget requests using route cache tags without deleting unrelated c
     assertThat($cacheValue, isTrue(), 'Failed to assert that a cached value is present');
 });
 
-test('it can forget requests using multiple route cache tags', function () {
+it('can forget requests using multiple route cache tags', function () {
     $firstResponse = $this->get('/tagged/2');
     assertRegularResponse($firstResponse);
 

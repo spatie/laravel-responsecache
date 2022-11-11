@@ -1,9 +1,6 @@
 <?php
 
-namespace Spatie\ResponseCache\Test;
-
 use Illuminate\Http\Request;
-use Mockery;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Hasher\DefaultHasher;
 use function PHPUnit\Framework\assertEquals;
@@ -17,7 +14,7 @@ beforeEach(function () {
     $this->requestHasher = new DefaultHasher($this->cacheProfile);
 });
 
-test('it can generate a hash for a request', function () {
+it('can generate a hash for a request', function () {
     $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
 
     assertEquals(
@@ -26,7 +23,7 @@ test('it can generate a hash for a request', function () {
     );
 });
 
-test('it generates a different hash per request host', function () {
+it('generates a different hash per request host', function () {
     $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
 
     $request = Request::create('https://spatie.be/example-page');

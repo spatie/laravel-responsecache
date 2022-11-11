@@ -1,9 +1,6 @@
 <?php
 
-namespace Spatie\ResponseCache\Test;
-
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Support\Facades\Event;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
@@ -11,7 +8,7 @@ use Spatie\ResponseCache\Facades\ResponseCache;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
-test('it will cache a get request', function () {
+it('will cache a get request', function () {
     $firstResponse = $this->get('/random');
     $secondResponse = $this->get('/random');
 
@@ -21,7 +18,7 @@ test('it will cache a get request', function () {
     assertSameResponse($firstResponse, $secondResponse);
 });
 
-test('it will fire an event when responding without cache', function () {
+it('will fire an event when responding without cache', function () {
     Event::fake();
 
     $this->get('/random');
@@ -29,7 +26,7 @@ test('it will fire an event when responding without cache', function () {
     Event::assertDispatched(CacheMissed::class);
 });
 
-test('it will fire an event when responding from cache', function () {
+it('will fire an event when responding from cache', function () {
     Event::fake();
 
     $this->get('/random');
@@ -38,7 +35,7 @@ test('it will fire an event when responding from cache', function () {
     Event::assertDispatched(ResponseCacheHit::class);
 });
 
-test('it will cache redirects', function () {
+it('will cache redirects', function () {
     $firstResponse = $this->get('/redirect');
     $secondResponse = $this->get('/redirect');
 
@@ -48,7 +45,7 @@ test('it will cache redirects', function () {
     assertSameResponse($firstResponse, $secondResponse);
 });
 
-test('it will not cache errors', function () {
+it('will not cache errors', function () {
     $firstResponse = $this->get('/notfound');
     $secondResponse = $this->get('/notfound');
 
@@ -56,7 +53,7 @@ test('it will not cache errors', function () {
     assertRegularResponse($secondResponse);
 });
 
-test('it will not cache a post request', function () {
+it('will not cache a post request', function () {
     $firstResponse = $this->call('POST', '/random');
     $secondResponse = $this->call('POST', '/random');
 
@@ -66,7 +63,7 @@ test('it will not cache a post request', function () {
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it can forget a specific cached request', function () {
+it('can forget a specific cached request', function () {
     $firstResponse = $this->get('/random');
     assertRegularResponse($firstResponse);
 
@@ -78,7 +75,7 @@ test('it can forget a specific cached request', function () {
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it can forget several specific cached requests at once', function () {
+it('can forget several specific cached requests at once', function () {
     $firstResponseFirstCall = $this->get('/random/1');
     assertRegularResponse($firstResponseFirstCall);
 
@@ -97,7 +94,7 @@ test('it can forget several specific cached requests at once', function () {
     assertDifferentResponse($secondResponseFirstCall, $secondResponseSecondCall);
 });
 
-test('it will cache responses for each logged in user separately', function () {
+it('will cache responses for each logged in user separately', function () {
     $this->get('/login/1');
     $firstUserFirstCall = $this->get('/');
     $firstUserSecondCall = $this->get('/');
@@ -121,7 +118,7 @@ test('it will cache responses for each logged in user separately', function () {
     assertDifferentResponse($firstUserSecondCall, $secondUserSecondCall);
 });
 
-test('it will not cache routes with the doNotCacheResponse middleware', function () {
+it('will not cache routes with the doNotCacheResponse middleware', function () {
     $firstResponse = $this->get('/uncacheable');
     $secondResponse = $this->get('/uncacheable');
 
@@ -131,7 +128,7 @@ test('it will not cache routes with the doNotCacheResponse middleware', function
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it will not cache request when the package is not enable', function () {
+it('will not cache request when the package is not enable', function () {
     $this->app['config']->set('responsecache.enabled', false);
 
     $firstResponse = $this->get('/random');
@@ -143,7 +140,7 @@ test('it will not cache request when the package is not enable', function () {
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it will not serve cached requests when it is disabled in the config file', function () {
+it('will not serve cached requests when it is disabled in the config file', function () {
     $firstResponse = $this->get('/random');
 
     $this->app['config']->set('responsecache.enabled', false);
@@ -156,7 +153,7 @@ test('it will not serve cached requests when it is disabled in the config file',
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it will cache file responses', function () {
+it('will cache file responses', function () {
     $firstResponse = $this->get('/image');
     $secondResponse = $this->get('/image');
 
@@ -166,7 +163,7 @@ test('it will cache file responses', function () {
     assertSameResponse($firstResponse, $secondResponse);
 });
 
-test('it wont cache if lifetime is 0', function () {
+it('wont cache if lifetime is 0', function () {
     $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
     $firstResponse = $this->get('/');
@@ -176,7 +173,7 @@ test('it wont cache if lifetime is 0', function () {
     assertRegularResponse($secondResponse);
 });
 
-test('it will cache response for given lifetime which is defined as middleware parameter', function () {
+it('will cache response for given lifetime which is defined as middleware parameter', function () {
     // Set default lifetime as 0 to check if it will cache for given lifetime
     $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
@@ -187,7 +184,7 @@ test('it will cache response for given lifetime which is defined as middleware p
     assertCachedResponse($secondResponse);
 });
 
-test('it will reproduce cache if given lifetime is expired', function () {
+it('will reproduce cache if given lifetime is expired', function () {
     // Set default lifetime as 0 to disable middleware that is already pushed to Kernel
     $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
 
@@ -203,7 +200,7 @@ test('it will reproduce cache if given lifetime is expired', function () {
     assertRegularResponse($thirdResponse);
 });
 
-test('it can add a cache time header', function () {
+it('can add a cache time header', function () {
     $this->app['config']->set('responsecache.add_cache_time_header', true);
     $this->app['config']->set('responsecache.cache_time_header_name', 'X-Cached-At');
 
@@ -217,7 +214,7 @@ test('it can add a cache time header', function () {
     assertSameResponse($firstResponse, $secondResponse);
 });
 
-test('it can add a cache age header', function () {
+it('can add a cache age header', function () {
     $this->app['config']->set('responsecache.add_cache_time_header', true);
     $this->app['config']->set('responsecache.add_cache_age_header', true);
     $this->app['config']->set('responsecache.cache_age_header_name', 'X-Cached-Age');
@@ -233,7 +230,7 @@ test('it can add a cache age header', function () {
     assertSameResponse($firstResponse, $secondResponse);
 });
 
-test('it wont cache nor serve a cached response if request has bypass header', function () {
+it('wont cache nor serve a cached response if request has bypass header', function () {
     $headerName = 'X-Cache-Bypass';
     $headerValue = rand(1, 99999);
     $this->app['config']->set('responsecache.cache_bypass_header.name', $headerName);

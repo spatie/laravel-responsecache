@@ -1,10 +1,8 @@
 <?php
 
-namespace Spatie\ResponseCache\Test\Replacers;
-
 use Spatie\ResponseCache\Replacers\CsrfTokenReplacer;
 
-test('it will refresh csrf token on cached response', function () {
+it('will refresh csrf token on cached response', function () {
     session()->regenerateToken();
 
     config()->set('responsecache.replacers', [

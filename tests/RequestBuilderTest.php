@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ResponseCache\Test;
-
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheItemSelector\AbstractRequestBuilder;
 use function PHPUnit\Framework\assertEquals;
@@ -16,7 +14,7 @@ beforeAll(function () {
     }
 });
 
-test('request builder works', function () {
+it('request builder works', function () {
     $uri = '/foo';
 
     $cookies = [

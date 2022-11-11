@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ResponseCache\Test\CacheProfiles;
-
 use Illuminate\Http\JsonResponse;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Spatie\ResponseCache\Test\User;
@@ -14,23 +12,23 @@ beforeEach(function () {
     $this->cacheProfile = app(CacheAllSuccessfulGetRequests::class);
 });
 
-test('it will determine that get requests should be cached', function () {
+it('will determine that get requests should be cached', function () {
     assertTrue($this->cacheProfile->shouldCacheRequest(createRequest('get')));
 });
 
-test('it will determine that all non get request should not be cached', function () {
+it('will determine that all non get request should not be cached', function () {
     assertFalse($this->cacheProfile->shouldCacheRequest(createRequest('post')));
     assertFalse($this->cacheProfile->shouldCacheRequest(createRequest('patch')));
     assertFalse($this->cacheProfile->shouldCacheRequest(createRequest('delete')));
 });
 
-test('it will determine that a successful response should be cached', function () {
+it('will determine that a successful response should be cached', function () {
     foreach (range(200, 399) as $statusCode) {
         assertTrue($this->cacheProfile->shouldCacheResponse(createResponse($statusCode)));
     }
 });
 
-test('it will determine that a non text response should not be cached', function () {
+it('will determine that a non text response should not be cached', function () {
     $response = createResponse(200, 'application/pdf');
 
     $shouldCacheResponse = $this->cacheProfile->shouldCacheResponse($response);
@@ -38,7 +36,7 @@ test('it will determine that a non text response should not be cached', function
     assertFalse($shouldCacheResponse);
 });
 
-test('it will determine that a json response should be cached', function () {
+it('will determine that a json response should be cached', function () {
     $response = new JsonResponse(['a' => 'b']);
 
     $shouldCacheResponse = $this->cacheProfile->shouldCacheResponse($response);
@@ -46,13 +44,13 @@ test('it will determine that a json response should be cached', function () {
     assertTrue($shouldCacheResponse);
 });
 
-test('it will determine that an error should not be cached', function () {
+it('will determine that an error should not be cached', function () {
     foreach (range(400, 599) as $statusCode) {
         assertFalse($this->cacheProfile->shouldCacheResponse(createResponse($statusCode)));
     }
 });
 
-test('it will use the id of the logged in user to differentiate caches', function () {
+it('will use the id of the logged in user to differentiate caches', function () {
     assertEquals('', $this->cacheProfile->useCacheNameSuffix(createRequest('get')));
 
     User::all()->map(function ($user) {
@@ -61,7 +59,7 @@ test('it will use the id of the logged in user to differentiate caches', functio
     });
 });
 
-test('it will determine to cache responses for a certain amount of time', function () {
+it('will determine to cache responses for a certain amount of time', function () {
     /** @var $expirationDate \Carbon\Carbon */
     $expirationDate = $this->cacheProfile->cacheRequestUntil(createRequest('get'));
 

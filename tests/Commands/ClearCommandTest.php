@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ResponseCache\Test\Commands;
-
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
@@ -23,7 +21,7 @@ beforeEach(function () {
 });
 
 
-test('it will clear the cache', function () {
+it('will clear the cache', function () {
     $firstResponse = $this->get('/random');
 
     Artisan::call('responsecache:clear');
@@ -36,7 +34,7 @@ test('it will clear the cache', function () {
     assertDifferentResponse($firstResponse, $secondResponse);
 });
 
-test('it will clear only one page from cache', function () {
+it('will clear only one page from cache', function () {
     $firstResponse = $this->get('/random/1');
     $firstAlternativeResponse = $this->get('/random/2');
 
@@ -54,7 +52,7 @@ test('it will clear only one page from cache', function () {
     assertSameResponse($firstAlternativeResponse, $secondAlternativeResponse);
 });
 
-test('it will fire events when clearing the cache', function () {
+it('will fire events when clearing the cache', function () {
     Event::fake();
 
     Artisan::call('responsecache:clear');
@@ -63,7 +61,7 @@ test('it will fire events when clearing the cache', function () {
     Event::assertDispatched(ClearedResponseCache::class);
 });
 
-test('it will clear all when tags are not defined', function () {
+it('will clear all when tags are not defined', function () {
     $responseCache = ($this->createTaggableResponseCacheStore)(null);
     $appCache = $this->app['cache']->store('array');
 
