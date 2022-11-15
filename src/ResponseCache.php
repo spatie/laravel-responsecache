@@ -74,9 +74,7 @@ class ResponseCache
 
     public function hasBeenCached(Request $request, array $tags = []): bool
     {
-        return config('responsecache.enabled')
-            ? $this->taggedCache($tags)->has($this->hasher->getHashFor($request))
-            : false;
+        return $this->taggedCache($tags)->has($this->hasher->getHashFor($request));
     }
 
     public function getCachedResponseFor(Request $request, array $tags = []): Response
