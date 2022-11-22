@@ -44,7 +44,8 @@ class CacheResponse
                     return $response;
                 }
             } catch (CouldNotUnserialize $e) {
-                Log::error("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
+                report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
+                event(new CacheMissed($request));
             }
         }
 
