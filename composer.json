@@ -26,7 +26,7 @@
         "illuminate/console": "^8.71|^9.0",
         "illuminate/http": "^8.71|^9.0",
         "illuminate/support": "^8.71|^9.0",
-        "nesbot/carbon": "^2.35",
+        "nesbot/carbon": "^2.63",
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
