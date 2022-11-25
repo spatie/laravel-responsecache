@@ -2,6 +2,25 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.4 - 2022-11-25
+
+### What's Changed
+
+- Refactor tests to pest by @AyoobMH in https://github.com/spatie/laravel-responsecache/pull/418
+- Add PHP 8.2 Support to tests workflow by @patinthehat in https://github.com/spatie/laravel-responsecache/pull/421
+- Add Dependabot Automation by @patinthehat in https://github.com/spatie/laravel-responsecache/pull/420
+- Bump actions/checkout from 2 to 3 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/423
+- Bump stefanzweifel/git-auto-commit-action from 2.3.0 to 4.15.4 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/422
+- Catch CouldNotUnserialize exception and continue returning a response by @roberttolton in https://github.com/spatie/laravel-responsecache/pull/408
+
+### New Contributors
+
+- @AyoobMH made their first contribution in https://github.com/spatie/laravel-responsecache/pull/418
+- @dependabot made their first contribution in https://github.com/spatie/laravel-responsecache/pull/423
+- @roberttolton made their first contribution in https://github.com/spatie/laravel-responsecache/pull/408
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.4.3...7.4.4
+
 ## 7.4.3 - 2022-09-24
 
 ### What's Changed
