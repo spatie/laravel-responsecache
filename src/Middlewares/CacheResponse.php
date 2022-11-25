@@ -6,8 +6,10 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
+use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,18 +29,23 @@ class CacheResponse
         $tags = $this->getTags($args);
 
         if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
-            if ($this->responseCache->hasBeenCached($request, $tags)) {
-                event(new ResponseCacheHit($request));
+            try {
+                if ($this->responseCache->hasBeenCached($request, $tags)) {
+                    event(new ResponseCacheHit($request));
 
-                $response = $this->responseCache->getCachedResponseFor($request, $tags);
+                    $response = $this->responseCache->getCachedResponseFor($request, $tags);
 
-                $response = $this->addCacheAgeHeader($response);
+                    $response = $this->addCacheAgeHeader($response);
 
-                $this->getReplacers()->each(function (Replacer $replacer) use ($response) {
-                    $replacer->replaceInCachedResponse($response);
-                });
+                    $this->getReplacers()->each(function (Replacer $replacer) use ($response) {
+                        $replacer->replaceInCachedResponse($response);
+                    });
 
-                return $response;
+                    return $response;
+                }
+            } catch (CouldNotUnserialize $e) {
+                report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
+                event(new CacheMissed($request));
             }
         }
 
