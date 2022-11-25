@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
