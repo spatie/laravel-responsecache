@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.6 - 2023-01-23
+
+- add support for L10
+
 ## 7.4.5 - 2023-01-23
 
 ### What's Changed
