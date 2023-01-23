@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.5 - 2023-01-23
+
+### What's Changed
+
+- Bump stefanzweifel/git-auto-commit-action from 4.15.4 to 4.16.0 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/424
+- Normalize query string parameters before hashing by @cosmastech in https://github.com/spatie/laravel-responsecache/pull/426
+
+### New Contributors
+
+- @cosmastech made their first contribution in https://github.com/spatie/laravel-responsecache/pull/426
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.4.4...7.4.5
+
 ## 7.4.4 - 2022-11-25
 
 ### What's Changed
