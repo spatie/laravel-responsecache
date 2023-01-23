@@ -1,6 +1,3 @@
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
-
 <p align="center"><img src="/art/socialcard.png" alt="Social Card of Laravel Response Cache"></p>
 
 # Speed up an app by caching the entire response
