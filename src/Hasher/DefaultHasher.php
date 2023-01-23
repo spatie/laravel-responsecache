@@ -18,14 +18,6 @@ class DefaultHasher implements RequestHasher
         $cacheNameSuffix = $this->getCacheNameSuffix($request);
 
         return 'responsecache-' . md5(
-            "{$request->getHost()}-{$request->getRequestUri()}-{$request->getMethod()}/$cacheNameSuffix"
-        );
-    }
-    public function getHashFor(Request $request): string
-    {
-        $cacheNameSuffix = $this->getCacheNameSuffix($request);
-
-        return 'responsecache-' . md5(
             "{$request->getHost()}-{$this->getNormalizedRequestUri($request)}-{$request->getMethod()}/$cacheNameSuffix"
         );
     }
