@@ -24,11 +24,11 @@ class DefaultHasher implements RequestHasher
 
     protected function getNormalizedRequestUri(Request $request): string
     {
-        if (null !== $qs = $request->getQueryString()) {
-            $qs = '?'.$qs;
+        if ($queryString =  $request->getQueryString()) {
+            $queryString = '?'.$queryString;
         }
 
-        return $request->getBaseUrl().$request->getPathInfo().$qs;
+        return $request->getBaseUrl().$request->getPathInfo().$queryString;
     }
 
     protected function getCacheNameSuffix(Request $request)
