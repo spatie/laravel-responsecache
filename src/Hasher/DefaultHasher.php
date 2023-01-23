@@ -24,7 +24,7 @@ class DefaultHasher implements RequestHasher
 
     protected function getNormalizedRequestUri(Request $request): string
     {
-        if ($queryString =  $request->getQueryString()) {
+        if ($queryString = $request->getQueryString()) {
             $queryString = '?'.$queryString;
         }
 
