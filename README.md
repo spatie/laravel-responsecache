@@ -152,7 +152,7 @@ protected $middlewareGroups = [
 
 ...
 
-protected $routeMiddleware = [
+protected $middlewareAliases = [
    ...
    'doNotCacheResponse' => \Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class,
 ];
