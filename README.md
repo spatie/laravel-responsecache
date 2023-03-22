@@ -34,7 +34,7 @@ The package will automatically register itself.
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Spatie\ResponseCache\ResponseCacheServiceProvider"
+php artisan vendor:publish --tag="responsecache-config"
 ```
 
 This is the contents of the published config file:
