@@ -341,7 +341,7 @@ interface CacheProfile
 Instead of registering the `cacheResponse` middleware globally, you can also register it as route middleware.
 
 ```php
-protected $routeMiddleware = [
+protected $middlewareAliases = [
    ...
    'cacheResponse' => \Spatie\ResponseCache\Middlewares\CacheResponse::class,
 ];
