@@ -83,7 +83,7 @@ return [
 
     /*
      * This class is responsible for generating a hash for a request. This hash
-     * is used to look up an cached response.
+     * is used to look up a cached response.
      */
     'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,
 
