@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 abstract class BaseCacheProfile implements CacheProfile
 {
@@ -23,7 +24,7 @@ abstract class BaseCacheProfile implements CacheProfile
 
     public function useCacheNameSuffix(Request $request): string
     {
-        return Auth::check()
+        return array_key_exists('auth', Route::getMiddleware()) && Auth::check()
             ? (string) Auth::id()
             : '';
     }
