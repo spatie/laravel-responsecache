@@ -12,6 +12,7 @@ use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class CacheResponse
 {
@@ -30,17 +31,11 @@ class CacheResponse
         if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
             try {
                 if ($this->responseCache->hasBeenCached($request, $tags)) {
-                    event(new ResponseCacheHit($request));
 
-                    $response = $this->responseCache->getCachedResponseFor($request, $tags);
-
-                    $response = $this->addCacheAgeHeader($response);
-
-                    $this->getReplacers()->each(function (Replacer $replacer) use ($response) {
-                        $replacer->replaceInCachedResponse($response);
-                    });
-
-                    return $response;
+                    $response = $this->getCachedResponse($request, $tags);
+                    if ($response !== false) {
+                        return $response;
+                    }
                 }
             } catch (CouldNotUnserialize $e) {
                 report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
@@ -57,6 +52,38 @@ class CacheResponse
         }
 
         event(new CacheMissed($request));
+
+        return $response;
+    }
+
+    /**
+     * Get a cached response when available.
+     *
+     * @param Request $request
+     *   The incoming request.
+     * @param array $tags
+     *   Any cache tags when available.
+     *
+     * @return false|Response
+     *   Returns the cached response when available, or false if there was an
+     *   error.
+     */
+    protected function getCachedResponse(Request $request, array $tags = []): false|Response
+    {
+        try {
+            $response = $this->responseCache->getCachedResponseFor($request, $tags);
+        }
+        catch (Throwable $x) {
+            return false;
+        }
+
+        event(new ResponseCacheHit($request));
+
+        $response = $this->addCacheAgeHeader($response);
+
+        $this->getReplacers()->each(function (Replacer $replacer) use ($response) {
+            $replacer->replaceInCachedResponse($response);
+        });
 
         return $response;
     }
