@@ -56,30 +56,17 @@ class CacheResponse
         return $response;
     }
 
-    /**
-     * Get a cached response when available.
-     *
-     * @param Request $request
-     *   The incoming request.
-     * @param array $tags
-     *   Any cache tags when available.
-     *
-     * @return false|Response
-     *   Returns the cached response when available, or false if there was an
-     *   error.
-     *
-     * @throws CouldNotUnserialize
-     */
     protected function getCachedResponse(Request $request, array $tags = []): false|Response
     {
         try {
             $response = $this->responseCache->getCachedResponseFor($request, $tags);
         }
-        catch (CouldNotUnserialize $e) {
-            throw $e;
+        catch (CouldNotUnserialize $exception) {
+            throw $exception;
         }
-        catch (Throwable $e) {
-            report("Unable to retrieve cached response when one was expected. Error: {$e->getMessage()}");
+        catch (Throwable $exception) {
+            report("Unable to retrieve cached response when one was expected. Error: {$exception->getMessage()}");
+            
             return false;
         }
 
