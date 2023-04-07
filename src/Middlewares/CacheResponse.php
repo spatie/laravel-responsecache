@@ -60,13 +60,11 @@ class CacheResponse
     {
         try {
             $response = $this->responseCache->getCachedResponseFor($request, $tags);
-        }
-        catch (CouldNotUnserialize $exception) {
+        } catch (CouldNotUnserialize $exception) {
             throw $exception;
-        }
-        catch (Throwable $exception) {
+        } catch (Throwable $exception) {
             report("Unable to retrieve cached response when one was expected. Error: {$exception->getMessage()}");
-            
+
             return false;
         }
 
