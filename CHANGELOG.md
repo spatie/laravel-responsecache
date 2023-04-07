@@ -2,6 +2,23 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.7 - 2023-04-07
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.3.5 to 1.3.6 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/427
+- Property name changed by @Fot0n in https://github.com/spatie/laravel-responsecache/pull/428
+- Typo fix in config responsecache by @dorqa95 in https://github.com/spatie/laravel-responsecache/pull/431
+- Issue #342: CacheResponse race condition with has and get by @swichers in https://github.com/spatie/laravel-responsecache/pull/434
+
+### New Contributors
+
+- @Fot0n made their first contribution in https://github.com/spatie/laravel-responsecache/pull/428
+- @dorqa95 made their first contribution in https://github.com/spatie/laravel-responsecache/pull/431
+- @swichers made their first contribution in https://github.com/spatie/laravel-responsecache/pull/434
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.4.6...7.4.7
+
 ## 7.4.6 - 2023-01-23
 
 - add support for L10
