@@ -13,21 +13,21 @@ abstract class AbstractRequestBuilder
     protected array $server = [];
     protected ?string $cacheNameSuffix = null;
 
-    public function withPutMethod(): self
+    public function withPutMethod(): static
     {
         $this->method = 'PUT';
 
         return $this;
     }
 
-    public function withPatchMethod(): self
+    public function withPatchMethod(): static
     {
         $this->method = 'PATCH';
 
         return $this;
     }
 
-    public function withPostMethod(): self
+    public function withPostMethod(): static
     {
         $this->method = 'POST';
 
@@ -38,21 +38,21 @@ abstract class AbstractRequestBuilder
      * if method is GET then will be converted to query
      * otherwise it will became part of request input
      */
-    public function withParameters(array $parameters): self
+    public function withParameters(array $parameters): static
     {
         $this->parameters = $parameters;
 
         return $this;
     }
 
-    public function withCookies(array $cookies): self
+    public function withCookies(array $cookies): static
     {
         $this->cookies = $cookies;
 
         return $this;
     }
 
-    public function withHeaders(array $headers): self
+    public function withHeaders(array $headers): static
     {
         $this->server = collect($this->server)
             ->filter(fn (string $val, string $key) => ! str_starts_with($key, 'HTTP_'))
@@ -65,14 +65,14 @@ abstract class AbstractRequestBuilder
         return $this;
     }
 
-    public function withRemoteAddress($remoteAddress): self
+    public function withRemoteAddress($remoteAddress): static
     {
         $this->server['REMOTE_ADDR'] = $remoteAddress;
 
         return $this;
     }
 
-    public function usingSuffix($cacheNameSuffix): self
+    public function usingSuffix($cacheNameSuffix): static
     {
         $this->cacheNameSuffix = $cacheNameSuffix;
 
