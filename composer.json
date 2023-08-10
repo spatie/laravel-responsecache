@@ -1,5 +1,5 @@
 {
-    "name": "spatie/laravel-responsecache",
+    "name": "ngochip/laravel-responsecache",
     "description": "Speed up a Laravel application by caching the entire response",
     "keywords": [
         "spatie",
