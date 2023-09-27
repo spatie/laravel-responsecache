@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.8 - 2023-09-27
+
+### What's Changed
+
+- Change PHPDoc for method clear(array ) in Facade by @kra-so in https://github.com/spatie/laravel-responsecache/pull/451
+
+### New Contributors
+
+- @gomzyakov made their first contribution in https://github.com/spatie/laravel-responsecache/pull/437
+- @kra-so made their first contribution in https://github.com/spatie/laravel-responsecache/pull/451
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.4.7...7.4.8
+
 ## 7.4.7 - 2023-04-07
 
 ### What's Changed
