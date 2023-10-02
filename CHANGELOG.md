@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.9 - 2023-10-02
+
+- Fix docblock
+
 ## 7.4.8 - 2023-09-27
 
 ### What's Changed
