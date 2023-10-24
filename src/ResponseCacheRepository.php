@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache;
 
+use Carbon\Carbon;
 use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
 use Spatie\ResponseCache\Serializers\Serializer;
@@ -18,7 +19,7 @@ class ResponseCacheRepository
 
     public function put(string $key, Response $response, \DateTime | int $seconds): void
     {
-        $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
+        $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? Carbon::now()->addSeconds($seconds) : $seconds);
     }
 
     public function has(string $key): bool
@@ -64,6 +65,6 @@ class ResponseCacheRepository
 
     public function isTagged($repository): bool
     {
-        return $repository instanceof TaggedCache && ! empty($repository->getTags());
+        return $repository instanceof TaggedCache && !empty($repository->getTags());
     }
 }
