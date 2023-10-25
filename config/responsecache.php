@@ -89,6 +89,10 @@ return [
 
     /*
      * This class is responsible for serializing responses.
+     * To use igbinary as serializer, change the serializer setting to
+     * \Spatie\ResponseCache\Serializers\IgBinarySerializer::class
+     *
+     * Please make sure that the igbinary php extension is installed!
      */
     'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
 ];
