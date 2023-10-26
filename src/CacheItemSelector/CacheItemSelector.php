@@ -36,11 +36,7 @@ class CacheItemSelector extends AbstractRequestBuilder
     {
         collect($this->urls)
             ->map(function ($uri) {
-                if (
-                    is_string($uri) &&
-                    str_contains((string) $uri, 'responsecache-') === true &&
-                    strlen('responsecache-' . md5('.')) === strlen($uri)
-                ) {
+                if ($this->isUriHashed($uri)) {
                     return $uri;
                 }
 
@@ -57,5 +53,11 @@ class CacheItemSelector extends AbstractRequestBuilder
         return empty($tags)
             ? $this->cache
             : $this->cache->tags($tags);
+    }
+
+    private function isUriHashed(string $uri): bool
+    {
+        return str_contains($uri, 'responsecache-') === true &&
+        strlen('responsecache-' . md5('.')) === strlen($uri);
     }
 }
