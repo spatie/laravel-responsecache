@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.4.10 - 2023-10-28
+
+### What's Changed
+
+- Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/449
+- Bump stefanzweifel/git-auto-commit-action from 4.16.0 to 5.0.0 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/452
+- Do not enable cache time header by default by @francoism90 in https://github.com/spatie/laravel-responsecache/pull/456
+
+### New Contributors
+
+- @francoism90 made their first contribution in https://github.com/spatie/laravel-responsecache/pull/456
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.4.9...7.4.10
+
 ## 7.4.9 - 2023-10-02
 
 - Fix docblock
