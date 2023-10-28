@@ -35,7 +35,7 @@ return [
      * should be added to a cached response. This can be handy when
      * debugging.
      */
-    'add_cache_time_header' => env('APP_DEBUG', true),
+    'add_cache_time_header' => env('APP_DEBUG', false),
 
     /*
      * This setting determines the name of the http header that contains
