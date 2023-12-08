@@ -36,6 +36,8 @@ it('will clear the cache', function () {
 });
 
 it('will clear only one page from cache', function () {
+    $this->app['config']->set('responsecache.add_cache_time_header', true);
+
     $firstResponse = $this->get('/random/1');
     $firstAlternativeResponse = $this->get('/random/2');
 
