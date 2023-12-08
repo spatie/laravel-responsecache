@@ -211,7 +211,7 @@ it('can add a cache time header', function () {
 
     $this->assertFalse($firstResponse->headers->has('X-Cached-At'));
     assertTrue($secondResponse->headers->has('X-Cached-At'));
-    $this->assertInstanceOf(DateTime::class, $secondResponse->headers->getDate('X-Cached-At'));
+    $this->assertInstanceOf(DateTimeImmutable::class, $secondResponse->headers->getDate('X-Cached-At'));
 
     assertSameResponse($firstResponse, $secondResponse);
 });
