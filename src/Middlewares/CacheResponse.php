@@ -32,8 +32,7 @@ class CacheResponse
             try {
                 if ($this->responseCache->hasBeenCached($request, $tags)) {
 
-                    $response = $this->getCachedResponse($request, $tags);
-                    if ($response !== false) {
+                    if (($response = $this->getCachedResponse($request, $tags)) !== false) {
                         return $response;
                     }
                 }
