@@ -49,5 +49,8 @@ class ResponseCacheServiceProvider extends PackageServiceProvider
             });
 
         $this->app->singleton('responsecache', ResponseCache::class);
+        
+        $this->app->singleton(CacheResponse::class);
+            
     }
 }
