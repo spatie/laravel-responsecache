@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.5.0 - 2024-03-11
+
+### What's Changed
+
+* Add php 8.3 matrix by @binbyz in https://github.com/spatie/laravel-responsecache/pull/460
+* Support Laravel 11
+
+### New Contributors
+
+* @binbyz made their first contribution in https://github.com/spatie/laravel-responsecache/pull/460
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.4.10...7.5.0
+
 ## 7.4.10 - 2023-10-28
 
 ### What's Changed
