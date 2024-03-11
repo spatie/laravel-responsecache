@@ -11,3 +11,4 @@ psalm.xml
 testbench.yaml
 tests/temp
 vendor
+.phpunit.cache
