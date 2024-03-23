@@ -9,6 +9,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Commands\ClearCommand;
 use Spatie\ResponseCache\Hasher\RequestHasher;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Serializers\Serializer;
 
 class ResponseCacheServiceProvider extends PackageServiceProvider
@@ -49,5 +50,8 @@ class ResponseCacheServiceProvider extends PackageServiceProvider
             });
 
         $this->app->singleton('responsecache', ResponseCache::class);
+        
+        $this->app->singleton(CacheResponse::class);
+            
     }
 }

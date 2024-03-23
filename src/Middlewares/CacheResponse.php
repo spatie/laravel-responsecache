@@ -18,6 +18,8 @@ class CacheResponse
 {
     protected ResponseCache $responseCache;
 
+    protected bool $shouldCacheResponse = false;
+
     public function __construct(ResponseCache $responseCache)
     {
         $this->responseCache = $responseCache;
@@ -25,7 +27,6 @@ class CacheResponse
 
     public function handle(Request $request, Closure $next, ...$args): Response
     {
-        $lifetimeInSeconds = $this->getLifetime($args);
         $tags = $this->getTags($args);
 
         if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
@@ -47,7 +48,7 @@ class CacheResponse
 
         if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
             if ($this->responseCache->shouldCache($request, $response)) {
-                $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
+                $this->shouldCacheResponse = true;
             }
         }
 
@@ -127,5 +128,17 @@ class CacheResponse
         }
 
         return $response;
+    }
+
+    public function terminate(Request $request, Response $response, ...$args): void
+    {
+        $lifetimeInSeconds = $this->getLifetime($args);
+        $tags              = $this->getTags($args);
+
+        if (! $this->shouldCacheResponse) {
+            return;
+        }
+
+        $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
     }
 }
