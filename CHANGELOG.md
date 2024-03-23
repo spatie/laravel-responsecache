@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.5.1 - 2024-03-23
+
+- allow Carbon 3
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.5.0...7.5.1
+
 ## 7.5.0 - 2024-03-11
 
 ### What's Changed
