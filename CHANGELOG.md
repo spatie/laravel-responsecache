@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.5.2 - 2024-04-03
+
+### What's Changed
+
+* Cast cache lifetime to integer by default by @dwightwatson in https://github.com/spatie/laravel-responsecache/pull/468
+
+### New Contributors
+
+* @dwightwatson made their first contribution in https://github.com/spatie/laravel-responsecache/pull/468
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.5.1...7.5.2
+
 ## 7.5.1 - 2024-03-23
 
 - allow Carbon 3
