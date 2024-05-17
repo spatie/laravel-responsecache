@@ -268,7 +268,7 @@ The `cacheNameSuffix` depends by your cache profile, by default is the user ID o
 Requests can be ignored by using the `doNotCacheResponse` middleware.
 This middleware [can be assigned to routes and controllers](http://laravel.com/docs/master/controllers#controller-middleware).
 
-Using the middleware are route could be exempt from being cached.
+Using the middleware our route could be exempt from being cached.
 
 ```php
 // app/Http/routes.php
