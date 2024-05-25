@@ -141,7 +141,7 @@ And finally you should install the provided middlewares `\Spatie\ResponseCache\M
 
 **For laravel 11.x and newer:**
 
-Add the middleware definitions the bootstrap app.
+Add the middleware definitions to the bootstrap app.
 
 ```php
 // bootstrap/app.php
@@ -166,7 +166,7 @@ Add the middleware definitions the bootstrap app.
 
 **For laravel 10.x and earlier:**
 
-Add the middleware definitions the http kernel.
+Add the middleware definitions to the http kernel.
 
 
 ```php
