@@ -136,7 +136,37 @@ return [
 ];
 ```
 
-And finally you should install the provided middlewares `\Spatie\ResponseCache\Middlewares\CacheResponse::class` and `\Spatie\ResponseCache\Middlewares\DoNotCacheResponse` in the http kernel.
+And finally you should install the provided middlewares `\Spatie\ResponseCache\Middlewares\CacheResponse::class` and `\Spatie\ResponseCache\Middlewares\DoNotCacheResponse`.
+
+
+**For laravel 11.x and newer:**
+
+Add the middleware definitions to the bootstrap app.
+
+```php
+// bootstrap/app.php
+
+
+->withMiddleware(function (Middleware $middleware) {
+    ...
+    $middleware->web(append: [
+        ...
+        \Spatie\ResponseCache\Middlewares\CacheResponse::class,
+    ]);
+
+    ...
+
+    $middleware->alias([
+        ...
+        'doNotCacheResponse' => \Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class,
+    ]);
+})
+
+```
+
+**For laravel 10.x and earlier:**
+
+Add the middleware definitions to the http kernel.
 
 
 ```php
