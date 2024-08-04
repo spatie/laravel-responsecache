@@ -20,7 +20,7 @@ it('can generate a hash for a request', function () {
     $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
 
     assertEquals(
-        'responsecache-467d6e9cb7425ed9d3e114e44eb7117f',
+        'responsecache-9937bec32aa1918917ad64b2b25f2982',
         $this->requestHasher->getHashFor($this->request)
     );
 });
