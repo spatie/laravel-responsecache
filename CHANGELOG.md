@@ -2,6 +2,24 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.6.0 - 2024-08-05
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 5.0.0 to 5.0.1 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/470
+* Fix incorrect grammar by @SebKay in https://github.com/spatie/laravel-responsecache/pull/472
+* Add missing Laravel 11.x Documentation by @omaratpxt in https://github.com/spatie/laravel-responsecache/pull/474
+* Bump dependabot/fetch-metadata from 1.6.0 to 2.2.0 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/475
+* Switch DefaultHasher to xxh128 for a faster alternative to MD5. by @marcell-ferenc in https://github.com/spatie/laravel-responsecache/pull/478
+
+### New Contributors
+
+* @SebKay made their first contribution in https://github.com/spatie/laravel-responsecache/pull/472
+* @omaratpxt made their first contribution in https://github.com/spatie/laravel-responsecache/pull/474
+* @marcell-ferenc made their first contribution in https://github.com/spatie/laravel-responsecache/pull/478
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.5.2...7.6.0
+
 ## 7.5.2 - 2024-04-03
 
 ### What's Changed
