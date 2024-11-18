@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.6.1 - 2024-11-18
+
+### What's Changed
+
+* Add PHPDoc for ResponseCache Facade by @alies-dev in https://github.com/spatie/laravel-responsecache/pull/485
+
+### New Contributors
+
+* @alies-dev made their first contribution in https://github.com/spatie/laravel-responsecache/pull/485
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.6.0...7.6.1
+
 ## 7.6.0 - 2024-08-05
 
 ### What's Changed
