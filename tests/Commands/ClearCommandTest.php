@@ -8,7 +8,6 @@ use function PHPUnit\Framework\assertNull;
 
 use Spatie\ResponseCache\Events\ClearedResponseCache;
 use Spatie\ResponseCache\Events\ClearingResponseCache;
-
 use Spatie\ResponseCache\ResponseCacheRepository;
 
 beforeEach(function () {

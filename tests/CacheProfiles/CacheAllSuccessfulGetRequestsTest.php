@@ -4,7 +4,6 @@ use Illuminate\Http\JsonResponse;
 
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
-
 use function PHPUnit\Framework\assertTrue;
 
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
