@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.6.2 - 2024-12-09
+
+### What's Changed
+
+* CsrfTokenReplacer avoid str_replace():  by @thyseus in https://github.com/spatie/laravel-responsecache/pull/482
+
+### New Contributors
+
+* @thyseus made their first contribution in https://github.com/spatie/laravel-responsecache/pull/482
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.6.1...7.6.2
+
 ## 7.6.1 - 2024-11-18
 
 ### What's Changed
