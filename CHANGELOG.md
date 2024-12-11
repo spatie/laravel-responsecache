@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.6.3 - 2024-12-11
+
+### What's Changed
+
+* Fix ResponseCache Facade docblock for forget() by @alexcanana in https://github.com/spatie/laravel-responsecache/pull/486
+
+### New Contributors
+
+* @alexcanana made their first contribution in https://github.com/spatie/laravel-responsecache/pull/486
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.6.2...7.6.3
+
 ## 7.6.2 - 2024-12-09
 
 ### What's Changed
