@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static void clear(array $tags = [])
- * @method static void forget(string|array $key)
+ * @method static void forget(string|array $key, array $tags = [])
  * @method static bool enabled(\Illuminate\Http\Request $request)
  * @method static bool shouldCache(\Illuminate\Http\Request $request, \Symfony\Component\HttpFoundation\Response $response)
  * @method static bool shouldBypass(\Illuminate\Http\Request $request)
