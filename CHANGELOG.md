@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.6.4 - 2025-02-25
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 5.0.1 to 5.1.0 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/487
+* Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/488
+* Add compatibility for Laravel 12. by @mazedlx in https://github.com/spatie/laravel-responsecache/pull/490
+
+### New Contributors
+
+* @mazedlx made their first contribution in https://github.com/spatie/laravel-responsecache/pull/490
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.6.3...7.6.4
+
 ## 7.6.3 - 2024-12-11
 
 ### What's Changed
