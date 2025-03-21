@@ -23,6 +23,11 @@ class CacheResponse
         $this->responseCache = $responseCache;
     }
 
+    public static function using($lifetime, ...$tags): string
+    {
+        return static::class.':'.implode(',', [$lifetime, ...$tags]);
+    }
+
     public function handle(Request $request, Closure $next, ...$args): Response
     {
         $lifetimeInSeconds = $this->getLifetime($args);
