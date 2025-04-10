@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.6.5 - 2025-04-10
+
+### What's Changed
+
+* fix DocBlock in ResponseCache Facade by @ricventu in https://github.com/spatie/laravel-responsecache/pull/492
+
+### New Contributors
+
+* @ricventu made their first contribution in https://github.com/spatie/laravel-responsecache/pull/492
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.6.4...7.6.5
+
 ## 7.6.4 - 2025-02-25
 
 ### What's Changed
