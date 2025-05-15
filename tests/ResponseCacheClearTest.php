@@ -13,6 +13,11 @@ beforeEach(function () {
 });
 
 it('will fire appropriate events when clearing the cache successfully', function () {
+    $this->mock(ResponseCacheRepository::class, function (MockInterface $mock) {
+        $mock->shouldReceive('clear')
+            ->once()
+            ->andReturn(true);
+    });
     $result = app(ResponseCache::class)->clear();
 
     expect($result)->toBeTrue();
