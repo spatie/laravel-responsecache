@@ -455,11 +455,10 @@ This event is fired when a request passes through the `ResponseCache` middleware
 
 This event is fired when a request passes through the `ResponseCache` middleware but no cached response was found or returned.
 
-#### ClearingResponseCache and ClearedResponseCache
+#### ClearingResponseCache, ClearedResponseCache and ClearingResponseCacheFailed
 
-`Spatie\ResponseCache\Events\ClearingResponseCache`
-
-`Spatie\ResponseCache\Events\ClearedResponseCache`
+1. `Spatie\ResponseCache\Events\ClearingResponseCache`
+2. `Spatie\ResponseCache\Events\ClearedResponseCache` or `Spatie\ResponseCache\Events\ClearingResponseCacheFailed`
 
 These events are fired respectively when the `responsecache:clear` is started and finished.
 
