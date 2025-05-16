@@ -32,8 +32,8 @@ class ResponseCacheRepository
     }
 
     /**
-     * Clear the entire response cache.
      * If the response cache tag is empty, or a Store doesn't support tags, the whole cache will be cleared.
+     
      * @return bool Whether the cache was cleared successfully.
      */
     public function clear(): bool
