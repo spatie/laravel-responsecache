@@ -91,11 +91,11 @@ class ResponseCache
 
         $result = $this->taggedCache($tags)->clear();
 
-        if ($result === true) {
-            event(new ClearedResponseCache());
-        } else {
-            event(new ClearingResponseCacheFailed());
-        }
+        $resultEvent = $result
+            ? new ClearedResponseCache()
+            : new ClearingResponseCacheFailed();
+
+        event($resultEvent);
 
         return $result;
     }
