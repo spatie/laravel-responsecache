@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.7.0 - 2025-05-20
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 5.1.0 to 5.2.0 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/493
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot in https://github.com/spatie/laravel-responsecache/pull/494
+* [8.0] Introduce `ClearingResponseCacheFailed` and return boolean by `clear()` by @alies-dev in https://github.com/spatie/laravel-responsecache/pull/495
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.6.5...7.7.0
+
 ## 7.6.5 - 2025-04-10
 
 ### What's Changed
