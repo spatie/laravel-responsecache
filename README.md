@@ -404,6 +404,8 @@ Route::group(function() {
 If the [cache driver you configured supports tags](https://laravel.com/docs/5.8/cache#cache-tags), you can specify a list of tags when applying the middleware.
 
 ```php
+use Spatie\ResponseCache\Middlewares\CacheResponse;
+
 // add a "foo" tag to this route with a 300 second lifetime
 Route::get('/test1', 'SnowflakeController@index')->middleware('cacheResponse:300,foo');
 
@@ -416,6 +418,9 @@ Route::group(function() {
 
    Route::get('/test4', 'YetAnotherSnowflakeController@index');
 })->middleware('cacheResponse:foo,bar');
+
+// or use the using method for convenience
+Route::get('/test5', 'SnowflakeController@index')->middleware(CacheResponse::using(300, 'foo', 'bar'));
 ```
 
 #### Clearing tagged content

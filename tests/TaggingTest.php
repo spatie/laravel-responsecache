@@ -3,6 +3,7 @@
 use function PHPUnit\Framework\assertThat;
 use function PHPUnit\Framework\isTrue;
 
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Test\Concerns\CanChangeCacheStore;
 
 uses(CanChangeCacheStore::class);
@@ -76,4 +77,15 @@ it('can forget requests using multiple route cache tags', function () {
     $secondResponse = $this->get('/tagged/2');
     assertRegularResponse($secondResponse);
     assertDifferentResponse($firstResponse, $secondResponse);
+});
+
+it('can generate middleware string for different tag combinations using the using method', function () {
+    $singleTag = CacheResponse::using('foo');
+    expect($singleTag)->toBe(CacheResponse::class.':foo');
+
+    $multipleTags = CacheResponse::using('foo', 'bar');
+    expect($multipleTags)->toBe(CacheResponse::class.':foo,bar');
+
+    $lifetime = CacheResponse::using(300);
+    expect($lifetime)->toBe(CacheResponse::class.':300');
 });
