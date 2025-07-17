@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.7.1 - 2025-07-17
+
+### What's Changed
+
+* Introduce using() method to conveniently define lifetime and tags by @kamilkozak in https://github.com/spatie/laravel-responsecache/pull/491
+
+### New Contributors
+
+* @kamilkozak made their first contribution in https://github.com/spatie/laravel-responsecache/pull/491
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.7.0...7.7.1
+
 ## 7.7.0 - 2025-05-20
 
 ### What's Changed
