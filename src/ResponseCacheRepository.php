@@ -31,21 +31,22 @@ class ResponseCacheRepository
         return $this->responseSerializer->unserialize($this->cache->get($key) ?? '');
     }
 
-    public function clear(): void
+    /**
+     * If the response cache tag is empty, or a Store doesn't support tags, the whole cache will be cleared.
+
+     * @return bool Whether the cache was cleared successfully.
+     */
+    public function clear(): bool
     {
         if ($this->isTagged($this->cache)) {
-            $this->cache->flush();
-
-            return;
+            return $this->cache->flush();
         }
 
         if (empty(config('responsecache.cache_tag'))) {
-            $this->cache->clear();
-
-            return;
+            return $this->cache->clear();
         }
 
-        $this->cache->tags(config('responsecache.cache_tag'))->flush();
+        return $this->cache->tags(config('responsecache.cache_tag'))->flush();
     }
 
     public function forget(string $key): bool

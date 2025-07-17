@@ -8,6 +8,7 @@ use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Events\ClearedResponseCache;
 use Spatie\ResponseCache\Events\ClearingResponseCache;
+use Spatie\ResponseCache\Events\ClearingResponseCacheFailed;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -84,13 +85,19 @@ class ResponseCache
         return $this->taggedCache($tags)->get($this->hasher->getHashFor($request));
     }
 
-    public function clear(array $tags = []): void
+    public function clear(array $tags = []): bool
     {
         event(new ClearingResponseCache());
 
-        $this->taggedCache($tags)->clear();
+        $result = $this->taggedCache($tags)->clear();
 
-        event(new ClearedResponseCache());
+        $resultEvent = $result
+            ? new ClearedResponseCache()
+            : new ClearingResponseCacheFailed();
+
+        event($resultEvent);
+
+        return $result;
     }
 
     protected function addCachedHeader(Response $response): Response

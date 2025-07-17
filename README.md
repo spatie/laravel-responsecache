@@ -1,11 +1,19 @@
-<p align="center"><img src="/art/socialcard.png" alt="Social Card of Laravel Response Cache"></p>
+<div align="left">
+    <a href="https://spatie.be/open-source?utm_source=github&utm_medium=banner&utm_campaign=laravel-responsecache">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://spatie.be/packages/header/laravel-responsecache/html/dark.webp">
+        <img alt="Logo for laravel-responsecache" src="https://spatie.be/packages/header/laravel-responsecache/html/light.webp">
+      </picture>
+    </a>
 
-# Speed up an app by caching the entire response
+<h1>Speed up an app by caching the entire response</h1>
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 ![Tests](https://github.com/spatie/laravel-responsecache/actions/workflows/run-tests.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-responsecache.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-responsecache)
+    
+</div>
 
 This Laravel package can cache an entire response. By default it will cache all successful get-requests that return text based content (such as html and json) for a week. This could potentially speed up the response quite considerably.
 
@@ -447,11 +455,10 @@ This event is fired when a request passes through the `ResponseCache` middleware
 
 This event is fired when a request passes through the `ResponseCache` middleware but no cached response was found or returned.
 
-#### ClearingResponseCache and ClearedResponseCache
+#### ClearingResponseCache, ClearedResponseCache and ClearingResponseCacheFailed
 
-`Spatie\ResponseCache\Events\ClearingResponseCache`
-
-`Spatie\ResponseCache\Events\ClearedResponseCache`
+1. `Spatie\ResponseCache\Events\ClearingResponseCache`
+2. `Spatie\ResponseCache\Events\ClearedResponseCache` or `Spatie\ResponseCache\Events\ClearingResponseCacheFailed`
 
 These events are fired respectively when the `responsecache:clear` is started and finished.
 
@@ -525,7 +532,7 @@ composer test
 ## Alternatives
 
 - [Barry Vd. Heuvel](https://twitter.com/barryvdh) made [a package that caches responses by leveraging HttpCache](https://github.com/barryvdh/laravel-httpcache).
-- [Joseph Silber](https://twitter.com/joseph_silber) created [Laravel Page Cache](https://github.com/JosephSilber/page-cache) that can write it's cache to disk and let Nginx read them, so PHP doesn't even have to start up anymore.
+- [Joseph Silber](https://twitter.com/joseph_silber) created [Laravel Page Cache](https://github.com/JosephSilber/page-cache) that can write its cache to disk and let Nginx read them, so PHP doesn't even have to start up anymore.
 
 ## Changelog
 
@@ -544,7 +551,7 @@ If you've found a bug regarding security please mail [security@spatie.be](mailto
 - [Freek Van der Herten](https://github.com/freekmurze)
 - [All Contributors](../../contributors)
 
-And a special thanks to [Caneco](https://twitter.com/caneco) for the logo ✨
+Special thanks to [Caneco](https://twitter.com/caneco) for the original logo.
 
 ## License
 
