@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 7.7.2 - 2025-08-28
+
+### What's Changed
+
+* Fix Carbon3 diffInSeconds to use int and not float by @it-can in https://github.com/spatie/laravel-responsecache/pull/500
+* Bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/spatie/laravel-responsecache/pull/498
+* Bump stefanzweifel/git-auto-commit-action from 5.2.0 to 6.0.1 by @dependabot[bot] in https://github.com/spatie/laravel-responsecache/pull/496
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.7.1...7.7.2
+
 ## 7.7.1 - 2025-07-17
 
 ### What's Changed
