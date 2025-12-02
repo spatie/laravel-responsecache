@@ -5,8 +5,8 @@ namespace Spatie\ResponseCache\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static void clear(array $tags = [])
- * @method static void forget(string|array $key, array $tags = [])
+ * @method static bool clear(array $tags = [])
+ * @method static \Spatie\ResponseCache\ResponseCache forget(string|array $uris, array $tags = [])
  * @method static bool enabled(\Illuminate\Http\Request $request)
  * @method static bool shouldCache(\Illuminate\Http\Request $request, \Symfony\Component\HttpFoundation\Response $response)
  * @method static bool shouldBypass(\Illuminate\Http\Request $request)
