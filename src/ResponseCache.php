@@ -153,7 +153,7 @@ class ResponseCache
      * Get a cached response using flexible/SWR (stale-while-revalidate) strategy.
      *
      * @param string $key
-     * @param array{0: int, 1: int} $seconds [fresh_seconds, stale_seconds]
+     * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
      * @param \Closure $callback Callback that returns a Response object
      * @param array $tags
      * @param bool|null $alwaysDefer

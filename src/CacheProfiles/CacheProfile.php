@@ -25,7 +25,7 @@ interface CacheProfile
     public function useCacheNameSuffix(Request $request): string;
 
     /**
-     * Return flexible cache times [fresh_seconds, stale_seconds] for SWR behavior.
+     * Return flexible cache times [fresh_seconds, total_seconds] for SWR behavior.
      * Return null to disable SWR for this request and use traditional caching.
      *
      * @return array{0: int, 1: int}|null

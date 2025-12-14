@@ -33,13 +33,13 @@ class CacheResponse
      * Create a middleware string for flexible/SWR caching.
      *
      * @param int $freshSeconds How long the cache is considered fresh
-     * @param int $staleSeconds How long stale cache can be served while revalidating
+     * @param int $totalSeconds Total cache lifetime (fresh + stale period)
      * @param string ...$tags Optional cache tags
      * @return string
      */
-    public static function flexible(int $freshSeconds, int $staleSeconds, ...$tags): string
+    public static function flexible(int $freshSeconds, int $totalSeconds, ...$tags): string
     {
-        $flexibleTime = "{$freshSeconds}:{$staleSeconds}";
+        $flexibleTime = "{$freshSeconds}:{$totalSeconds}";
 
         if (empty($tags)) {
             return static::class.':'.$flexibleTime;
@@ -63,12 +63,10 @@ class CacheResponse
             return $next($request);
         }
 
-        // Use flexible/SWR caching if enabled
         if ($this->shouldUseFlexibleCache($request, $flexibleTime)) {
             return $this->handleFlexibleCache($request, $next, $flexibleTime, $tags);
         }
 
-        // Traditional caching flow
         return $this->handleTraditionalCache($request, $next, $lifetimeInSeconds, $tags);
     }
 

@@ -25,22 +25,16 @@ class ResponseCacheRepository
      * Get a cached response using flexible/SWR strategy.
      *
      * @param string $key
-     * @param array{0: int, 1: int} $seconds [fresh_seconds, stale_seconds]
+     * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
      * @param \Closure $callback Callback that returns a Response object
      * @param bool|null $alwaysDefer
      * @return Response
      */
     public function flexible(string $key, array $seconds, \Closure $callback, ?bool $alwaysDefer = false): Response
     {
-        // Fix Laravel bug: flexible() uses $ttl[1] instead of $ttl[0] + $ttl[1] for total TTL
-        // We need to pass the total cache lifetime, not just the stale period
-        // Convert [fresh, stale] to [fresh, total] before passing to Laravel
-        $totalSeconds = $seconds[0] + $seconds[1];
-        $fixedSeconds = [$seconds[0], $totalSeconds];
-
         $result = $this->cache->flexible(
             $key,
-            $fixedSeconds,
+            $seconds,
             function () use ($callback) {
                 $response = $callback();
 
