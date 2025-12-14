@@ -141,13 +141,6 @@ return [
      * This class is responsible for serializing responses.
      */
     'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
-
-    /*
-     * Always defer cache refresh to background even during fresh period.
-     * This can improve response times but may serve slightly stale data.
-     * Only applies when using CacheResponse::flexible() middleware.
-     */
-    'flexible_always_defer' => env('RESPONSE_CACHE_FLEXIBLE_ALWAYS_DEFER', false),
 ];
 ```
 
@@ -398,26 +391,36 @@ Configure flexible caching per route using the `flexible()` method:
 ```php
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 
-// Fresh for 3 minutes, then stale for 15minutes
+// Fresh for 3 minutes, then stale for 15 minutes
 Route::get('/api/posts', 'PostController@index')
     ->middleware(CacheResponse::flexible(180, 900));
 
-// Middleware group, fresh for 5 seconds, stale for 10seconds
+// Defer refresh to background during stale period
+Route::get('/api/live-data', 'LiveDataController@index')
+    ->middleware(CacheResponse::flexible(60, 300, true));
+
+// Middleware group, fresh for 5 seconds, stale for 10 seconds
 Route::middleware(CacheResponse::flexible(5, 10))->group(function () {
     Route::get('/test', function () {
         return rand();
     });
 });
 
-// With cache tags
+// With defer and cache tags
 Route::get('/api/posts', 'PostController@index')
-    ->middleware(CacheResponse::flexible(180, 900, 'posts', 'api'));
+    ->middleware(CacheResponse::flexible(180, 900, false, 'posts', 'api'));
 ```
 
 The `flexible()` method accepts:
 - `$freshSeconds`: How long the cache is considered fresh
 - `$totalSeconds`: Total cache lifetime (fresh period + stale period)
+- `$defer`: Whether to defer refresh to background during stale period (default: `false`)
 - `...$tags`: Optional cache tags
+
+**Defer behavior:**
+- `$defer = false` (default): During stale period, requests wait for synchronous refresh (slower but always current)
+- `$defer = true`: During stale period, stale cache is served immediately while refresh happens in background (faster but briefly stale)
+- During fresh period: No refresh happens regardless of defer setting
 
 
 ### Caching specific routes

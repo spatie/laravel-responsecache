@@ -311,24 +311,3 @@ describe('edge cases', function () {
         expect($responseBasic1->getContent())->not->toBe($responseCustom1->getContent());
     });
 });
-
-describe('always defer mode', function () {
-    it('always defers refresh when flexible_always_defer is enabled', function () {
-        config()->set('responsecache.flexible_always_defer', true);
-
-        $firstResponse = $this->get('/flexible/basic');
-        $firstContent = $firstResponse->getContent();
-
-        // Even within fresh period, should return immediately and defer
-        Carbon::setTestNow(Carbon::now()->addSeconds(2));
-
-        $secondResponse = $this->get('/flexible/basic');
-        expect($secondResponse->getContent())->toBe($firstContent);
-
-        app()->terminate();
-
-        // After termination, should have potentially new content
-        $thirdResponse = $this->get('/flexible/basic');
-        expect($thirdResponse->getContent())->toStartWith('random-');
-    });
-});

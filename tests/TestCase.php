@@ -155,7 +155,7 @@ abstract class TestCase extends Orchestra
 
         Route::any('/flexible/with-tags', function () {
             return 'tagged-'.Str::random(10);
-        })->middleware(CacheResponse::flexible(5, 10, 'tag1', 'tag2'));
+        })->middleware(CacheResponse::flexible(5, 10, false, 'tag1', 'tag2'));
 
         Route::any('/flexible/custom-time', function () {
             return 'custom-'.Str::random(10);
