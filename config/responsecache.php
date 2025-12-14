@@ -91,11 +91,4 @@ return [
      * This class is responsible for serializing responses.
      */
     'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
-
-    /*
-     * Always defer cache refresh to background even during fresh period.
-     * This can improve response times but may serve slightly stale data.
-     * Only applies when using CacheResponse::flexible() middleware.
-     */
-    'flexible_always_defer' => env('RESPONSE_CACHE_FLEXIBLE_ALWAYS_DEFER', false),
 ];

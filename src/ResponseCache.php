@@ -159,8 +159,8 @@ class ResponseCache
      * @param bool|null $alwaysDefer
      * @return Response
      */
-    public function flexible(string $key, array $seconds, \Closure $callback, array $tags = [], ?bool $alwaysDefer = false): Response
+    public function flexible(string $key, array $seconds, \Closure $callback, array $tags = [], ?bool $defer = false): Response
     {
-        return $this->taggedCache($tags)->flexible($key, $seconds, $callback, $alwaysDefer);
+        return $this->taggedCache($tags)->flexible($key, $seconds, $callback, $defer);
     }
 }

@@ -30,7 +30,7 @@ class ResponseCacheRepository
      * @param bool|null $alwaysDefer
      * @return Response
      */
-    public function flexible(string $key, array $seconds, \Closure $callback, ?bool $alwaysDefer = false): Response
+    public function flexible(string $key, array $seconds, \Closure $callback, ?bool $defer = false): Response
     {
         $result = $this->cache->flexible(
             $key,
@@ -41,7 +41,7 @@ class ResponseCacheRepository
                 return $this->responseSerializer->serialize($response);
             },
             null,
-            $alwaysDefer
+            $defer
         );
 
         return $this->responseSerializer->unserialize($result);

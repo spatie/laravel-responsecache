@@ -34,12 +34,14 @@ class CacheResponse
      *
      * @param int $freshSeconds How long the cache is considered fresh
      * @param int $totalSeconds Total cache lifetime (fresh + stale period)
+     * @param bool $defer Whether to always defer refresh to background (default: false)
      * @param string ...$tags Optional cache tags
      * @return string
      */
-    public static function flexible(int $freshSeconds, int $totalSeconds, ...$tags): string
+    public static function flexible(int $freshSeconds, int $totalSeconds, bool $defer = false, ...$tags): string
     {
-        $flexibleTime = "{$freshSeconds}:{$totalSeconds}";
+        $deferFlag = $defer ? '1' : '0';
+        $flexibleTime = "{$freshSeconds}:{$totalSeconds}:{$deferFlag}";
 
         if (empty($tags)) {
             return static::class.':'.$flexibleTime;
@@ -123,9 +125,12 @@ class CacheResponse
     {
         $cacheKey = app(RequestHasher::class)->getHashFor($request);
 
+        // Extract defer flag from flexibleTime array [fresh, stale, defer]
+        $defer = $flexibleTime[2] ?? false;
+
         $response = $this->responseCache->flexible(
             $cacheKey,
-            $flexibleTime,
+            [$flexibleTime[0], $flexibleTime[1]],
             function () use ($request, $next) {
                 $response = $next($request);
 
@@ -147,7 +152,7 @@ class CacheResponse
                 return $cachedResponse;
             },
             $tags,
-            config('responsecache.flexible_always_defer', false)
+            $defer
         );
 
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->replaceInCachedResponse($response));
@@ -181,18 +186,20 @@ class CacheResponse
 
         $parts = explode(':', $args[0]);
 
-        if (count($parts) !== 2) {
+        // Support both old format (fresh:stale) and new format (fresh:stale:defer)
+        if (count($parts) < 2 || count($parts) > 3) {
             return null;
         }
 
         $fresh = (int) $parts[0];
         $stale = (int) $parts[1];
+        $defer = isset($parts[2]) ? $parts[2] === '1' : false;
 
         if ($fresh <= 0 || $stale <= 0) {
             return null;
         }
 
-        return [$fresh, $stale];
+        return [$fresh, $stale, $defer];
     }
 
     protected function getCachedResponse(Request $request, array $tags = []): false|Response
