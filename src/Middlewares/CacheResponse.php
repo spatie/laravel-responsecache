@@ -100,13 +100,6 @@ class CacheResponse
             if ($this->responseCache->hasBeenCached($request, $tags)) {
                 $response = $this->getCachedResponse($request, $tags);
                 if ($response !== false) {
-                    if (config('responsecache.add_cache_freshness_header')) {
-                        $response->headers->set(
-                            config('responsecache.cache_freshness_header_name'),
-                            'fresh'
-                        );
-                    }
-
                     return $response;
                 }
             }
@@ -158,13 +151,6 @@ class CacheResponse
         );
 
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->replaceInCachedResponse($response));
-
-        if (config('responsecache.add_cache_freshness_header')) {
-            $response->headers->set(
-                config('responsecache.cache_freshness_header_name'),
-                'flexible'
-            );
-        }
 
         $response = $this->addCacheAgeHeader($response);
 

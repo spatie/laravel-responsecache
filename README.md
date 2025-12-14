@@ -148,19 +148,6 @@ return [
      * Only applies when using CacheResponse::flexible() middleware.
      */
     'flexible_always_defer' => env('RESPONSE_CACHE_FLEXIBLE_ALWAYS_DEFER', false),
-
-    /*
-     * This setting determines if a http header named with the cache freshness
-     * should be added to a cached response. This can be handy when
-     * debugging SWR behavior.
-     */
-    'add_cache_freshness_header' => env('RESPONSE_CACHE_FRESHNESS_HEADER', false),
-
-    /*
-     * This setting determines the name of the http header that contains
-     * the freshness state of the cache (fresh, stale, miss)
-     */
-    'cache_freshness_header_name' => env('RESPONSE_CACHE_FRESHNESS_HEADER_NAME', 'laravel-responsecache-freshness'),
 ];
 ```
 
@@ -411,9 +398,16 @@ Configure flexible caching per route using the `flexible()` method:
 ```php
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 
-// Fresh for 3 minutes, stale for 15 minutes (18 minutes total)
+// Fresh for 3 minutes, then stale for 15minutes
 Route::get('/api/posts', 'PostController@index')
     ->middleware(CacheResponse::flexible(180, 900));
+
+// Middleware group, fresh for 5 seconds, stale for 10seconds
+Route::middleware(CacheResponse::flexible(5, 10))->group(function () {
+    Route::get('/test', function () {
+        return rand();
+    });
+});
 
 // With cache tags
 Route::get('/api/posts', 'PostController@index')
@@ -425,19 +419,6 @@ The `flexible()` method accepts:
 - `$totalSeconds`: Total cache lifetime (fresh period + stale period)
 - `...$tags`: Optional cache tags
 
-#### Configuration options
-
-```php
-// Always defer cache refresh to background even during fresh period
-// This improves response times but may serve slightly stale data
-'flexible_always_defer' => true,
-
-// Add freshness state header for debugging
-'add_cache_freshness_header' => true,
-'cache_freshness_header_name' => 'laravel-responsecache-freshness',
-```
-
-When debugging is enabled, responses include a header showing the cache state.
 
 ### Caching specific routes
 Instead of registering the `cacheResponse` middleware globally, you can also register it as route middleware.

@@ -32,17 +32,6 @@ describe('fresh cache period', function () {
         expect($secondContent)->toBe($firstContent);
     });
 
-    it('adds flexible freshness header when configured', function () {
-        config()->set('responsecache.add_cache_freshness_header', true);
-        config()->set('responsecache.cache_freshness_header_name', 'X-Cache-Freshness');
-
-        $this->get('/flexible/basic');
-
-        $cachedResponse = $this->get('/flexible/basic');
-
-        expect($cachedResponse->headers->has('X-Cache-Freshness'))->toBeTrue();
-        expect($cachedResponse->headers->get('X-Cache-Freshness'))->toBe('flexible');
-    });
 
     it('adds cache time header when configured', function () {
         config()->set('responsecache.add_cache_time_header', true);

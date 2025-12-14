@@ -98,17 +98,4 @@ return [
      * Only applies when using CacheResponse::flexible() middleware.
      */
     'flexible_always_defer' => env('RESPONSE_CACHE_FLEXIBLE_ALWAYS_DEFER', false),
-
-    /*
-     * This setting determines if a http header named with the cache freshness
-     * should be added to a cached response. This can be handy when
-     * debugging SWR behavior.
-     */
-    'add_cache_freshness_header' => env('RESPONSE_CACHE_FRESHNESS_HEADER', false),
-
-    /*
-     * This setting determines the name of the http header that contains
-     * the freshness state of the cache (fresh, stale, miss)
-     */
-    'cache_freshness_header_name' => env('RESPONSE_CACHE_FRESHNESS_HEADER_NAME', 'laravel-responsecache-freshness'),
 ];
