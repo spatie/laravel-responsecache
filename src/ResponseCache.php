@@ -27,11 +27,6 @@ class ResponseCache
         return $this->cacheProfile->enabled($request);
     }
 
-    public function getCacheProfile(): CacheProfile
-    {
-        return $this->cacheProfile;
-    }
-
     public function shouldCache(Request $request, Response $response): bool
     {
         if ($request->attributes->has('responsecache.doNotCache')) {

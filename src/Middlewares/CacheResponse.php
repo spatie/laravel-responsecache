@@ -65,7 +65,7 @@ class CacheResponse
             return $next($request);
         }
 
-        if ($this->shouldUseFlexibleCache($request, $flexibleTime)) {
+        if ($this->shouldUseFlexibleCache($flexibleTime)) {
             return $this->handleFlexibleCache($request, $next, $flexibleTime, $tags);
         }
 
@@ -164,7 +164,7 @@ class CacheResponse
         return $response;
     }
 
-    protected function shouldUseFlexibleCache(Request $request, ?array $flexibleTime): bool
+    protected function shouldUseFlexibleCache(?array $flexibleTime): bool
     {
         // Only use flexible cache when explicitly set via CacheResponse::flexible()
         return $flexibleTime !== null;
@@ -186,7 +186,6 @@ class CacheResponse
 
         $parts = explode(':', $args[0]);
 
-        // Support both old format (fresh:stale) and new format (fresh:stale:defer)
         if (count($parts) < 2 || count($parts) > 3) {
             return null;
         }
