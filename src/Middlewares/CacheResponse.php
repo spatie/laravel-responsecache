@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
+use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,37 +29,195 @@ class CacheResponse
         return static::class.':'.implode(',', [$lifetime, ...$tags]);
     }
 
+    /**
+     * Create a middleware string for flexible/SWR caching.
+     *
+     * @param int $freshSeconds How long the cache is considered fresh
+     * @param int $staleSeconds How long stale cache can be served while revalidating
+     * @param string ...$tags Optional cache tags
+     * @return string
+     */
+    public static function flexible(int $freshSeconds, int $staleSeconds, ...$tags): string
+    {
+        $flexibleTime = "{$freshSeconds}:{$staleSeconds}";
+
+        if (empty($tags)) {
+            return static::class.':'.$flexibleTime;
+        }
+
+        return static::class.':'.implode(',', [$flexibleTime, ...$tags]);
+    }
+
     public function handle(Request $request, Closure $next, ...$args): Response
     {
         $lifetimeInSeconds = $this->getLifetime($args);
+        $flexibleTime = $this->getFlexibleTime($args);
         $tags = $this->getTags($args);
 
-        if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
-            try {
-                if ($this->responseCache->hasBeenCached($request, $tags)) {
+        if (! $this->responseCache->enabled($request) || $this->responseCache->shouldBypass($request)) {
+            return $next($request);
+        }
 
-                    $response = $this->getCachedResponse($request, $tags);
-                    if ($response !== false) {
-                        return $response;
-                    }
-                }
-            } catch (CouldNotUnserialize $e) {
-                report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
-                event(new CacheMissed($request));
+        // Skip global middleware if route has explicit cache middleware
+        if ($this->shouldSkipGlobalMiddleware($request, $flexibleTime, $lifetimeInSeconds)) {
+            return $next($request);
+        }
+
+        // Use flexible/SWR caching if enabled
+        if ($this->shouldUseFlexibleCache($request, $flexibleTime)) {
+            return $this->handleFlexibleCache($request, $next, $flexibleTime, $tags);
+        }
+
+        // Traditional caching flow
+        return $this->handleTraditionalCache($request, $next, $lifetimeInSeconds, $tags);
+    }
+
+    protected function shouldSkipGlobalMiddleware(Request $request, ?array $flexibleTime, ?int $lifetimeInSeconds): bool
+    {
+        // If this middleware has explicit args, don't skip (it's route-specific)
+        if ($flexibleTime !== null || $lifetimeInSeconds !== null) {
+            return false;
+        }
+
+        // Check if route has explicit CacheResponse middleware
+        $route = $request->route();
+        if (! $route) {
+            return false;
+        }
+
+        $middlewares = $route->gatherMiddleware();
+        foreach ($middlewares as $middleware) {
+            // Check if it's a CacheResponse middleware with parameters
+            if (is_string($middleware) && str_starts_with($middleware, static::class.':')) {
+                return true; // Skip global middleware, let route handle it
             }
+        }
+
+        return false;
+    }
+
+    protected function handleTraditionalCache(Request $request, Closure $next, ?int $lifetimeInSeconds, array $tags): Response
+    {
+        try {
+            if ($this->responseCache->hasBeenCached($request, $tags)) {
+                $response = $this->getCachedResponse($request, $tags);
+                if ($response !== false) {
+                    if (config('responsecache.add_cache_freshness_header')) {
+                        $response->headers->set(
+                            config('responsecache.cache_freshness_header_name'),
+                            'fresh'
+                        );
+                    }
+
+                    return $response;
+                }
+            }
+        } catch (CouldNotUnserialize $e) {
+            report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
+            event(new CacheMissed($request));
         }
 
         $response = $next($request);
 
-        if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
-            if ($this->responseCache->shouldCache($request, $response)) {
-                $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
-            }
+        if ($this->responseCache->shouldCache($request, $response)) {
+            $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
         }
 
         event(new CacheMissed($request));
 
         return $response;
+    }
+
+    protected function handleFlexibleCache(Request $request, Closure $next, ?array $flexibleTime, array $tags): Response
+    {
+        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+
+        if ($flexibleTime === null) {
+            $flexibleTime = $this->responseCache->getCacheProfile()->flexibleCacheTime($request);
+        }
+
+        $response = $this->responseCache->flexible(
+            $cacheKey,
+            $flexibleTime,
+            function () use ($request, $next) {
+                $response = $next($request);
+
+                if (! $this->responseCache->shouldCache($request, $response)) {
+                    return $response;
+                }
+
+                $cachedResponse = clone $response;
+
+                if (config('responsecache.add_cache_time_header')) {
+                    $cachedResponse->headers->set(
+                        config('responsecache.cache_time_header_name'),
+                        Carbon::now()->toRfc2822String(),
+                    );
+                }
+
+                $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
+
+                return $cachedResponse;
+            },
+            $tags,
+            config('responsecache.flexible_always_defer', false)
+        );
+
+        $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->replaceInCachedResponse($response));
+
+        if (config('responsecache.add_cache_freshness_header')) {
+            $response->headers->set(
+                config('responsecache.cache_freshness_header_name'),
+                'flexible'
+            );
+        }
+
+        $response = $this->addCacheAgeHeader($response);
+
+        event(new ResponseCacheHit($request));
+
+        return $response;
+    }
+
+    protected function shouldUseFlexibleCache(Request $request, ?array $flexibleTime): bool
+    {
+        if ($flexibleTime !== null) {
+            return true;
+        }
+
+        $profileFlexibleTime = $this->responseCache->getCacheProfile()->flexibleCacheTime($request);
+
+        return $profileFlexibleTime !== null;
+    }
+
+    protected function getFlexibleTime(array $args): ?array
+    {
+        if (count($args) < 1) {
+            return null;
+        }
+
+        if (! is_string($args[0])) {
+            return null;
+        }
+
+        if (! str_contains($args[0], ':')) {
+            return null;
+        }
+
+        $parts = explode(':', $args[0]);
+
+        if (count($parts) !== 2) {
+            return null;
+        }
+
+        $fresh = (int) $parts[0];
+        $stale = (int) $parts[1];
+
+        if ($fresh <= 0 || $stale <= 0) {
+            return null;
+        }
+
+        return [$fresh, $stale];
     }
 
     protected function getCachedResponse(Request $request, array $tags = []): false|Response
@@ -116,8 +275,10 @@ class CacheResponse
     {
         $tags = $args;
 
-        if (count($args) >= 1 && is_numeric($args[0])) {
-            $tags = array_slice($args, 1);
+        if (count($args) >= 1) {
+            if (is_numeric($args[0]) || str_contains($args[0], ':')) {
+                $tags = array_slice($args, 1);
+            }
         }
 
         return array_filter($tags);

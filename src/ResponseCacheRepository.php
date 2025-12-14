@@ -21,6 +21,38 @@ class ResponseCacheRepository
         $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
     }
 
+    /**
+     * Get a cached response using flexible/SWR strategy.
+     *
+     * @param string $key
+     * @param array{0: int, 1: int} $seconds [fresh_seconds, stale_seconds]
+     * @param \Closure $callback Callback that returns a Response object
+     * @param bool|null $alwaysDefer
+     * @return Response
+     */
+    public function flexible(string $key, array $seconds, \Closure $callback, ?bool $alwaysDefer = false): Response
+    {
+        // Fix Laravel bug: flexible() uses $ttl[1] instead of $ttl[0] + $ttl[1] for total TTL
+        // We need to pass the total cache lifetime, not just the stale period
+        // Convert [fresh, stale] to [fresh, total] before passing to Laravel
+        $totalSeconds = $seconds[0] + $seconds[1];
+        $fixedSeconds = [$seconds[0], $totalSeconds];
+
+        $result = $this->cache->flexible(
+            $key,
+            $fixedSeconds,
+            function () use ($callback) {
+                $response = $callback();
+
+                return $this->responseSerializer->serialize($response);
+            },
+            null,
+            $alwaysDefer
+        );
+
+        return $this->responseSerializer->unserialize($result);
+    }
+
     public function has(string $key): bool
     {
         return $this->cache->has($key);
@@ -67,4 +99,6 @@ class ResponseCacheRepository
     {
         return $repository instanceof TaggedCache && ! empty($repository->getTags());
     }
+
+
 }

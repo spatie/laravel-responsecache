@@ -145,6 +145,21 @@ abstract class TestCase extends Orchestra
         Route::any('/cache-for-given-lifetime', function () {
             return 'dummy response';
         })->middleware('cacheResponse:300');
+
+        // Flexible cache routes for SWR testing
+        Route::middleware(CacheResponse::flexible(5, 10))->group(function () {
+            Route::any('/flexible/basic', function () {
+                return 'random-'.Str::random(10);
+            });
+        });
+
+        Route::any('/flexible/with-tags', function () {
+            return 'tagged-'.Str::random(10);
+        })->middleware(CacheResponse::flexible(5, 10, 'tag1', 'tag2'));
+
+        Route::any('/flexible/custom-time', function () {
+            return 'custom-'.Str::random(10);
+        })->middleware(CacheResponse::flexible(3, 15));
     }
 
     public function getTempDirectory($suffix = '')

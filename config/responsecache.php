@@ -91,4 +91,39 @@ return [
      * This class is responsible for serializing responses.
      */
     'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
+
+    /*
+     * Enable stale-while-revalidate caching behavior.
+     * When enabled, stale cache can be served while refreshing in background.
+     */
+    'flexible_cache_enabled' => env('RESPONSE_CACHE_FLEXIBLE_ENABLED', false),
+
+    /*
+     * Default flexible cache times [fresh_seconds, stale_seconds].
+     * First value: how long cache is considered fresh
+     * Second value: how long stale cache can be served while revalidating
+     */
+    'flexible_cache_time' => [
+        (int) env('RESPONSE_CACHE_FLEXIBLE_FRESH', 60 * 5), // 5 minutes fresh
+        (int) env('RESPONSE_CACHE_FLEXIBLE_STALE', 60 * 60), // 1 hour stale
+    ],
+
+    /*
+     * Always defer cache refresh to background even during fresh period.
+     * This can improve response times but may serve slightly stale data.
+     */
+    'flexible_always_defer' => env('RESPONSE_CACHE_FLEXIBLE_ALWAYS_DEFER', false),
+
+    /*
+     * This setting determines if a http header named with the cache freshness
+     * should be added to a cached response. This can be handy when
+     * debugging SWR behavior.
+     */
+    'add_cache_freshness_header' => env('RESPONSE_CACHE_FRESHNESS_HEADER', false),
+
+    /*
+     * This setting determines the name of the http header that contains
+     * the freshness state of the cache (fresh, stale, miss)
+     */
+    'cache_freshness_header_name' => env('RESPONSE_CACHE_FRESHNESS_HEADER_NAME', 'laravel-responsecache-freshness'),
 ];
