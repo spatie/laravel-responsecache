@@ -28,15 +28,6 @@ abstract class BaseCacheProfile implements CacheProfile
             : '';
     }
 
-    public function flexibleCacheTime(Request $request): ?array
-    {
-        if (! config('responsecache.flexible_cache_enabled')) {
-            return null;
-        }
-
-        return config('responsecache.flexible_cache_time');
-    }
-
     public function isRunningInConsole(): bool
     {
         if (app()->environment('testing')) {

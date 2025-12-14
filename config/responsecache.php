@@ -93,24 +93,9 @@ return [
     'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
 
     /*
-     * Enable stale-while-revalidate caching behavior.
-     * When enabled, stale cache can be served while refreshing in background.
-     */
-    'flexible_cache_enabled' => env('RESPONSE_CACHE_FLEXIBLE_ENABLED', false),
-
-    /*
-     * Default flexible cache times [fresh_seconds, stale_seconds].
-     * First value: how long cache is considered fresh
-     * Second value: how long stale cache can be served while revalidating
-     */
-    'flexible_cache_time' => [
-        (int) env('RESPONSE_CACHE_FLEXIBLE_FRESH', 60 * 5), // 5 minutes fresh
-        (int) env('RESPONSE_CACHE_FLEXIBLE_STALE', 60 * 60), // 1 hour stale
-    ],
-
-    /*
      * Always defer cache refresh to background even during fresh period.
      * This can improve response times but may serve slightly stale data.
+     * Only applies when using CacheResponse::flexible() middleware.
      */
     'flexible_always_defer' => env('RESPONSE_CACHE_FLEXIBLE_ALWAYS_DEFER', false),
 

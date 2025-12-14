@@ -126,13 +126,9 @@ class CacheResponse
         return $response;
     }
 
-    protected function handleFlexibleCache(Request $request, Closure $next, ?array $flexibleTime, array $tags): Response
+    protected function handleFlexibleCache(Request $request, Closure $next, array $flexibleTime, array $tags): Response
     {
         $cacheKey = app(RequestHasher::class)->getHashFor($request);
-
-        if ($flexibleTime === null) {
-            $flexibleTime = $this->responseCache->getCacheProfile()->flexibleCacheTime($request);
-        }
 
         $response = $this->responseCache->flexible(
             $cacheKey,
@@ -179,13 +175,8 @@ class CacheResponse
 
     protected function shouldUseFlexibleCache(Request $request, ?array $flexibleTime): bool
     {
-        if ($flexibleTime !== null) {
-            return true;
-        }
-
-        $profileFlexibleTime = $this->responseCache->getCacheProfile()->flexibleCacheTime($request);
-
-        return $profileFlexibleTime !== null;
+        // Only use flexible cache when explicitly set via CacheResponse::flexible()
+        return $flexibleTime !== null;
     }
 
     protected function getFlexibleTime(array $args): ?array
