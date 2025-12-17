@@ -27,7 +27,7 @@ class ResponseCacheRepository
      * @param string $key
      * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
      * @param \Closure $callback Callback that returns a Response object
-     * @param bool|null $alwaysDefer
+     * @param bool|null $defer
      * @return Response
      */
     public function flexible(string $key, array $seconds, \Closure $callback, ?bool $defer = false): Response
@@ -93,6 +93,4 @@ class ResponseCacheRepository
     {
         return $repository instanceof TaggedCache && ! empty($repository->getTags());
     }
-
-
 }

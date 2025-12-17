@@ -377,40 +377,53 @@ interface CacheProfile
 
 ### Flexible caching with stale-while-revalidate (SWR)
 
-The package supports flexible caching with stale-while-revalidate behavior using explicit middleware. With SWR, cached responses have two time periods:
+For certain types of data, it can be useful to allow partially stale data to be served while the cached value is recalculated in the background, preventing some users from experiencing slow response times while cached values are calculated
+this is the stale while revalidate behaviour.
+You can find more info how Laravel uses SWR: https://laravel.com/docs/12.x/cache#swr
 
-- **Fresh period**: The cache is considered fresh and served immediately without revalidation
-- **Stale period**: The cache is served immediately but triggers a background refresh
 
-This means users always get instant responses, even when cache needs updating.
 
 #### Using flexible caching
 
-Configure flexible caching per route using the `flexible()` method:
+Configure flexible caching per route using the `flexible()` method of FlexibleCacheResponse middleware:
 
 ```php
-use Spatie\ResponseCache\Middlewares\CacheResponse;
+use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
-// Fresh for 3 minutes, then stale for 15 minutes
+/* Simple example how to use the flexible method: 
+/* between 0-180 seconds we will always serve fresh data from the cache 
+/* after 180 seconds we will serve "old" data and send new data to recalculate to the server
+/* on the next request if the new data is processed by the server we will serve the new data until
+/* then we serve old "stale" data
+*/
+int $freshSeconds = 180;
+int $staleSeconds = 900;
 Route::get('/api/posts', 'PostController@index')
-    ->middleware(CacheResponse::flexible(180, 900));
+    ->middleware(FlexibleCacheResponse::flexible($freshSeconds, $staleSeconds));
 
-// Defer refresh to background during stale period
+/* Pass third argument "Defer" to the flexible method to always Defer during stale period
+ * the server will wait for synchronous request meaning it will not serve stale data.
+ * This is of course slower since we need to wait for the server, but it will show the new data.
+ */
+int $freshSeconds = 60;
+int $staleSeconds = 300;
 Route::get('/api/live-data', 'LiveDataController@index')
-    ->middleware(CacheResponse::flexible(60, 300, true));
+    ->middleware(FlexibleCacheResponse::flexible(60, 300, true));
+    
+// If your database support it u can also use tags like this
+Route::get('/api/posts', 'PostController@index')
+    ->middleware(FlexibleCacheResponse::flexible(180, 900, false, 'posts', 'api'));
 
-// Middleware group, fresh for 5 seconds, stale for 10 seconds
-Route::middleware(CacheResponse::flexible(5, 10))->group(function () {
+// We can also group the routes with the middleware like this
+int $freshSeconds = 5;
+int $staleSeconds = 10;
+Route::middleware(FlexibleCacheResponse::flexible($freshSeconds, $staleSeconds))->group(function () {
     Route::get('/test', function () {
         return rand();
     });
 });
 
-// With defer and cache tags
-Route::get('/api/posts', 'PostController@index')
-    ->middleware(CacheResponse::flexible(180, 900, false, 'posts', 'api'));
 ```
-
 The `flexible()` method accepts:
 - `$freshSeconds`: How long the cache is considered fresh
 - `$totalSeconds`: Total cache lifetime (fresh period + stale period)
