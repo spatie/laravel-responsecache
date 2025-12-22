@@ -2,10 +2,8 @@
 
 namespace Spatie\ResponseCache\Middlewares;
 
-use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
@@ -14,7 +12,7 @@ use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class CacheResponse
+class CacheResponse extends BaseCacheMiddleware
 {
     protected ResponseCache $responseCache;
 
@@ -33,10 +31,13 @@ class CacheResponse
         $lifetimeInSeconds = $this->getLifetime($args);
         $tags = $this->getTags($args);
 
+        if ($this->shouldSkipGlobalMiddleware($request, $lifetimeInSeconds)) {
+            return $next($request);
+        }
+
         if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
             try {
                 if ($this->responseCache->hasBeenCached($request, $tags)) {
-
                     $response = $this->getCachedResponse($request, $tags);
                     if ($response !== false) {
                         return $response;
@@ -97,12 +98,6 @@ class CacheResponse
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }
 
-    protected function getReplacers(): Collection
-    {
-        return collect(config('responsecache.replacers'))
-            ->map(fn (string $replacerClass) => app($replacerClass));
-    }
-
     protected function getLifetime(array $args): ?int
     {
         if (count($args) >= 1 && is_numeric($args[0])) {
@@ -112,25 +107,31 @@ class CacheResponse
         return null;
     }
 
-    protected function getTags(array $args): array
+    protected function shouldSkipGlobalMiddleware(Request $request, ?int $lifetimeInSeconds): bool
     {
-        $tags = $args;
-
-        if (count($args) >= 1 && is_numeric($args[0])) {
-            $tags = array_slice($args, 1);
+        // If this middleware has explicit args, don't skip (it's route-specific)
+        if ($lifetimeInSeconds !== null) {
+            return false;
         }
 
-        return array_filter($tags);
-    }
-
-    public function addCacheAgeHeader(Response $response): Response
-    {
-        if (config('responsecache.add_cache_age_header') and $time = $response->headers->get(config('responsecache.cache_time_header_name'))) {
-            $ageInSeconds = (int) Carbon::parse($time)->diffInSeconds(Carbon::now(), true);
-
-            $response->headers->set(config('responsecache.cache_age_header_name'), $ageInSeconds);
+        $route = $request->route();
+        if (! $route) {
+            return false;
         }
 
-        return $response;
+        $middlewares = $route->gatherMiddleware();
+
+        foreach ($middlewares as $middleware) {
+            if (is_string($middleware) && str_starts_with($middleware, static::class.':')) {
+                return true;
+            }
+
+            if (is_string($middleware) && str_starts_with($middleware, FlexibleCacheResponse::class.':')) {
+                return true;
+            }
+        }
+
+        return false;
     }
+
 }

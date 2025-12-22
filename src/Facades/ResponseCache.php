@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool hasBeenCached(\Illuminate\Http\Request $request, array $tags = [])
  * @method static \Symfony\Component\HttpFoundation\Response getCachedResponseFor(\Illuminate\Http\Request $request, array $tags = [])
  * @method static \Spatie\ResponseCache\CacheItemSelector\CacheItemSelector selectCachedItems()
+ * @method static \Symfony\Component\HttpFoundation\Response flexible(string $key, array $seconds, \Closure $callback, array $tags = [], ?bool $defer = false)
  */
 class ResponseCache extends Facade
 {
