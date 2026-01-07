@@ -143,4 +143,19 @@ class ResponseCache
 
         return $this->cache->tags($tags);
     }
+
+    /**
+     * Get a cached response using flexible/SWR (stale-while-revalidate) strategy.
+     *
+     * @param string $key
+     * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
+     * @param \Closure $callback Callback that returns a Response object
+     * @param array $tags
+     * @param bool|null $alwaysDefer
+     * @return Response
+     */
+    public function flexible(string $key, array $seconds, \Closure $callback, array $tags = [], ?bool $defer = false): Response
+    {
+        return $this->taggedCache($tags)->flexible($key, $seconds, $callback, $defer);
+    }
 }
