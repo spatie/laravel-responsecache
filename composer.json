@@ -20,20 +20,20 @@
         }
     ],
     "require": {
-        "php": "^8.2",
-        "illuminate/cache": "^10.0|^11.0|^12.0",
-        "illuminate/container": "^10.0|^11.0|^12.0",
-        "illuminate/console": "^10.0|^11.0|^12.0",
-        "illuminate/http": "^10.0|^11.0|^12.0",
-        "illuminate/support": "^10.0|^11.0|^12.0",
-        "nesbot/carbon": "^2.63|^3.0",
+        "php": "^8.5",
+        "illuminate/cache": "^12.0",
+        "illuminate/container": "^12.0",
+        "illuminate/console": "^12.0",
+        "illuminate/http": "^12.0",
+        "illuminate/support": "^12.0",
+        "nesbot/carbon": "^3.0",
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
-        "laravel/framework": "^10.0|^11.0|^12.0",
-        "mockery/mockery": "^1.4",
-        "orchestra/testbench": "^8.0|^9.0|^10.0",
-        "pestphp/pest": "^2.22|^3.0"
+        "laravel/framework": "^12.0",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^4.0"
     },
     "autoload": {
         "psr-4": {
