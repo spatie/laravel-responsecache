@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache\Test;
 
+use Carbon\CarbonInterval;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\File;
@@ -154,6 +155,10 @@ abstract class TestCase extends Orchestra
                     return 'random-'.Str::random(10);
                 });
             });
+
+            Route::any('/carbon-interval', function () {
+                return 'custom-'.Str::random(10);
+            })->middleware(FlexibleCacheResponse::flexible(CarbonInterval::seconds(5), CarbonInterval::seconds(10)));
 
             Route::any('/with-tags', function () {
                 return 'tagged-'.Str::random(10);

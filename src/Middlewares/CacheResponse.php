@@ -35,17 +35,19 @@ class CacheResponse extends BaseCacheMiddleware
             return $next($request);
         }
 
-        if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
-            try {
-                if ($this->responseCache->hasBeenCached($request, $tags)) {
-                    $response = $this->getCachedResponse($request, $tags);
-                    if ($response !== false) {
-                        return $response;
+        if ($this->responseCache->enabled($request)) {
+            if (! $this->responseCache->shouldBypass($request)) {
+                try {
+                    if ($this->responseCache->hasBeenCached($request, $tags)) {
+                        $response = $this->getCachedResponse($request, $tags);
+                        if ($response !== false) {
+                            return $response;
+                        }
                     }
+                } catch (CouldNotUnserialize $e) {
+                    report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
+                    event(new CacheMissed($request));
                 }
-            } catch (CouldNotUnserialize $e) {
-                report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
-                event(new CacheMissed($request));
             }
         }
 
@@ -122,12 +124,16 @@ class CacheResponse extends BaseCacheMiddleware
         $middlewares = $route->gatherMiddleware();
 
         foreach ($middlewares as $middleware) {
-            if (is_string($middleware) && str_starts_with($middleware, static::class.':')) {
-                return true;
+            if (is_string($middleware)) {
+                if (str_starts_with($middleware, static::class.':')) {
+                    return true;
+                }
             }
 
-            if (is_string($middleware) && str_starts_with($middleware, FlexibleCacheResponse::class.':')) {
-                return true;
+            if (is_string($middleware)) {
+                if (str_starts_with($middleware, FlexibleCacheResponse::class.':')) {
+                    return true;
+                }
             }
         }
 

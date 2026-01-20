@@ -390,34 +390,40 @@ Configure flexible caching per route using the `flexible()` method of FlexibleCa
 ```php
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
-/* Simple example how to use the flexible method: 
-/* between 0-180 seconds we will always serve fresh data from the cache 
-/* after 180 seconds we will serve "old" data and send new data to recalculate to the server
-/* on the next request if the new data is processed by the server we will serve the new data until
-/* then we serve old "stale" data
-*/
-int $freshSeconds = 180;
-int $staleSeconds = 900;
+/* Simple example of how to use the flexible method.
+ * Between 0 and 180 seconds, we will always serve fresh data from the cache.
+ * After 180 seconds, we will serve "old" data and send a request to the server to recalculate new data.
+ * On the next request, if the new data has been processed by the server, we will serve the updated data.
+ * Until then, we will continue to serve the old "stale" data.
+ */
+$freshSeconds = 180;
+$staleSeconds = 900;
 Route::get('/api/posts', 'PostController@index')
-    ->middleware(FlexibleCacheResponse::flexible($freshSeconds, $staleSeconds));
+    ->middleware(FlexibleCacheResponse::flexible(freshSeconds: $freshSeconds, totalSeconds: $staleSeconds));
+    
+// The flexible method also accepts CarbonInterval. We can use minutes(), seconds() and other CarbonInterval functions.
+$freshSeconds = \Carbon\CarbonInterval::minutes(1);
+$staleSeconds = \Carbon\CarbonInterval::seconds(120);
+Route::get('/api/live-data', 'LiveDataController@index')
+    ->middleware(FlexibleCacheResponse::flexible(freshSeconds: $freshSeconds, totalSeconds: $staleSeconds, defer: true));
 
 /* Pass third argument "Defer" to the flexible method to always Defer during stale period
  * the server will wait for synchronous request meaning it will not serve stale data.
  * This is of course slower since we need to wait for the server, but it will show the new data.
  */
-int $freshSeconds = 60;
-int $staleSeconds = 300;
+$freshSeconds = 60;
+$staleSeconds = 300;
 Route::get('/api/live-data', 'LiveDataController@index')
-    ->middleware(FlexibleCacheResponse::flexible(60, 300, true));
+    ->middleware(FlexibleCacheResponse::flexible(freshSeconds: 60, totalSeconds: 300, defer: true));
     
-// If your database support it u can also use tags like this
+// If your database support it u can also use tags like this.
 Route::get('/api/posts', 'PostController@index')
-    ->middleware(FlexibleCacheResponse::flexible(180, 900, false, 'posts', 'api'));
+    ->middleware(FlexibleCacheResponse::flexible(freshSeconds: 180, totalSeconds: 900, defer: false, 'posts', 'api'));
 
-// We can also group the routes with the middleware like this
-int $freshSeconds = 5;
-int $staleSeconds = 10;
-Route::middleware(FlexibleCacheResponse::flexible($freshSeconds, $staleSeconds))->group(function () {
+// We can also group the routes with the middleware like this.
+$freshSeconds = 5;
+$staleSeconds = 10;
+Route::middleware(FlexibleCacheResponse::flexible(freshSeconds: $freshSeconds,totalSeconds: $staleSeconds))->group(function () {
     Route::get('/test', function () {
         return rand();
     });

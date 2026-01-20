@@ -30,6 +30,18 @@ it('returns cached response within fresh period', function () {
     expect($secondContent)->toBe($firstContent);
 });
 
+it('returns cached response within fresh period using carbon functions in flexible method', function () {
+    $firstResponse = $this->get('/flexible/carbon-interval');
+    $firstContent = $firstResponse->getContent();
+
+    Carbon::setTestNow(Carbon::now()->addSeconds(3));
+
+    $secondResponse = $this->get('/flexible/carbon-interval');
+    $secondContent = $secondResponse->getContent();
+
+    expect($secondContent)->toBe($firstContent);
+});
+
 
 it('adds cache time header when configured', function () {
     config()->set('responsecache.add_cache_time_header', true);

@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\Middlewares;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Closure;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
@@ -35,14 +36,16 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
     /**
      * Create a middleware string for flexible/SWR caching.
      *
-     * @param int $freshSeconds How long the cache is considered fresh
-     * @param int $totalSeconds Total cache lifetime (fresh + stale period)
+     * @param int|CarbonInterval $freshSeconds How long the cache is considered fresh
+     * @param int|CarbonInterval $totalSeconds Total cache lifetime (fresh + stale period)
      * @param bool $defer Whether to always defer refresh to background (default: false)
      * @param string ...$tags Optional cache tags
-     * @return string
      */
-    public static function flexible(int $freshSeconds, int $totalSeconds, bool $defer = false, ...$tags): string
+    public static function flexible(int|CarbonInterval $freshSeconds, int|CarbonInterval $totalSeconds, bool $defer = false, ...$tags): string
     {
+        $freshSeconds = $freshSeconds instanceof CarbonInterval ? (int) $freshSeconds->totalSeconds : $freshSeconds;
+        $totalSeconds = $totalSeconds instanceof CarbonInterval ? (int) $totalSeconds->totalSeconds : $totalSeconds;
+
         $deferFlag = $defer ? '1' : '0';
         $flexibleTime = "{$freshSeconds}:{$totalSeconds}:{$deferFlag}";
 
@@ -60,12 +63,13 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
     {
         $cacheKey = app(RequestHasher::class)->getHashFor($request);
 
-        // Extract defer flag from flexibleTime array [fresh, stale, defer]
+        $fresh = $flexibleTime[0];
+        $stale = $flexibleTime[1];
         $defer = $flexibleTime[2] ?? false;
 
         $response = $this->responseCache->flexible(
             $cacheKey,
-            [$flexibleTime[0], $flexibleTime[1]],
+            [$fresh, $stale],
             function () use ($request, $next) {
                 $response = $next($request);
 

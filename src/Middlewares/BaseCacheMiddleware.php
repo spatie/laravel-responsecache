@@ -16,10 +16,12 @@ class BaseCacheMiddleware
 
     public function addCacheAgeHeader(Response $response): Response
     {
-        if (config('responsecache.add_cache_age_header') and $time = $response->headers->get(config('responsecache.cache_time_header_name'))) {
-            $ageInSeconds = (int) Carbon::parse($time)->diffInSeconds(Carbon::now(), true);
-
-            $response->headers->set(config('responsecache.cache_age_header_name'), $ageInSeconds);
+        if (config('responsecache.add_cache_age_header')) {
+            if (config('responsecache.cache_time_header_name')) {
+                $time = $response->headers->get(config('responsecache.cache_time_header_name'));
+                $ageInSeconds = (int) Carbon::parse($time)->diffInSeconds(Carbon::now(), true);
+                $response->headers->set(config('responsecache.cache_age_header_name'), $ageInSeconds);
+            }
         }
 
         return $response;
