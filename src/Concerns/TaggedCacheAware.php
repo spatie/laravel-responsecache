@@ -6,7 +6,6 @@ use Spatie\ResponseCache\ResponseCacheRepository;
 
 trait TaggedCacheAware
 {
-
     protected function taggedCache(array $tags = []): ResponseCacheRepository
     {
         if (empty($tags)) {
