@@ -2,10 +2,12 @@
 
 namespace Spatie\ResponseCache;
 
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
+use Spatie\ResponseCache\Concerns\TaggedCacheAware;
 use Spatie\ResponseCache\Events\ClearedResponseCache;
 use Spatie\ResponseCache\Events\ClearingResponseCache;
 use Spatie\ResponseCache\Events\ClearingResponseCacheFailed;
@@ -14,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCache
 {
+    use TaggedCacheAware;
+
     public function __construct(
         protected ResponseCacheRepository $cache,
         protected RequestHasher $hasher,
@@ -135,26 +139,17 @@ class ResponseCache
         return new CacheItemSelector($this->hasher, $this->cache);
     }
 
-    protected function taggedCache(array $tags = []): ResponseCacheRepository
-    {
-        if (empty($tags)) {
-            return $this->cache;
-        }
-
-        return $this->cache->tags($tags);
-    }
-
     /**
      * Get a cached response using flexible/SWR (stale-while-revalidate) strategy.
      *
      * @param string $key
      * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
-     * @param \Closure $callback Callback that returns a Response object
+     * @param Closure $callback Callback that returns a Response object
      * @param array $tags
-     * @param bool|null $alwaysDefer
+     * @param bool|null $defer
      * @return Response
      */
-    public function flexible(string $key, array $seconds, \Closure $callback, array $tags = [], ?bool $defer = false): Response
+    public function flexible(string $key, array $seconds, Closure $callback, array $tags = [], ?bool $defer = false): Response
     {
         return $this->taggedCache($tags)->flexible($key, $seconds, $callback, $defer);
     }

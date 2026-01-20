@@ -125,13 +125,8 @@ class CacheResponse extends BaseCacheMiddleware
 
         foreach ($middlewares as $middleware) {
             if (is_string($middleware)) {
-                if (str_starts_with($middleware, static::class.':')) {
-                    return true;
-                }
-            }
-
-            if (is_string($middleware)) {
-                if (str_starts_with($middleware, FlexibleCacheResponse::class.':')) {
+                if (str_starts_with($middleware, static::class.':') ||
+                    str_starts_with($middleware, FlexibleCacheResponse::class.':')) {
                     return true;
                 }
             }

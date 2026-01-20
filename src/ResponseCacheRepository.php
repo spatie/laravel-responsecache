@@ -2,6 +2,8 @@
 
 namespace Spatie\ResponseCache;
 
+use Closure;
+use DateTime;
 use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
 use Spatie\ResponseCache\Serializers\Serializer;
@@ -16,7 +18,7 @@ class ResponseCacheRepository
         //
     }
 
-    public function put(string $key, Response $response, \DateTime | int $seconds): void
+    public function put(string $key, Response $response, DateTime | int $seconds): void
     {
         $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
     }
@@ -26,11 +28,11 @@ class ResponseCacheRepository
      *
      * @param string $key
      * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
-     * @param \Closure $callback Callback that returns a Response object
+     * @param Closure $callback Callback that returns a Response object
      * @param bool|null $defer
      * @return Response
      */
-    public function flexible(string $key, array $seconds, \Closure $callback, ?bool $defer = false): Response
+    public function flexible(string $key, array $seconds, Closure $callback, ?bool $defer = false): Response
     {
         $result = $this->cache->flexible(
             $key,

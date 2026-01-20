@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultSerializer implements Serializer
 {
-    public const RESPONSE_TYPE_NORMAL = 'normal';
-    public const RESPONSE_TYPE_FILE = 'file';
+    public const string RESPONSE_TYPE_NORMAL = 'normal';
+    public const string RESPONSE_TYPE_FILE = 'file';
 
     public function serialize(Response $response): string
     {
