@@ -375,6 +375,67 @@ interface CacheProfile
 }
 ```
 
+### Flexible caching with stale-while-revalidate (SWR)
+
+For certain types of data, it can be useful to allow partially stale data to be served while the cached value is recalculated in the background, preventing some users from experiencing slow response times while cached values are calculated
+this is the stale while revalidate behaviour.
+You can find more info how Laravel uses SWR: https://laravel.com/docs/12.x/cache#swr
+
+
+
+#### Using flexible caching
+
+Configure flexible caching per route using the `flexible()` method of FlexibleCacheResponse middleware:
+
+```php
+use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
+
+/* Simple example how to use the flexible method: 
+/* between 0-180 seconds we will always serve fresh data from the cache 
+/* after 180 seconds we will serve "old" data and send new data to recalculate to the server
+/* on the next request if the new data is processed by the server we will serve the new data until
+/* then we serve old "stale" data
+*/
+int $freshSeconds = 180;
+int $staleSeconds = 900;
+Route::get('/api/posts', 'PostController@index')
+    ->middleware(FlexibleCacheResponse::flexible($freshSeconds, $staleSeconds));
+
+/* Pass third argument "Defer" to the flexible method to always Defer during stale period
+ * the server will wait for synchronous request meaning it will not serve stale data.
+ * This is of course slower since we need to wait for the server, but it will show the new data.
+ */
+int $freshSeconds = 60;
+int $staleSeconds = 300;
+Route::get('/api/live-data', 'LiveDataController@index')
+    ->middleware(FlexibleCacheResponse::flexible(60, 300, true));
+    
+// If your database support it u can also use tags like this
+Route::get('/api/posts', 'PostController@index')
+    ->middleware(FlexibleCacheResponse::flexible(180, 900, false, 'posts', 'api'));
+
+// We can also group the routes with the middleware like this
+int $freshSeconds = 5;
+int $staleSeconds = 10;
+Route::middleware(FlexibleCacheResponse::flexible($freshSeconds, $staleSeconds))->group(function () {
+    Route::get('/test', function () {
+        return rand();
+    });
+});
+
+```
+The `flexible()` method accepts:
+- `$freshSeconds`: How long the cache is considered fresh
+- `$totalSeconds`: Total cache lifetime (fresh period + stale period)
+- `$defer`: Whether to defer refresh to background during stale period (default: `false`)
+- `...$tags`: Optional cache tags
+
+**Defer behavior:**
+- `$defer = false` (default): During stale period, requests wait for synchronous refresh (slower but always current)
+- `$defer = true`: During stale period, stale cache is served immediately while refresh happens in background (faster but briefly stale)
+- During fresh period: No refresh happens regardless of defer setting
+
+
 ### Caching specific routes
 Instead of registering the `cacheResponse` middleware globally, you can also register it as route middleware.
 

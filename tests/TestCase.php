@@ -11,6 +11,7 @@ use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\ResponseCache\Facades\ResponseCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
+use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 use Spatie\ResponseCache\ResponseCacheServiceProvider;
 
 abstract class TestCase extends Orchestra
@@ -145,6 +146,23 @@ abstract class TestCase extends Orchestra
         Route::any('/cache-for-given-lifetime', function () {
             return 'dummy response';
         })->middleware('cacheResponse:300');
+
+
+        Route::prefix('/flexible')->group(function () {
+            Route::middleware(FlexibleCacheResponse::flexible(5, 10))->group(function () {
+                Route::any('/basic', function () {
+                    return 'random-'.Str::random(10);
+                });
+            });
+
+            Route::any('/with-tags', function () {
+                return 'tagged-'.Str::random(10);
+            })->middleware(FlexibleCacheResponse::flexible(5, 10, false, 'tag1', 'tag2'));
+
+            Route::any('/custom-time', function () {
+                return 'custom-'.Str::random(10);
+            })->middleware(FlexibleCacheResponse::flexible(3, 15));
+        });
     }
 
     public function getTempDirectory($suffix = '')
