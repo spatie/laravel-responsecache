@@ -3,14 +3,17 @@
 namespace Spatie\ResponseCache\Serializers;
 
 use Illuminate\Http\Response as IlluminateResponse;
+use Spatie\ResponseCache\Enums\ResponseType;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @deprecated Use JsonSerializer instead. DefaultSerializer uses PHP serialize()
+ *             which has security implications. This class will be removed in v9.0.
+ */
 class DefaultSerializer implements Serializer
 {
-    public const string RESPONSE_TYPE_NORMAL = 'normal';
-    public const string RESPONSE_TYPE_FILE = 'file';
 
     public function serialize(Response $response): string
     {
@@ -39,13 +42,13 @@ class DefaultSerializer implements Serializer
 
         if ($response instanceof BinaryFileResponse) {
             $content = $response->getFile()->getPathname();
-            $type = static::RESPONSE_TYPE_FILE;
+            $type = ResponseType::File->value;
 
             return compact('statusCode', 'headers', 'content', 'type');
         }
 
         $content = $response->getContent();
-        $type = static::RESPONSE_TYPE_NORMAL;
+        $type = ResponseType::Normal->value;
 
         return compact('statusCode', 'headers', 'content', 'type');
     }
@@ -65,15 +68,17 @@ class DefaultSerializer implements Serializer
 
     protected function buildResponse(array $responseProperties): Response
     {
-        $type = $responseProperties['type'] ?? static::RESPONSE_TYPE_NORMAL;
+        $type = ResponseType::from($responseProperties['type'] ?? ResponseType::Normal->value);
 
-        if ($type === static::RESPONSE_TYPE_FILE) {
-            return new BinaryFileResponse(
+        return match ($type) {
+            ResponseType::File => new BinaryFileResponse(
                 $responseProperties['content'],
                 $responseProperties['statusCode']
-            );
-        }
-
-        return new IlluminateResponse($responseProperties['content'], $responseProperties['statusCode']);
+            ),
+            ResponseType::Normal => new IlluminateResponse(
+                $responseProperties['content'],
+                $responseProperties['statusCode']
+            ),
+        };
     }
 }

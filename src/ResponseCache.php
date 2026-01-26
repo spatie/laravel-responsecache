@@ -47,15 +47,15 @@ class ResponseCache
     public function shouldBypass(Request $request): bool
     {
         // Ensure we return if cache_bypass_header is not setup
-        if (! config('responsecache.cache_bypass_header.name')) {
+        if (! config('responsecache.bypass.header_name')) {
             return false;
         }
         // Ensure we return if cache_bypass_header is not setup
-        if (! config('responsecache.cache_bypass_header.value')) {
+        if (! config('responsecache.bypass.header_value')) {
             return false;
         }
 
-        return $request->header(config('responsecache.cache_bypass_header.name')) === (string) config('responsecache.cache_bypass_header.value');
+        return $request->header(config('responsecache.bypass.header_name')) === (string) config('responsecache.bypass.header_value');
     }
 
     public function cacheResponse(
@@ -64,7 +64,7 @@ class ResponseCache
         ?int $lifetimeInSeconds = null,
         array $tags = []
     ): Response {
-        if (config('responsecache.add_cache_time_header')) {
+        if (config('responsecache.debug.add_time_header')) {
             $response = $this->addCachedHeader($response);
         }
 
@@ -109,7 +109,7 @@ class ResponseCache
         $clonedResponse = clone $response;
 
         $clonedResponse->headers->set(
-            config('responsecache.cache_time_header_name'),
+            config('responsecache.debug.time_header_name'),
             Carbon::now()->toRfc2822String(),
         );
 

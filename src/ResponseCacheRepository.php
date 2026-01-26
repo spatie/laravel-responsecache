@@ -70,11 +70,11 @@ class ResponseCacheRepository
             return $this->cache->flush();
         }
 
-        if (empty(config('responsecache.cache_tag'))) {
+        if (empty(config('responsecache.cache.tag'))) {
             return $this->cache->clear();
         }
 
-        return $this->cache->tags(config('responsecache.cache_tag'))->flush();
+        return $this->cache->tags(config('responsecache.cache.tag'))->flush();
     }
 
     public function forget(string $key): bool

@@ -17,10 +17,15 @@ class DefaultHasher implements RequestHasher
     {
         $cacheNameSuffix = $this->getCacheNameSuffix($request);
 
-        return 'responsecache-' . hash(
-            'xxh128',
-            "{$request->getHost()}-{$this->getNormalizedRequestUri($request)}-{$request->getMethod()}/$cacheNameSuffix"
-        );
+        // Use array implode for cleaner concatenation
+        $components = [
+            $request->getHost(),
+            $this->getNormalizedRequestUri($request),
+            $request->getMethod(),
+            $cacheNameSuffix,
+        ];
+
+        return 'responsecache-' . hash('xxh128', implode('|', $components));
     }
 
     protected function getNormalizedRequestUri(Request $request): string

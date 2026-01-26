@@ -45,7 +45,7 @@ it('can forget requests using route cache tags from global cache', function () {
     $firstResponse = $this->get('/tagged/1');
     assertRegularResponse($firstResponse);
 
-    $this->app['cache']->store(config('responsecache.cache_store'))->tags('laravel-responsecache')->clear('foo');
+    $this->app['cache']->store(config('responsecache.cache.store'))->tags('laravel-responsecache')->clear('foo');
 
     $secondResponse = $this->get('/tagged/1');
     assertRegularResponse($secondResponse);
@@ -53,7 +53,7 @@ it('can forget requests using route cache tags from global cache', function () {
 });
 
 it('can forget requests using route cache tags without deleting unrelated cache', function () {
-    $this->app['cache']->store(config('responsecache.cache_store'))->tags('unrelated-cache')->put('baz', true);
+    $this->app['cache']->store(config('responsecache.cache.store'))->tags('unrelated-cache')->put('baz', true);
 
     $firstResponse = $this->get('/tagged/1');
     assertRegularResponse($firstResponse);
@@ -64,7 +64,7 @@ it('can forget requests using route cache tags without deleting unrelated cache'
     assertRegularResponse($secondResponse);
     assertDifferentResponse($firstResponse, $secondResponse);
 
-    $cacheValue = $this->app['cache']->store(config('responsecache.cache_store'))->tags('unrelated-cache')->get('baz');
+    $cacheValue = $this->app['cache']->store(config('responsecache.cache.store'))->tags('unrelated-cache')->get('baz');
     assertThat($cacheValue, isTrue(), 'Failed to assert that a cached value is present');
 });
 

@@ -4,6 +4,9 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Spatie\ResponseCache\Attributes\Cache;
+use Spatie\ResponseCache\Attributes\NoCache;
+use Spatie\ResponseCache\Configuration\CacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
@@ -21,6 +24,31 @@ class CacheResponse extends BaseCacheMiddleware
         $this->responseCache = $responseCache;
     }
 
+    /**
+     * Create a middleware string for standard cache configuration.
+     *
+     * @param int|null $lifetime Cache lifetime in seconds
+     * @param string|array $tags Cache tags
+     * @param string|null $driver Cache driver to use
+     * @return string Middleware string
+     */
+    public static function for(
+        ?int $lifetime = null,
+        string|array $tags = [],
+        ?string $driver = null,
+    ): string {
+        $config = new CacheConfiguration(
+            lifetime: $lifetime,
+            tags: is_array($tags) ? $tags : [$tags],
+            driver: $driver,
+        );
+
+        return static::class . ':' . base64_encode(serialize($config));
+    }
+
+    /**
+     * @deprecated Use for() instead. Will be removed in v9.0.
+     */
     public static function using($lifetime, ...$tags): string
     {
         return static::class.':'.implode(',', [$lifetime, ...$tags]);
@@ -28,10 +56,27 @@ class CacheResponse extends BaseCacheMiddleware
 
     public function handle(Request $request, Closure $next, ...$args): Response
     {
-        $lifetimeInSeconds = $this->getLifetime($args);
-        $tags = $this->getTags($args);
+        // Check for attributes first
+        $attribute = $this->getAttributeFromRequest($request);
 
-        if ($this->shouldSkipGlobalMiddleware($request, $lifetimeInSeconds)) {
+        // If NoCache attribute is present, skip caching entirely
+        if ($attribute instanceof NoCache) {
+            return $next($request);
+        }
+
+        // Use attribute configuration if available, otherwise check for new configuration object, then fall back to args
+        if ($attribute instanceof Cache) {
+            $lifetimeInSeconds = $attribute->lifetime;
+            $tags = $attribute->tags;
+        } elseif ($config = $this->getConfigurationFromArgs($args)) {
+            $lifetimeInSeconds = $config->lifetime;
+            $tags = $config->tags;
+        } else {
+            $lifetimeInSeconds = $this->getLifetime($args);
+            $tags = $this->getTags($args);
+        }
+
+        if ($this->shouldSkipGlobalMiddleware($request, $lifetimeInSeconds, $attribute)) {
             return $next($request);
         }
 
@@ -100,6 +145,25 @@ class CacheResponse extends BaseCacheMiddleware
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }
 
+    protected function getConfigurationFromArgs(array $args): ?CacheConfiguration
+    {
+        if (count($args) >= 1 && is_string($args[0])) {
+            try {
+                $decoded = base64_decode($args[0], true);
+                if ($decoded !== false) {
+                    $config = unserialize($decoded);
+                    if ($config instanceof CacheConfiguration) {
+                        return $config;
+                    }
+                }
+            } catch (\Throwable) {
+                // Not a configuration object, fall through to legacy parsing
+            }
+        }
+
+        return null;
+    }
+
     protected function getLifetime(array $args): ?int
     {
         if (count($args) >= 1 && is_numeric($args[0])) {
@@ -109,10 +173,10 @@ class CacheResponse extends BaseCacheMiddleware
         return null;
     }
 
-    protected function shouldSkipGlobalMiddleware(Request $request, ?int $lifetimeInSeconds): bool
+    protected function shouldSkipGlobalMiddleware(Request $request, ?int $lifetimeInSeconds, ?object $attribute = null): bool
     {
-        // If this middleware has explicit args, don't skip (it's route-specific)
-        if ($lifetimeInSeconds !== null) {
+        // If this middleware has explicit args or attributes, don't skip (it's route-specific)
+        if ($lifetimeInSeconds !== null || $attribute !== null) {
             return false;
         }
 

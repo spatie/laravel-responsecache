@@ -7,7 +7,7 @@ use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 
 beforeEach(function () {
-    config()->set('responsecache.cache_store', 'array');
+    config()->set('responsecache.cache.store', 'array');
     config()->set('cache.default', 'array');
     Cache::forgetDriver('array');
 
@@ -44,8 +44,8 @@ it('returns cached response within fresh period using carbon functions in flexib
 
 
 it('adds cache time header when configured', function () {
-    config()->set('responsecache.add_cache_time_header', true);
-    config()->set('responsecache.cache_time_header_name', 'X-Cached-At');
+    config()->set('responsecache.debug.add_time_header', true);
+    config()->set('responsecache.debug.time_header_name', 'X-Cached-At');
 
     $this->get('/flexible/basic');
 
@@ -55,9 +55,9 @@ it('adds cache time header when configured', function () {
 });
 
 it('adds cache age header when configured', function () {
-    config()->set('responsecache.add_cache_time_header', true);
-    config()->set('responsecache.add_cache_age_header', true);
-    config()->set('responsecache.cache_age_header_name', 'X-Cache-Age');
+    config()->set('responsecache.debug.add_time_header', true);
+    config()->set('responsecache.debug.add_age_header', true);
+    config()->set('responsecache.debug.age_header_name', 'X-Cache-Age');
 
     $this->get('/flexible/basic');
 
@@ -232,8 +232,8 @@ it('parses flexible time with tags correctly', function () {
 });
 
 it('bypasses flexible cache when bypass header is present', function () {
-    config()->set('responsecache.cache_bypass_header.name', 'X-Cache-Bypass');
-    config()->set('responsecache.cache_bypass_header.value', 'true');
+    config()->set('responsecache.bypass.header_name', 'X-Cache-Bypass');
+    config()->set('responsecache.bypass.header_value', 'true');
 
     $firstResponse = $this->get('/flexible/basic', ['X-Cache-Bypass' => 'true']);
     $secondResponse = $this->get('/flexible/basic', ['X-Cache-Bypass' => 'true']);

@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Closure;
 use Illuminate\Http\Request;
+use Spatie\ResponseCache\Attributes\FlexibleCache;
+use Spatie\ResponseCache\Attributes\NoCache;
+use Spatie\ResponseCache\Configuration\FlexibleCacheConfiguration;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Replacers\Replacer;
@@ -23,8 +26,25 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
     public function handle(Request $request, Closure $next, ...$args): Response
     {
-        $flexibleTime = $this->getFlexibleTime($args);
-        $tags = $this->getTags($args);
+        // Check for attributes first
+        $attribute = $this->getAttributeFromRequest($request);
+
+        // If NoCache attribute is present, skip caching entirely
+        if ($attribute instanceof NoCache) {
+            return $next($request);
+        }
+
+        // Use attribute configuration if available, otherwise check for new configuration object, then fall back to args
+        if ($attribute instanceof FlexibleCache) {
+            $flexibleTime = [$attribute->fresh, $attribute->stale, $attribute->defer];
+            $tags = $attribute->tags;
+        } elseif ($config = $this->getConfigurationFromArgs($args)) {
+            $flexibleTime = [$config->fresh, $config->stale, $config->defer];
+            $tags = $config->tags;
+        } else {
+            $flexibleTime = $this->getFlexibleTime($args);
+            $tags = $this->getTags($args);
+        }
 
         if (! $this->responseCache->enabled($request) || $this->responseCache->shouldBypass($request)) {
             return $next($request);
@@ -36,10 +56,32 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
     /**
      * Create a middleware string for flexible/SWR caching.
      *
-     * @param int|CarbonInterval $freshSeconds How long the cache is considered fresh
-     * @param int|CarbonInterval $totalSeconds Total cache lifetime (fresh + stale period)
+     * @param int|CarbonInterval $fresh How long the cache is considered fresh
+     * @param int|CarbonInterval $stale Stale period (time to serve stale while revalidating)
      * @param bool $defer Whether to always defer refresh to background (default: false)
-     * @param string ...$tags Optional cache tags
+     * @param string|array $tags Optional cache tags
+     */
+    public static function for(
+        int|CarbonInterval $fresh,
+        int|CarbonInterval $stale,
+        bool $defer = false,
+        string|array $tags = [],
+    ): string {
+        $freshSeconds = $fresh instanceof CarbonInterval ? (int) $fresh->totalSeconds : $fresh;
+        $staleSeconds = $stale instanceof CarbonInterval ? (int) $stale->totalSeconds : $stale;
+
+        $config = new FlexibleCacheConfiguration(
+            fresh: $freshSeconds,
+            stale: $staleSeconds,
+            defer: $defer,
+            tags: is_array($tags) ? $tags : [$tags],
+        );
+
+        return static::class . ':' . base64_encode(serialize($config));
+    }
+
+    /**
+     * @deprecated Use for() instead. Will be removed in v9.0.
      */
     public static function flexible(int|CarbonInterval $freshSeconds, int|CarbonInterval $totalSeconds, bool $defer = false, ...$tags): string
     {
@@ -79,9 +121,9 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
                 $cachedResponse = clone $response;
 
-                if (config('responsecache.add_cache_time_header')) {
+                if (config('responsecache.debug.add_time_header')) {
                     $cachedResponse->headers->set(
-                        config('responsecache.cache_time_header_name'),
+                        config('responsecache.debug.time_header_name'),
                         Carbon::now()->toRfc2822String(),
                     );
                 }
@@ -101,6 +143,25 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
         event(new ResponseCacheHit($request));
 
         return $response;
+    }
+
+    protected function getConfigurationFromArgs(array $args): ?FlexibleCacheConfiguration
+    {
+        if (count($args) >= 1 && is_string($args[0])) {
+            try {
+                $decoded = base64_decode($args[0], true);
+                if ($decoded !== false) {
+                    $config = unserialize($decoded);
+                    if ($config instanceof FlexibleCacheConfiguration) {
+                        return $config;
+                    }
+                }
+            } catch (\Throwable) {
+                // Not a configuration object, fall through to legacy parsing
+            }
+        }
+
+        return null;
     }
 
     protected function getFlexibleTime(array $args): ?array
@@ -133,6 +194,5 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
         return [$fresh, $stale, $defer];
     }
-
 
 }

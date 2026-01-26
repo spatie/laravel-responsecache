@@ -9,7 +9,7 @@ trait CanChangeCacheStore
         parent::getEnvironmentSetUp($app);
 
         // Set the driver to array (tags don't work with the file driver)
-        config()->set('responsecache.cache_store', 'array');
-        config()->set('responsecache.cache_tag', 'tagging-test');
+        config()->set('responsecache.cache.store', 'array');
+        config()->set('responsecache.cache.tag', 'tagging-test');
     }
 }

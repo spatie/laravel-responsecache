@@ -4,6 +4,7 @@ namespace Spatie\ResponseCache\CacheProfiles;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\ResponseCache\Enums\HttpMethod;
 use Symfony\Component\HttpFoundation\Response;
 
 class CacheAllSuccessfulGetRequests extends BaseCacheProfile
@@ -18,7 +19,7 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile
             return false;
         }
 
-        return $request->isMethod('get');
+        return $request->isMethod(HttpMethod::Get->value);
     }
 
     public function shouldCacheResponse(Response $response): bool

@@ -10,10 +10,20 @@ class CsrfTokenReplacer implements Replacer
 
     public function prepareResponseToCache(Response $response): void
     {
-        $csrf_token = csrf_token();
         $content = $response->getContent();
 
-        if (! $content || ! $csrf_token) {
+        if (! $content) {
+            return;
+        }
+
+        $csrf_token = csrf_token();
+
+        if (! $csrf_token) {
+            return;
+        }
+
+        // Skip if CSRF token not in content
+        if (! str_contains($content, $csrf_token)) {
             return;
         }
 
@@ -26,10 +36,15 @@ class CsrfTokenReplacer implements Replacer
 
     public function replaceInCachedResponse(Response $response): void
     {
-        $csrf_token = csrf_token();
         $content = $response->getContent();
 
-        if (! $content || ! $csrf_token) {
+        if (! $content || ! str_contains($content, $this->replacementString)) {
+            return;
+        }
+
+        $csrf_token = csrf_token();
+
+        if (! $csrf_token) {
             return;
         }
 
