@@ -12,8 +12,8 @@ use Spatie\ResponseCache\ResponseCacheRepository;
 
 beforeEach(function () {
     $this->createTaggableResponseCacheStore = function ($tag): Repository {
-        $this->app['config']->set('responsecache.cache_store', 'array');
-        $this->app['config']->set('responsecache.cache_tag', $tag);
+        $this->app['config']->set('responsecache.cache.store', 'array');
+        $this->app['config']->set('responsecache.cache.tag', $tag);
 
         // Simulating construction of Repository inside of the service provider
         return $this->app->contextual[ResponseCacheRepository::class][$this->app->getAlias(Repository::class)]();

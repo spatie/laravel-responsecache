@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\Test\Serializers;
 
 use Illuminate\Http\JsonResponse;
+use Spatie\ResponseCache\Enums\ResponseType;
 use Spatie\ResponseCache\Serializers\DefaultSerializer;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ class TestSerializer extends DefaultSerializer
 
         if ($response instanceof BinaryFileResponse) {
             $content = $response->getFile()->getPathname();
-            $type = self::RESPONSE_TYPE_FILE;
+            $type = ResponseType::File->value;
 
             return compact('statusCode', 'headers', 'content', 'type');
         }
@@ -25,7 +26,7 @@ class TestSerializer extends DefaultSerializer
             ? $response->getData()
             : $response->getContent();
 
-        $type = self::RESPONSE_TYPE_NORMAL;
+        $type = ResponseType::Normal->value;
 
         $class = get_class($response);
 
@@ -34,9 +35,9 @@ class TestSerializer extends DefaultSerializer
 
     protected function buildResponse(array $responseProperties): Response
     {
-        $type = $responseProperties['type'] ?? self::RESPONSE_TYPE_NORMAL;
+        $type = $responseProperties['type'] ?? ResponseType::Normal->value;
 
-        if ($type === self::RESPONSE_TYPE_FILE) {
+        if ($type === ResponseType::File->value) {
             return new BinaryFileResponse(
                 $responseProperties['content'],
                 $responseProperties['statusCode']

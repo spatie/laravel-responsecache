@@ -2,10 +2,11 @@
 
 namespace Spatie\ResponseCache\Middlewares;
 
-use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Spatie\ResponseCache\Attributes\Cache;
+use Spatie\ResponseCache\Attributes\NoCache;
+use Spatie\ResponseCache\Configuration\CacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissed;
 use Spatie\ResponseCache\Events\ResponseCacheHit;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
@@ -14,7 +15,7 @@ use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class CacheResponse
+class CacheResponse extends BaseCacheMiddleware
 {
     protected ResponseCache $responseCache;
 
@@ -23,6 +24,31 @@ class CacheResponse
         $this->responseCache = $responseCache;
     }
 
+    /**
+     * Create a middleware string for standard cache configuration.
+     *
+     * @param int|null $lifetime Cache lifetime in seconds
+     * @param string|array $tags Cache tags
+     * @param string|null $driver Cache driver to use
+     * @return string Middleware string
+     */
+    public static function for(
+        ?int $lifetime = null,
+        string|array $tags = [],
+        ?string $driver = null,
+    ): string {
+        $config = new CacheConfiguration(
+            lifetime: $lifetime,
+            tags: is_array($tags) ? $tags : [$tags],
+            driver: $driver,
+        );
+
+        return static::class . ':' . base64_encode(serialize($config));
+    }
+
+    /**
+     * @deprecated Use for() instead. Will be removed in v9.0.
+     */
     public static function using($lifetime, ...$tags): string
     {
         return static::class.':'.implode(',', [$lifetime, ...$tags]);
@@ -30,21 +56,43 @@ class CacheResponse
 
     public function handle(Request $request, Closure $next, ...$args): Response
     {
-        $lifetimeInSeconds = $this->getLifetime($args);
-        $tags = $this->getTags($args);
+        // Check for attributes first
+        $attribute = $this->getAttributeFromRequest($request);
 
-        if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
-            try {
-                if ($this->responseCache->hasBeenCached($request, $tags)) {
+        // If NoCache attribute is present, skip caching entirely
+        if ($attribute instanceof NoCache) {
+            return $next($request);
+        }
 
-                    $response = $this->getCachedResponse($request, $tags);
-                    if ($response !== false) {
-                        return $response;
+        // Use attribute configuration if available, otherwise check for new configuration object, then fall back to args
+        if ($attribute instanceof Cache) {
+            $lifetimeInSeconds = $attribute->lifetime;
+            $tags = $attribute->tags;
+        } elseif ($config = $this->getConfigurationFromArgs($args)) {
+            $lifetimeInSeconds = $config->lifetime;
+            $tags = $config->tags;
+        } else {
+            $lifetimeInSeconds = $this->getLifetime($args);
+            $tags = $this->getTags($args);
+        }
+
+        if ($this->shouldSkipGlobalMiddleware($request, $lifetimeInSeconds, $attribute)) {
+            return $next($request);
+        }
+
+        if ($this->responseCache->enabled($request)) {
+            if (! $this->responseCache->shouldBypass($request)) {
+                try {
+                    if ($this->responseCache->hasBeenCached($request, $tags)) {
+                        $response = $this->getCachedResponse($request, $tags);
+                        if ($response !== false) {
+                            return $response;
+                        }
                     }
+                } catch (CouldNotUnserialize $e) {
+                    report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
+                    event(new CacheMissed($request));
                 }
-            } catch (CouldNotUnserialize $e) {
-                report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
-                event(new CacheMissed($request));
             }
         }
 
@@ -97,10 +145,23 @@ class CacheResponse
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }
 
-    protected function getReplacers(): Collection
+    protected function getConfigurationFromArgs(array $args): ?CacheConfiguration
     {
-        return collect(config('responsecache.replacers'))
-            ->map(fn (string $replacerClass) => app($replacerClass));
+        if (count($args) >= 1 && is_string($args[0])) {
+            try {
+                $decoded = base64_decode($args[0], true);
+                if ($decoded !== false) {
+                    $config = unserialize($decoded);
+                    if ($config instanceof CacheConfiguration) {
+                        return $config;
+                    }
+                }
+            } catch (\Throwable) {
+                // Not a configuration object, fall through to legacy parsing
+            }
+        }
+
+        return null;
     }
 
     protected function getLifetime(array $args): ?int
@@ -112,25 +173,30 @@ class CacheResponse
         return null;
     }
 
-    protected function getTags(array $args): array
+    protected function shouldSkipGlobalMiddleware(Request $request, ?int $lifetimeInSeconds, ?object $attribute = null): bool
     {
-        $tags = $args;
-
-        if (count($args) >= 1 && is_numeric($args[0])) {
-            $tags = array_slice($args, 1);
+        // If this middleware has explicit args or attributes, don't skip (it's route-specific)
+        if ($lifetimeInSeconds !== null || $attribute !== null) {
+            return false;
         }
 
-        return array_filter($tags);
-    }
-
-    public function addCacheAgeHeader(Response $response): Response
-    {
-        if (config('responsecache.add_cache_age_header') and $time = $response->headers->get(config('responsecache.cache_time_header_name'))) {
-            $ageInSeconds = (int) Carbon::parse($time)->diffInSeconds(Carbon::now(), true);
-
-            $response->headers->set(config('responsecache.cache_age_header_name'), $ageInSeconds);
+        $route = $request->route();
+        if (! $route) {
+            return false;
         }
 
-        return $response;
+        $middlewares = $route->gatherMiddleware();
+
+        foreach ($middlewares as $middleware) {
+            if (is_string($middleware)) {
+                if (str_starts_with($middleware, static::class.':') ||
+                    str_starts_with($middleware, FlexibleCacheResponse::class.':')) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
+
 }

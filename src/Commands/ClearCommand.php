@@ -11,7 +11,7 @@ class ClearCommand extends Command
 
     protected $description = 'Clear the response cache';
 
-    public function handle()
+    public function handle(): void
     {
         $this->clear();
 

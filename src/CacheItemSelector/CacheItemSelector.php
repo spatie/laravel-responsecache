@@ -2,11 +2,14 @@
 
 namespace Spatie\ResponseCache\CacheItemSelector;
 
+use Spatie\ResponseCache\Concerns\TaggedCacheAware;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\ResponseCacheRepository;
 
 class CacheItemSelector extends AbstractRequestBuilder
 {
+    use TaggedCacheAware;
+
     protected array $urls;
 
     protected array $tags = [];
@@ -41,12 +44,5 @@ class CacheItemSelector extends AbstractRequestBuilder
             })
             ->filter(fn ($hash) => $this->taggedCache($this->tags)->has($hash))
             ->each(fn ($hash) => $this->taggedCache($this->tags)->forget($hash));
-    }
-
-    protected function taggedCache(array $tags = []): ResponseCacheRepository
-    {
-        return empty($tags)
-            ? $this->cache
-            : $this->cache->tags($tags);
     }
 }

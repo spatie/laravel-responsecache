@@ -166,7 +166,7 @@ it('will cache file responses', function () {
 });
 
 it('wont cache if lifetime is 0', function () {
-    $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
+    $this->app['config']->set('responsecache.cache.lifetime', 0);
 
     $firstResponse = $this->get('/');
     $secondResponse = $this->get('/');
@@ -177,7 +177,7 @@ it('wont cache if lifetime is 0', function () {
 
 it('will cache response for given lifetime which is defined as middleware parameter', function () {
     // Set default lifetime as 0 to check if it will cache for given lifetime
-    $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
+    $this->app['config']->set('responsecache.cache.lifetime', 0);
 
     $firstResponse = $this->get('/cache-for-given-lifetime');
     $secondResponse = $this->get('/cache-for-given-lifetime');
@@ -188,7 +188,7 @@ it('will cache response for given lifetime which is defined as middleware parame
 
 it('will reproduce cache if given lifetime is expired', function () {
     // Set default lifetime as 0 to disable middleware that is already pushed to Kernel
-    $this->app['config']->set('responsecache.cache_lifetime_in_seconds', 0);
+    $this->app['config']->set('responsecache.cache.lifetime', 0);
 
     Carbon::setTestNow(Carbon::now()->subMinutes(6));
     $firstResponse = $this->get('/cache-for-given-lifetime');
@@ -203,8 +203,8 @@ it('will reproduce cache if given lifetime is expired', function () {
 });
 
 it('can add a cache time header', function () {
-    $this->app['config']->set('responsecache.add_cache_time_header', true);
-    $this->app['config']->set('responsecache.cache_time_header_name', 'X-Cached-At');
+    $this->app['config']->set('responsecache.debug.add_time_header', true);
+    $this->app['config']->set('responsecache.debug.time_header_name', 'X-Cached-At');
 
     $firstResponse = $this->get('/random');
     $secondResponse = $this->get('/random');
@@ -217,9 +217,9 @@ it('can add a cache time header', function () {
 });
 
 it('can add a cache age header', function () {
-    $this->app['config']->set('responsecache.add_cache_time_header', true);
-    $this->app['config']->set('responsecache.add_cache_age_header', true);
-    $this->app['config']->set('responsecache.cache_age_header_name', 'X-Cached-Age');
+    $this->app['config']->set('responsecache.debug.add_time_header', true);
+    $this->app['config']->set('responsecache.debug.add_age_header', true);
+    $this->app['config']->set('responsecache.debug.age_header_name', 'X-Cached-Age');
 
     $firstResponse = $this->get('/random');
     $secondResponse = $this->get('/random');
@@ -235,8 +235,8 @@ it('can add a cache age header', function () {
 it('wont cache nor serve a cached response if request has bypass header', function () {
     $headerName = 'X-Cache-Bypass';
     $headerValue = rand(1, 99999);
-    $this->app['config']->set('responsecache.cache_bypass_header.name', $headerName);
-    $this->app['config']->set('responsecache.cache_bypass_header.value', $headerValue);
+    $this->app['config']->set('responsecache.bypass.header_name', $headerName);
+    $this->app['config']->set('responsecache.bypass.header_value', $headerValue);
 
     $firstResponse = $this->get('/', ['X-Cache-Bypass' => $headerValue]);
     $secondResponse = $this->get('/', ['X-Cache-Bypass' => $headerValue]);

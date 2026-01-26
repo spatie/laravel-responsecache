@@ -2,6 +2,8 @@
 
 namespace Spatie\ResponseCache;
 
+use Closure;
+use DateTime;
 use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
 use Spatie\ResponseCache\Serializers\Serializer;
@@ -16,9 +18,35 @@ class ResponseCacheRepository
         //
     }
 
-    public function put(string $key, Response $response, \DateTime | int $seconds): void
+    public function put(string $key, Response $response, DateTime | int $seconds): void
     {
         $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
+    }
+
+    /**
+     * Get a cached response using flexible/SWR strategy.
+     *
+     * @param string $key
+     * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
+     * @param Closure $callback Callback that returns a Response object
+     * @param bool|null $defer
+     * @return Response
+     */
+    public function flexible(string $key, array $seconds, Closure $callback, ?bool $defer = false): Response
+    {
+        $result = $this->cache->flexible(
+            $key,
+            $seconds,
+            function () use ($callback) {
+                $response = $callback();
+
+                return $this->responseSerializer->serialize($response);
+            },
+            null,
+            $defer
+        );
+
+        return $this->responseSerializer->unserialize($result);
     }
 
     public function has(string $key): bool
@@ -42,11 +70,11 @@ class ResponseCacheRepository
             return $this->cache->flush();
         }
 
-        if (empty(config('responsecache.cache_tag'))) {
+        if (empty(config('responsecache.cache.tag'))) {
             return $this->cache->clear();
         }
 
-        return $this->cache->tags(config('responsecache.cache_tag'))->flush();
+        return $this->cache->tags(config('responsecache.cache.tag'))->flush();
     }
 
     public function forget(string $key): bool
