@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DefaultSerializer implements Serializer
 {
-
     public function serialize(Response $response): string
     {
         return serialize($this->getResponseData($response));

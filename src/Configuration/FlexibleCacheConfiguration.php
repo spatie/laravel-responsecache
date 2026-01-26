@@ -9,5 +9,6 @@ class FlexibleCacheConfiguration
         public int $stale,
         public bool $defer = false,
         public array $tags = [],
-    ) {}
+    ) {
+    }
 }
