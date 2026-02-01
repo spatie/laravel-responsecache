@@ -8,5 +8,6 @@ class CacheConfiguration
         public ?int $lifetime = null,
         public array $tags = [],
         public ?string $driver = null,
-    ) {}
+    ) {
+    }
 }
