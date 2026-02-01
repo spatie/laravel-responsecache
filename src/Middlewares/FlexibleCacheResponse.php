@@ -29,7 +29,6 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
         // Check for attributes first
         $attribute = $this->getAttributeFromRequest($request);
 
-        // If NoCache attribute is present, skip caching entirely
         if ($attribute instanceof NoCache) {
             return $next($request);
         }

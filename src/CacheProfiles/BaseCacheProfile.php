@@ -17,16 +17,13 @@ abstract class BaseCacheProfile implements CacheProfile
     public function cacheRequestUntil(Request $request): DateTime
     {
         return Carbon::now()->addSeconds(
-            config('responsecache.cache.lifetime')
+            config('responsecache.cache.lifetime_in_seconds')
         );
     }
 
     public function useCacheNameSuffix(Request $request): string
     {
-        return match (Auth::check()) {
-            true => (string) Auth::id(),
-            false => '',
-        };
+        return Auth::check() ? (string) Auth::id() : '';
     }
 
     public function isRunningInConsole(): bool

@@ -87,7 +87,7 @@ public function store() {}
 ```
 
 **Update your code:**
-- `config('responsecache.cache_lifetime_in_seconds')` → `config('responsecache.cache.lifetime')`
+- `config('responsecache.cache_lifetime_in_seconds')` → `config('responsecache.cache.lifetime_in_seconds')`
 - `config('responsecache.cache_store')` → `config('responsecache.cache.store')`
 - `config('responsecache.add_cache_time_header')` → `config('responsecache.debug.add_time_header')`
 - `config('responsecache.cache_bypass_header.name')` → `config('responsecache.bypass.header_name')`

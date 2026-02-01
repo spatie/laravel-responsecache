@@ -59,16 +59,15 @@ class CacheResponse extends BaseCacheMiddleware
         // Check for attributes first
         $attribute = $this->getAttributeFromRequest($request);
 
-        // If NoCache attribute is present, skip caching entirely
         if ($attribute instanceof NoCache) {
             return $next($request);
         }
 
-        // Use attribute configuration if available, otherwise check for new configuration object, then fall back to args
-        if ($attribute instanceof Cache) {
-            $lifetimeInSeconds = $attribute->lifetime;
-            $tags = $attribute->tags;
-        } elseif ($config = $this->getConfigurationFromArgs($args)) {
+        $config = $attribute instanceof Cache
+            ? $attribute
+            : $this->getConfigurationFromArgs($args);
+
+        if ($config) {
             $lifetimeInSeconds = $config->lifetime;
             $tags = $config->tags;
         } else {
@@ -80,20 +79,20 @@ class CacheResponse extends BaseCacheMiddleware
             return $next($request);
         }
 
-        if ($this->responseCache->enabled($request)) {
-            if (! $this->responseCache->shouldBypass($request)) {
-                try {
-                    if ($this->responseCache->hasBeenCached($request, $tags)) {
-                        $response = $this->getCachedResponse($request, $tags);
-                        if ($response !== false) {
-                            return $response;
-                        }
-                    }
-                } catch (CouldNotUnserialize $e) {
-                    report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
-                    event(new CacheMissed($request));
+        try {
+            if ($this->responseCache->enabled($request)
+                && ! $this->responseCache->shouldBypass($request)
+                && $this->responseCache->hasBeenCached($request, $tags)
+            ) {
+                $response = $this->getCachedResponse($request, $tags);
+
+                if ($response !== false) {
+                    return $response;
                 }
             }
+        } catch (\Throwable $e) {
+            report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
+            event(new CacheMissed($request));
         }
 
         $response = $next($request);

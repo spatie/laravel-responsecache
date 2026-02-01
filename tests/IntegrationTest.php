@@ -166,7 +166,7 @@ it('will cache file responses', function () {
 });
 
 it('wont cache if lifetime is 0', function () {
-    $this->app['config']->set('responsecache.cache.lifetime', 0);
+    $this->app['config']->set('responsecache.cache.lifetime_in_seconds', 0);
 
     $firstResponse = $this->get('/');
     $secondResponse = $this->get('/');
@@ -177,7 +177,7 @@ it('wont cache if lifetime is 0', function () {
 
 it('will cache response for given lifetime which is defined as middleware parameter', function () {
     // Set default lifetime as 0 to check if it will cache for given lifetime
-    $this->app['config']->set('responsecache.cache.lifetime', 0);
+    $this->app['config']->set('responsecache.cache.lifetime_in_seconds', 0);
 
     $firstResponse = $this->get('/cache-for-given-lifetime');
     $secondResponse = $this->get('/cache-for-given-lifetime');
@@ -188,7 +188,7 @@ it('will cache response for given lifetime which is defined as middleware parame
 
 it('will reproduce cache if given lifetime is expired', function () {
     // Set default lifetime as 0 to disable middleware that is already pushed to Kernel
-    $this->app['config']->set('responsecache.cache.lifetime', 0);
+    $this->app['config']->set('responsecache.cache.lifetime_in_seconds', 0);
 
     Carbon::setTestNow(Carbon::now()->subMinutes(6));
     $firstResponse = $this->get('/cache-for-given-lifetime');

@@ -21,7 +21,7 @@ return [
          * When using the default CacheRequestFilter this setting controls the
          * default number of seconds responses must be cached.
          */
-        'lifetime' => (int) env('RESPONSE_CACHE_LIFETIME', 60 * 60 * 24 * 7),
+        'lifetime_in_seconds' => (int) env('RESPONSE_CACHE_LIFETIME', 60 * 60 * 24 * 7),
 
         /*
          * If the cache driver you configured supports tags, you may specify a tag name
@@ -107,7 +107,6 @@ return [
 
     /*
      * This class is responsible for serializing responses.
-     * Changed to JsonSerializer for security - JSON is safer than PHP serialize()
      */
     'serializer' => \Spatie\ResponseCache\Serializers\JsonSerializer::class,
 
