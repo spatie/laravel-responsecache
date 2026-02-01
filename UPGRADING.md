@@ -9,12 +9,12 @@ Because there are many breaking changes an upgrade is not that easy. There are m
 Laravel ResponseCache v8 modernizes the package with PHP 8.5+ features and an improved developer experience:
 
 **New Features:**
-- 🎯 Enum-based type safety for HTTP methods and response types
-- ⚡ Attribute-based cache configuration using `#[Cache]` and `#[FlexibleCache]`
-- 📦 Restructured config with logical grouping (cache.*, debug.*, bypass.*)
-- 🔒 JSON serialization by default (replacing PHP serialize() for security)
-- ✨ Enhanced fluent API with named parameters
-- 🐛 Better debug headers for troubleshooting
+- Enum-based type safety for HTTP methods and response types
+- Attribute-based cache configuration using `#[Cache]` and `#[FlexibleCache]`
+- Restructured config with logical grouping (cache.*, debug.*, bypass.*)
+- JSON serialization by default (replacing PHP serialize() for security)
+- Enhanced fluent API with named parameters
+- Better debug headers for troubleshooting
 
 **Breaking Changes:**
 1. Middleware API completely redesigned
@@ -95,15 +95,9 @@ public function store() {}
 #### 3. Default Serializer Changed
 
 **Old:** `DefaultSerializer` using PHP `serialize()` (security risk)
-**New:** `JsonSerializer` using JSON encoding
+**New:** `JsonSerializer` using JSON encoding (more secure)
 
-**If you need the old behavior:**
-```php
-// In config/responsecache.php
-'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
-```
-
-**Note:** `DefaultSerializer` is deprecated and will be removed in v9.0.
+The `DefaultSerializer` class has been removed. If you had customized the serializer, implement the `Serializer` interface directly.
 
 #### 4. Enum Usage (Internal)
 

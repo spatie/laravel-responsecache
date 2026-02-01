@@ -29,24 +29,23 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
         // Check for attributes first
         $attribute = $this->getAttributeFromRequest($request);
 
-        if ($attribute instanceof NoCache) {
+        if ($attribute instanceof NoCache
+            || ! $this->responseCache->enabled($request)
+            || $this->responseCache->shouldBypass($request)
+        ) {
             return $next($request);
         }
 
-        // Use attribute configuration if available, otherwise check for new configuration object, then fall back to args
-        if ($attribute instanceof FlexibleCache) {
-            $flexibleTime = [$attribute->fresh, $attribute->stale, $attribute->defer];
-            $tags = $attribute->tags;
-        } elseif ($config = $this->getConfigurationFromArgs($args)) {
+        $config = $attribute instanceof FlexibleCache
+            ? $attribute
+            : $this->getConfigurationFromArgs($args);
+
+        if ($config) {
             $flexibleTime = [$config->fresh, $config->stale, $config->defer];
             $tags = $config->tags;
         } else {
             $flexibleTime = $this->getFlexibleTime($args);
             $tags = $this->getTags($args);
-        }
-
-        if (! $this->responseCache->enabled($request) || $this->responseCache->shouldBypass($request)) {
-            return $next($request);
         }
 
         return $this->handleFlexibleCache($request, $next, $flexibleTime, $tags);
@@ -146,21 +145,23 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
     protected function getConfigurationFromArgs(array $args): ?FlexibleCacheConfiguration
     {
-        if (count($args) >= 1 && is_string($args[0])) {
-            try {
-                $decoded = base64_decode($args[0], true);
-                if ($decoded !== false) {
-                    $config = unserialize($decoded);
-                    if ($config instanceof FlexibleCacheConfiguration) {
-                        return $config;
-                    }
-                }
-            } catch (\Throwable) {
-                // Not a configuration object, fall through to legacy parsing
-            }
+        if (count($args) < 1 || ! is_string($args[0])) {
+            return null;
         }
 
-        return null;
+        try {
+            $decoded = base64_decode($args[0], true);
+
+            if ($decoded === false) {
+                return null;
+            }
+
+            $config = unserialize($decoded);
+
+            return $config instanceof FlexibleCacheConfiguration ? $config : null;
+        } catch (\Throwable) {
+            return null;
+        }
     }
 
     protected function getFlexibleTime(array $args): ?array

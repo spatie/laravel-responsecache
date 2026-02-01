@@ -140,7 +140,7 @@ return [
     /*
      * This class is responsible for serializing responses.
      */
-    'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
+    'serializer' => \Spatie\ResponseCache\Serializers\JsonSerializer::class,
 ];
 ```
 
@@ -578,7 +578,7 @@ Afterwards you can define your replacer in the `responsecache.php` config file:
 
 A serializer is responsible from serializing a response so it can be stored in the cache. It is also responsible for rebuilding the response from the cache.
 
-The default serializer `Spatie\ResponseCache\Serializer\DefaultSerializer` will just work in most cases.
+The default serializer `Spatie\ResponseCache\Serializers\JsonSerializer` will work in most cases.
 
 If you have some special serialization needs you can specify a custom serializer in the `serializer` key of the config file. Any class that implements `Spatie\ResponseCache\Serializers\Serializer` can be used. This is how that interface looks like:
 

@@ -16,19 +16,18 @@ class CsrfTokenReplacer implements Replacer
             return;
         }
 
-        $csrf_token = csrf_token();
+        $csrfToken = csrf_token();
 
-        if (! $csrf_token) {
+        if (! $csrfToken) {
             return;
         }
 
-        // Skip if CSRF token not in content
-        if (! str_contains($content, $csrf_token)) {
+        if (! str_contains($content, $csrfToken)) {
             return;
         }
 
         $response->setContent(str_replace(
-            $csrf_token,
+            $csrfToken,
             $this->replacementString,
             $content,
         ));
@@ -42,15 +41,15 @@ class CsrfTokenReplacer implements Replacer
             return;
         }
 
-        $csrf_token = csrf_token();
+        $csrfToken = csrf_token();
 
-        if (! $csrf_token) {
+        if (! $csrfToken) {
             return;
         }
 
         $response->setContent(str_replace(
             $this->replacementString,
-            $csrf_token,
+            $csrfToken,
             $content,
         ));
     }
