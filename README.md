@@ -377,68 +377,82 @@ interface CacheProfile
 
 ### Flexible caching with stale-while-revalidate (SWR)
 
-For certain types of data, it can be useful to allow partially stale data to be served while the cached value is recalculated in the background, preventing some users from experiencing slow response times while cached values are calculated
-this is the stale while revalidate behaviour.
+For certain types of data, it can be useful to allow partially stale data to be served while the cached value is recalculated in the background, preventing some users from experiencing slow response times while cached values are calculated.
+This is the stale-while-revalidate behaviour.
+
 You can find more info how Laravel uses SWR: https://laravel.com/docs/12.x/cache#swr
 
+#### Using attributes (recommended)
 
+The cleanest way to configure flexible caching is with the `#[FlexibleCache]` attribute on your controller methods:
 
-#### Using flexible caching
+```php
+use Spatie\ResponseCache\Attributes\FlexibleCache;
+use Spatie\ResponseCache\Attributes\NoCache;
 
-Configure flexible caching per route using the `flexible()` method of FlexibleCacheResponse middleware:
+class PostController extends Controller
+{
+    // Cache fresh for 180 seconds, then serve stale for 720 more seconds while revalidating
+    #[FlexibleCache(fresh: 180, stale: 720)]
+    public function index() {}
+
+    // With defer: serve stale immediately, refresh in background
+    #[FlexibleCache(fresh: 60, stale: 300, defer: true)]
+    public function show($id) {}
+
+    // With cache tags
+    #[FlexibleCache(fresh: 180, stale: 720, tags: ['posts', 'api'])]
+    public function apiIndex() {}
+
+    // Disable caching for this method
+    #[NoCache]
+    public function store() {}
+}
+```
+
+#### Using middleware
+
+Configure flexible caching per route using the `for()` method:
 
 ```php
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
-/* Simple example of how to use the flexible method.
- * Between 0 and 180 seconds, we will always serve fresh data from the cache.
- * After 180 seconds, we will serve "old" data and send a request to the server to recalculate new data.
- * On the next request, if the new data has been processed by the server, we will serve the updated data.
- * Until then, we will continue to serve the old "stale" data.
- */
-$freshSeconds = 180;
-$staleSeconds = 900;
-Route::get('/api/posts', 'PostController@index')
-    ->middleware(FlexibleCacheResponse::flexible(freshSeconds: $freshSeconds, totalSeconds: $staleSeconds));
-    
-// The flexible method also accepts CarbonInterval. We can use minutes(), seconds() and other CarbonInterval functions.
-$freshSeconds = \Carbon\CarbonInterval::minutes(1);
-$staleSeconds = \Carbon\CarbonInterval::seconds(120);
-Route::get('/api/live-data', 'LiveDataController@index')
-    ->middleware(FlexibleCacheResponse::flexible(freshSeconds: $freshSeconds, totalSeconds: $staleSeconds, defer: true));
+// Fresh for 180 seconds, stale for 720 more seconds
+Route::get('/api/posts', [PostController::class, 'index'])
+    ->middleware(FlexibleCacheResponse::for(fresh: 180, stale: 720));
 
-/* Pass third argument "Defer" to the flexible method to always Defer during stale period
- * the server will wait for synchronous request meaning it will not serve stale data.
- * This is of course slower since we need to wait for the server, but it will show the new data.
- */
-$freshSeconds = 60;
-$staleSeconds = 300;
-Route::get('/api/live-data', 'LiveDataController@index')
-    ->middleware(FlexibleCacheResponse::flexible(freshSeconds: 60, totalSeconds: 300, defer: true));
-    
-// If your database support it u can also use tags like this.
-Route::get('/api/posts', 'PostController@index')
-    ->middleware(FlexibleCacheResponse::flexible(freshSeconds: 180, totalSeconds: 900, defer: false, 'posts', 'api'));
+// The for() method also accepts CarbonInterval
+Route::get('/api/live-data', [LiveDataController::class, 'index'])
+    ->middleware(FlexibleCacheResponse::for(
+        fresh: \Carbon\CarbonInterval::minutes(1),
+        stale: \Carbon\CarbonInterval::minutes(5),
+        defer: true
+    ));
 
-// We can also group the routes with the middleware like this.
-$freshSeconds = 5;
-$staleSeconds = 10;
-Route::middleware(FlexibleCacheResponse::flexible(freshSeconds: $freshSeconds,totalSeconds: $staleSeconds))->group(function () {
-    Route::get('/test', function () {
-        return rand();
-    });
+// With cache tags
+Route::get('/api/posts', [PostController::class, 'index'])
+    ->middleware(FlexibleCacheResponse::for(
+        fresh: 180,
+        stale: 720,
+        tags: ['posts', 'api']
+    ));
+
+// Group routes with the same flexible cache configuration
+Route::middleware(FlexibleCacheResponse::for(fresh: 60, stale: 300))->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/stats', [StatsController::class, 'index']);
 });
-
 ```
-The `flexible()` method accepts:
-- `$freshSeconds`: How long the cache is considered fresh
-- `$totalSeconds`: Total cache lifetime (fresh period + stale period)
-- `$defer`: Whether to defer refresh to background during stale period (default: `false`)
-- `...$tags`: Optional cache tags
+
+The `for()` method accepts:
+- `fresh`: How long the cache is considered fresh (int seconds or CarbonInterval)
+- `stale`: How long to serve stale content while revalidating (int seconds or CarbonInterval)
+- `defer`: Whether to defer refresh to background during stale period (default: `false`)
+- `tags`: Optional cache tags (string or array)
 
 **Defer behavior:**
-- `$defer = false` (default): During stale period, requests wait for synchronous refresh (slower but always current)
-- `$defer = true`: During stale period, stale cache is served immediately while refresh happens in background (faster but briefly stale)
+- `defer: false` (default): During stale period, requests wait for synchronous refresh (slower but always current)
+- `defer: true`: During stale period, stale cache is served immediately while refresh happens in background (faster but briefly stale)
 - During fresh period: No refresh happens regardless of defer setting
 
 
