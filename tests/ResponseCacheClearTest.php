@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Event;
 use Mockery\MockInterface;
-use Spatie\ResponseCache\Events\ClearedResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCacheFailed;
+use Spatie\ResponseCache\Events\ClearedResponseCacheEvent;
+use Spatie\ResponseCache\Events\ClearingResponseCacheEvent;
+use Spatie\ResponseCache\Events\ClearingResponseCacheFailedEvent;
 use Spatie\ResponseCache\ResponseCache;
 use Spatie\ResponseCache\ResponseCacheRepository;
 
@@ -21,9 +21,9 @@ it('will fire appropriate events when clearing the cache successfully', function
     $result = app(ResponseCache::class)->clear();
 
     expect($result)->toBeTrue();
-    Event::assertDispatched(ClearingResponseCache::class);
-    Event::assertDispatched(ClearedResponseCache::class);
-    Event::assertNotDispatched(ClearingResponseCacheFailed::class);
+    Event::assertDispatched(ClearingResponseCacheEvent::class);
+    Event::assertDispatched(ClearedResponseCacheEvent::class);
+    Event::assertNotDispatched(ClearingResponseCacheFailedEvent::class);
 });
 
 it('will fire appropriate events when clearing the cache fails', function () {
@@ -36,7 +36,7 @@ it('will fire appropriate events when clearing the cache fails', function () {
     $result = app(ResponseCache::class)->clear();
 
     expect($result)->toBeFalse();
-    Event::assertDispatched(ClearingResponseCache::class);
-    Event::assertNotDispatched(ClearedResponseCache::class);
-    Event::assertDispatched(ClearingResponseCacheFailed::class);
+    Event::assertDispatched(ClearingResponseCacheEvent::class);
+    Event::assertNotDispatched(ClearedResponseCacheEvent::class);
+    Event::assertDispatched(ClearingResponseCacheFailedEvent::class);
 });

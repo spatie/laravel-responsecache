@@ -4,7 +4,6 @@ namespace Spatie\ResponseCache\Enums;
 
 enum CacheStrategy
 {
-    case Standard;      // Traditional TTL-based caching
-    case Flexible;      // Stale-while-revalidate with async refresh
-    case Disabled;      // Explicitly disabled for route
-}
+    case Standard;
+    case Flexible;     
+    case Disabled;     

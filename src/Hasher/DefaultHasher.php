@@ -28,11 +28,38 @@ class DefaultHasher implements RequestHasher
 
     protected function getNormalizedRequestUri(Request $request): string
     {
-        if ($queryString = $request->getQueryString()) {
+        $queryString = $this->getNormalizedQueryString($request);
+
+        if ($queryString !== '') {
             $queryString = '?'.$queryString;
         }
 
         return $request->getBaseUrl().$request->getPathInfo().$queryString;
+    }
+
+    protected function getNormalizedQueryString(Request $request): string
+    {
+        $queryString = $request->getQueryString();
+
+        if ($queryString === null || $queryString === '') {
+            return '';
+        }
+
+        $ignoredParameters = config('responsecache.ignored_query_parameters', []);
+
+        if (empty($ignoredParameters)) {
+            return $queryString;
+        }
+
+        parse_str($queryString, $parameters);
+
+        $parameters = array_diff_key($parameters, array_flip($ignoredParameters));
+
+        if (empty($parameters)) {
+            return '';
+        }
+
+        return http_build_query($parameters);
     }
 
     protected function getCacheNameSuffix(Request $request)

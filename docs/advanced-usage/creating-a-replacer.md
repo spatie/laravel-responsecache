@@ -9,7 +9,7 @@ The package ships with a `CsrfTokenReplacer` that handles CSRF tokens automatica
 
 ## Creating a custom replacer
 
-Implement the `Replacer` interface:
+To create one, implement the `Replacer` interface.
 
 ```php
 namespace App\Replacers;
@@ -57,7 +57,7 @@ class UserNameReplacer implements Replacer
 }
 ```
 
-Register your replacer in the config file:
+Then register your replacer in the config file.
 
 ```php
 // config/responsecache.php

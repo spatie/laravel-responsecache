@@ -29,9 +29,31 @@ You can disable response caching entirely:
 RESPONSE_CACHE_ENABLED=false
 ```
 
+## Ignored query parameters
+
+By default, common tracking parameters like `utm_source`, `gclid`, and `fbclid` are stripped from the cache key. This means that `https://example.com/page` and `https://example.com/page?utm_source=google&gclid=abc` will share the same cached response.
+
+You can customize the list of ignored parameters in the config file.
+
+```php
+// config/responsecache.php
+
+'ignored_query_parameters' => [
+    'utm_source',
+    'utm_medium',
+    'utm_campaign',
+    'utm_term',
+    'utm_content',
+    'gclid',
+    'fbclid',
+],
+```
+
+Set this to an empty array if you want all query parameters to be included in the cache key.
+
 ## Debug headers
 
-When `APP_DEBUG` is `true`, the package adds a header to cached responses showing when the response was cached. You can customize this behavior:
+When `APP_DEBUG` is `true`, the package adds a header to cached responses showing when the response was cached. You can customize this behavior.
 
 ```php
 // config/responsecache.php

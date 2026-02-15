@@ -9,7 +9,7 @@ The default `JsonSerializer` will work in most cases. It serializes responses as
 
 ## Creating a custom serializer
 
-If you have special serialization needs, create a class that implements the `Serializer` interface:
+If you have special serialization needs, you can create a class that implements the `Serializer` interface.
 
 ```php
 namespace App\Serializers;
@@ -31,7 +31,7 @@ class CustomSerializer implements Serializer
 }
 ```
 
-Register your custom serializer in the config file:
+Then register your custom serializer in the config file.
 
 ```php
 // config/responsecache.php

@@ -3,7 +3,7 @@ title: Installation & setup
 weight: 4
 ---
 
-You can install the package via composer:
+You can install the package via composer.
 
 ```bash
 composer require spatie/laravel-responsecache
@@ -13,7 +13,7 @@ The package will automatically register itself.
 
 ## Registering the middleware
 
-Add the `CacheResponse` middleware and the `DoNotCacheResponse` alias in `bootstrap/app.php`:
+To get started, add the `CacheResponse` middleware and the `DoNotCacheResponse` alias in `bootstrap/app.php`.
 
 ```php
 // bootstrap/app.php
@@ -36,13 +36,13 @@ By default, the package will now cache all successful GET requests that return t
 
 ## Publishing the config file
 
-Optionally, you can publish the config file with:
+Optionally, you can publish the config file.
 
 ```bash
 php artisan vendor:publish --tag="responsecache-config"
 ```
 
-This is the content of the published config file:
+The published config file looks like this.
 
 ```php
 return [
@@ -65,6 +65,16 @@ return [
         'time_header_name' => env('RESPONSE_CACHE_HEADER_NAME', 'laravel-responsecache'),
         'add_age_header' => env('RESPONSE_CACHE_AGE_HEADER', false),
         'age_header_name' => env('RESPONSE_CACHE_AGE_HEADER_NAME', 'laravel-responsecache-age'),
+    ],
+
+    'ignored_query_parameters' => [
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_term',
+        'utm_content',
+        'gclid',
+        'fbclid',
     ],
 
     'cache_profile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,

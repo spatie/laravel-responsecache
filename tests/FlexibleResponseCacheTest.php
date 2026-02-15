@@ -3,8 +3,8 @@
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
-use Spatie\ResponseCache\Events\CacheMissed;
-use Spatie\ResponseCache\Events\ResponseCacheHit;
+use Spatie\ResponseCache\Events\CacheMissedEvent;
+use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
 
 beforeEach(function () {
     config()->set('responsecache.cache.store', 'array');
@@ -199,7 +199,7 @@ it('fires ResponseCacheHit event when serving from cache', function () {
     $this->get('/flexible/basic');
     $this->get('/flexible/basic');
 
-    Event::assertDispatched(ResponseCacheHit::class);
+    Event::assertDispatched(ResponseCacheHitEvent::class);
 })->skip('Currently this test does not work due to a bug in Laravel 11');
 
 it('fires CacheMissed event on first request', function () {
@@ -207,7 +207,7 @@ it('fires CacheMissed event on first request', function () {
 
     $this->get('/flexible/basic');
 
-    Event::assertDispatched(CacheMissed::class);
+    Event::assertDispatched(CacheMissedEvent::class);
 })->skip('Currently this test does not work due to a bug in Laravel 11');
 
 

@@ -4,7 +4,7 @@ namespace Spatie\ResponseCache\Events;
 
 use Illuminate\Http\Request;
 
-class ResponseCacheHit
+class ResponseCacheHitEvent
 {
     public function __construct(
         public Request $request,

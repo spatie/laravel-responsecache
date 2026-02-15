@@ -2,6 +2,6 @@
 
 namespace Spatie\ResponseCache\Events;
 
-class ClearingResponseCacheFailed
+class ClearingResponseCacheEvent
 {
 }

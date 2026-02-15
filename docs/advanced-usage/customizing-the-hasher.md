@@ -7,7 +7,7 @@ The hasher generates a unique cache key for each request. The default `DefaultHa
 
 ## Creating a custom hasher
 
-If you need a different hashing strategy, create a class that implements the `RequestHasher` interface:
+If you need a different hashing strategy, you can create a class that implements the `RequestHasher` interface.
 
 ```php
 namespace App\Hashers;
@@ -25,7 +25,7 @@ class CustomHasher implements RequestHasher
 }
 ```
 
-Register your custom hasher in the config file:
+Then register your custom hasher in the config file.
 
 ```php
 // config/responsecache.php

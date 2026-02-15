@@ -8,9 +8,9 @@ use Illuminate\Support\Carbon;
 use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Concerns\TaggedCacheAware;
-use Spatie\ResponseCache\Events\ClearedResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCacheFailed;
+use Spatie\ResponseCache\Events\ClearedResponseCacheEvent;
+use Spatie\ResponseCache\Events\ClearingResponseCacheEvent;
+use Spatie\ResponseCache\Events\ClearingResponseCacheFailedEvent;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -91,13 +91,13 @@ class ResponseCache
 
     public function clear(array $tags = []): bool
     {
-        event(new ClearingResponseCache());
+        event(new ClearingResponseCacheEvent());
 
         $result = $this->taggedCache($tags)->clear();
 
         $resultEvent = $result
-            ? new ClearedResponseCache()
-            : new ClearingResponseCacheFailed();
+            ? new ClearedResponseCacheEvent()
+            : new ClearingResponseCacheFailedEvent();
 
         event($resultEvent);
 
@@ -124,12 +124,12 @@ class ResponseCache
      */
     public function forget(string | array $uris, array $tags = []): self
     {
-        event(new ClearingResponseCache());
+        event(new ClearingResponseCacheEvent());
 
         $uris = is_array($uris) ? $uris : func_get_args();
         $this->selectCachedItems()->forUrls($uris)->forget();
 
-        event(new ClearedResponseCache());
+        event(new ClearedResponseCacheEvent());
 
         return $this;
     }

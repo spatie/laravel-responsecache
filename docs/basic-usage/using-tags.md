@@ -24,17 +24,17 @@ use Spatie\ResponseCache\Attributes\Cache;
 
 class PostController
 {
-    #[Cache(lifetime: 300, tags: ['posts'])]
+    #[Cache(lifetime: 5 * 60, tags: ['posts'])]
     public function index() { /* ... */ }
 
-    #[Cache(lifetime: 300, tags: ['posts', 'api'])]
+    #[Cache(lifetime: 5 * 60, tags: ['posts', 'api'])]
     public function apiIndex() { /* ... */ }
 }
 ```
 
 ## Global tags
 
-You can also set a global tag in the config file. All cached responses will receive this tag:
+You can also set a global tag in the config file. All cached responses will receive this tag.
 
 ```php
 // config/responsecache.php
@@ -48,7 +48,7 @@ You can also set a global tag in the config file. All cached responses will rece
 
 ## Clearing by tag
 
-You can clear responses that are assigned a specific tag:
+You can clear responses that are assigned a specific tag.
 
 ```php
 use Spatie\ResponseCache\Facades\ResponseCache;

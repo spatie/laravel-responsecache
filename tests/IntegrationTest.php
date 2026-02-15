@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Event;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
-use Spatie\ResponseCache\Events\CacheMissed;
-use Spatie\ResponseCache\Events\ResponseCacheHit;
+use Spatie\ResponseCache\Events\CacheMissedEvent;
+use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
 use Spatie\ResponseCache\Facades\ResponseCache;
 
 it('will cache a get request', function () {
@@ -25,7 +25,7 @@ it('will fire an event when responding without cache', function () {
 
     $this->get('/random');
 
-    Event::assertDispatched(CacheMissed::class);
+    Event::assertDispatched(CacheMissedEvent::class);
 })->skip('Currently this test does not working due to a bug in Laravel 11');
 
 it('will fire an event when responding from cache', function () {
@@ -34,7 +34,7 @@ it('will fire an event when responding from cache', function () {
     $this->get('/random');
     $this->get('/random');
 
-    Event::assertDispatched(ResponseCacheHit::class);
+    Event::assertDispatched(ResponseCacheHitEvent::class);
 })->skip('Currently this test does not working due to a bug in Laravel 11');
 
 it('will cache redirects', function () {

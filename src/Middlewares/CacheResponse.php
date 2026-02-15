@@ -9,8 +9,8 @@ use Spatie\ResponseCache\Attributes\Cache;
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 use Spatie\ResponseCache\Attributes\NoCache;
 use Spatie\ResponseCache\Configuration\CacheConfiguration;
-use Spatie\ResponseCache\Events\CacheMissed;
-use Spatie\ResponseCache\Events\ResponseCacheHit;
+use Spatie\ResponseCache\Events\CacheMissedEvent;
+use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
@@ -44,14 +44,6 @@ class CacheResponse extends BaseCacheMiddleware
         return static::class . ':' . base64_encode(serialize($config));
     }
 
-    /**
-     * @deprecated Use for() instead. Will be removed in v9.0.
-     */
-    public static function using($lifetime, ...$tags): string
-    {
-        return static::class.':'.implode(',', [$lifetime, ...$tags]);
-    }
-
     public function handle(Request $request, Closure $next, ...$args): Response
     {
         // Check for attributes first
@@ -77,33 +69,61 @@ class CacheResponse extends BaseCacheMiddleware
             $tags = $this->getTags($args);
         }
 
-        try {
-            if ($this->responseCache->enabled($request)
-                && ! $this->responseCache->shouldBypass($request)
-                && $this->responseCache->hasBeenCached($request, $tags)
-            ) {
-                $response = $this->getCachedResponse($request, $tags);
-
-                if ($response !== false) {
-                    return $response;
-                }
-            }
-        } catch (\Throwable $e) {
-            report("Could not unserialize response, returning uncached response instead. Error: {$e->getMessage()}");
-            event(new CacheMissed($request));
+        if ($cachedResponse = $this->serveCachedResponse($request, $tags)) {
+            return $cachedResponse;
         }
 
         $response = $next($request);
 
-        if ($this->responseCache->enabled($request) && ! $this->responseCache->shouldBypass($request)) {
-            if ($this->responseCache->shouldCache($request, $response)) {
-                $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
-            }
-        }
+        $this->cacheResponseIfNeeded($request, $response, $lifetimeInSeconds, $tags);
 
-        event(new CacheMissed($request));
+        event(new CacheMissedEvent($request));
 
         return $response;
+    }
+
+    protected function serveCachedResponse(Request $request, array $tags): ?Response
+    {
+        if (! $this->responseCache->enabled($request)) {
+            return null;
+        }
+
+        if ($this->responseCache->shouldBypass($request)) {
+            return null;
+        }
+
+        if (! $this->responseCache->hasBeenCached($request, $tags)) {
+            return null;
+        }
+
+        try {
+            $response = $this->getCachedResponse($request, $tags);
+        } catch (Throwable $exception) {
+            report("Could not unserialize response, returning uncached response instead. Error: {$exception->getMessage()}");
+
+            event(new CacheMissedEvent($request));
+
+            return null;
+        }
+
+        return $response ?: null;
+    }
+
+    protected function cacheResponseIfNeeded(Request $request, Response $response, ?int $lifetimeInSeconds, array $tags): void
+    {
+        if (! $this->responseCache->enabled($request)) {
+            return;
+        }
+
+        if ($this->responseCache->shouldBypass($request)) {
+            return;
+        }
+
+        if (! $this->responseCache->shouldCache($request, $response)) {
+            return;
+        }
+
+        $this->makeReplacementsAndCacheResponse($request, $response, $lifetimeInSeconds, $tags);
     }
 
     protected function getCachedResponse(Request $request, array $tags = []): false|Response
@@ -118,7 +138,7 @@ class CacheResponse extends BaseCacheMiddleware
             return false;
         }
 
-        event(new ResponseCacheHit($request));
+        event(new ResponseCacheHitEvent($request));
 
         $response = $this->addCacheAgeHeader($response);
 
@@ -153,7 +173,7 @@ class CacheResponse extends BaseCacheMiddleware
                         return $config;
                     }
                 }
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 // Not a configuration object, fall through to legacy parsing
             }
         }

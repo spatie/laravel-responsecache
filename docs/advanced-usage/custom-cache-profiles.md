@@ -5,7 +5,7 @@ weight: 1
 
 A cache profile determines which requests should be cached, for how long, and how to differentiate between users. The default profile `CacheAllSuccessfulGetRequests` caches all successful GET requests (excluding AJAX) that return text based content.
 
-You can create your own cache profile by implementing the `CacheProfile` interface:
+You can create your own cache profile by implementing the `CacheProfile` interface.
 
 ```php
 namespace App\CacheProfiles;
@@ -46,7 +46,7 @@ class CustomCacheProfile implements CacheProfile
 }
 ```
 
-Register your custom profile in the config file:
+Then register your custom profile in the config file.
 
 ```php
 // config/responsecache.php

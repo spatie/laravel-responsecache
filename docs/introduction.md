@@ -27,7 +27,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(FlexibleCacheResponse::for(lifetime: minutes(3), grace: minutes(12)));
 ```
 
-The cache can be cleared programmatically or via an artisan command:
+The cache can be cleared programmatically or via an artisan command.
 
 ```php
 use Spatie\ResponseCache\Facades\ResponseCache;

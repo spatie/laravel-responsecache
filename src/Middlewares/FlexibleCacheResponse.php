@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 use Spatie\ResponseCache\Attributes\NoCache;
 use Spatie\ResponseCache\Configuration\FlexibleCacheConfiguration;
-use Spatie\ResponseCache\Events\ResponseCacheHit;
+use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
@@ -68,26 +68,6 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
         return static::class . ':' . base64_encode(serialize($config));
     }
 
-    /**
-     * @deprecated Use for() instead. Will be removed in v9.0.
-     */
-    public static function flexible(int|CarbonInterval $freshSeconds, int|CarbonInterval $totalSeconds, ...$tags): string
-    {
-        $freshSeconds = $freshSeconds instanceof CarbonInterval ? (int) $freshSeconds->totalSeconds : $freshSeconds;
-        $totalSeconds = $totalSeconds instanceof CarbonInterval ? (int) $totalSeconds->totalSeconds : $totalSeconds;
-
-        $flexibleTime = "{$freshSeconds}:{$totalSeconds}";
-
-        $middlewareString = static::class.':'.$flexibleTime;
-
-        if (! empty($tags)) {
-            $middlewareString .= ','.implode(',', $tags);
-        }
-
-        return $middlewareString;
-    }
-
-
     protected function handleFlexibleCache(Request $request, Closure $next, array $flexibleTime, array $tags): Response
     {
         $cacheKey = app(RequestHasher::class)->getHashFor($request);
@@ -125,7 +105,7 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
         $response = $this->addCacheAgeHeader($response);
 
-        event(new ResponseCacheHit($request));
+        event(new ResponseCacheHitEvent($request));
 
         return $response;
     }

@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Event;
 
 use function PHPUnit\Framework\assertNull;
 
-use Spatie\ResponseCache\Events\ClearedResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCache;
+use Spatie\ResponseCache\Events\ClearedResponseCacheEvent;
+use Spatie\ResponseCache\Events\ClearingResponseCacheEvent;
 use Spatie\ResponseCache\ResponseCacheRepository;
 
 beforeEach(function () {
@@ -57,8 +57,8 @@ it('will fire events when clearing the cache', function () {
 
     Artisan::call('responsecache:clear');
 
-    Event::assertDispatched(ClearingResponseCache::class);
-    Event::assertDispatched(ClearedResponseCache::class);
+    Event::assertDispatched(ClearingResponseCacheEvent::class);
+    Event::assertDispatched(ClearedResponseCacheEvent::class);
 });
 
 it('will clear all when tags are not defined', function () {

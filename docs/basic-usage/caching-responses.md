@@ -7,7 +7,7 @@ After [installing the package](/docs/laravel-responsecache/v8/installation-setup
 
 ## Using middleware
 
-You can configure caching per route using the `CacheResponse::for()` method:
+You can configure caching per route using the `CacheResponse::for()` method.
 
 ```php
 use Spatie\ResponseCache\Middlewares\CacheResponse;
@@ -35,20 +35,20 @@ The `lifetime` parameter accepts Laravel's `minutes()`, `hours()`, and `days()` 
 
 ## Using attributes
 
-You can also configure caching with the `#[Cache]` attribute on your controller methods:
+You can also configure caching with the `#[Cache]` attribute on your controller methods.
 
 ```php
 use Spatie\ResponseCache\Attributes\Cache;
 
 class PostController
 {
-    #[Cache(lifetime: 300, tags: ['posts'])]
+    #[Cache(lifetime: 5 * 60, tags: ['posts'])]
     public function index()
     {
         return view('posts.index', ['posts' => Post::all()]);
     }
 
-    #[Cache(lifetime: 600, driver: 'redis')]
+    #[Cache(lifetime: 10 * 60, driver: 'redis')]
     public function show(Post $post)
     {
         return view('posts.show', ['post' => $post]);
@@ -56,17 +56,17 @@ class PostController
 }
 ```
 
-The `#[Cache]` attribute accepts:
+The `#[Cache]` attribute accepts the following parameters.
 - `lifetime`: Cache duration in seconds (defaults to the config value)
 - `tags`: Cache tags (array)
 - `driver`: Cache driver to use (defaults to the config value)
 
-Attributes can also be applied at the class level to cache all methods in the controller:
+Attributes can also be applied at the class level to cache all methods in the controller.
 
 ```php
 use Spatie\ResponseCache\Attributes\Cache;
 
-#[Cache(lifetime: 300, tags: ['posts'])]
+#[Cache(lifetime: 5 * 60, tags: ['posts'])]
 class PostController
 {
     public function index() { /* ... */ }

@@ -5,7 +5,7 @@ weight: 4
 
 ## Clearing the entire cache
 
-The entire response cache can be cleared programmatically:
+You can clear the entire response cache programmatically.
 
 ```php
 use Spatie\ResponseCache\Facades\ResponseCache;
@@ -13,7 +13,7 @@ use Spatie\ResponseCache\Facades\ResponseCache;
 ResponseCache::clear();
 ```
 
-Or using the artisan command:
+You can also clear it using the artisan command.
 
 ```bash
 php artisan responsecache:clear
@@ -21,7 +21,7 @@ php artisan responsecache:clear
 
 ## Forgetting specific URIs
 
-You can forget specific URIs:
+You can forget specific URIs.
 
 ```php
 use Spatie\ResponseCache\Facades\ResponseCache;
@@ -36,7 +36,7 @@ ResponseCache::forget(['/some-uri', '/other-uri']);
 ResponseCache::forget('/some-uri', '/other-uri');
 ```
 
-You can also forget a specific URI using the artisan command:
+You can also forget a specific URI using the artisan command.
 
 ```bash
 php artisan responsecache:clear --url=/some-uri
@@ -44,7 +44,7 @@ php artisan responsecache:clear --url=/some-uri
 
 ## Forgetting a selection of cached items
 
-For more control, use `selectCachedItems()` to specify exactly which cached items should be forgotten:
+For more control, you can use `selectCachedItems()` to specify exactly which cached items should be forgotten.
 
 ```php
 use Spatie\ResponseCache\Facades\ResponseCache;
@@ -81,7 +81,7 @@ ResponseCache::selectCachedItems()
 
 ## Using model events
 
-You can clear the cache whenever a model changes by using model events:
+You can clear the cache whenever a model changes by using model events.
 
 ```php
 namespace App\Traits;
@@ -101,7 +101,7 @@ trait ClearsResponseCache
 
 ## Clearing tagged content
 
-If you're using cache tags, you can clear only responses with specific tags:
+If you're using cache tags, you can clear only responses with specific tags.
 
 ```php
 use Spatie\ResponseCache\Facades\ResponseCache;

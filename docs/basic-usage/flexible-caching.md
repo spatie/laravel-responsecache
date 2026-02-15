@@ -12,7 +12,7 @@ Route::get('/api/posts', [PostController::class, 'index'])
     ->middleware(FlexibleCacheResponse::for(lifetime: minutes(3), grace: minutes(12)));
 ```
 
-This is what happens with the configuration above:
+This is what happens with the configuration above.
 
 - **0–3 minutes** (`lifetime`): The cached response is served directly. No regeneration happens.
 - **3–15 minutes** (`grace`): The cached response is still served instantly, but a background refresh is triggered so the next request gets fresh data.
@@ -24,7 +24,7 @@ Under the hood, this package uses Laravel's `Cache::flexible()` method. Laravel'
 
 ## Using middleware
 
-Configure flexible caching per route using the `FlexibleCacheResponse::for()` method:
+You can configure flexible caching per route using the `FlexibleCacheResponse::for()` method.
 
 ```php
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
@@ -51,20 +51,20 @@ The `lifetime` and `grace` parameters accept Laravel's `minutes()`, `hours()`, a
 
 ## Using attributes
 
-You can also configure flexible caching with the `#[FlexibleCache]` attribute:
+You can also configure flexible caching with the `#[FlexibleCache]` attribute.
 
 ```php
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 
 class PostController
 {
-    #[FlexibleCache(lifetime: 180, grace: 720)]
+    #[FlexibleCache(lifetime: 3 * 60, grace: 12 * 60)]
     public function index()
     {
         return view('posts.index', ['posts' => Post::all()]);
     }
 
-    #[FlexibleCache(lifetime: 180, grace: 720, tags: ['posts', 'api'])]
+    #[FlexibleCache(lifetime: 3 * 60, grace: 12 * 60, tags: ['posts', 'api'])]
     public function apiIndex()
     {
         return response()->json(Post::all());
@@ -72,12 +72,12 @@ class PostController
 }
 ```
 
-The attribute can also be applied at the class level to apply to all methods:
+The attribute can also be applied at the class level to apply to all methods.
 
 ```php
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 
-#[FlexibleCache(lifetime: 180, grace: 720)]
+#[FlexibleCache(lifetime: 3 * 60, grace: 12 * 60)]
 class DashboardController
 {
     public function index() { /* ... */ }
@@ -85,7 +85,7 @@ class DashboardController
 }
 ```
 
-The `#[FlexibleCache]` attribute accepts:
+The `#[FlexibleCache]` attribute accepts the following parameters.
 - `lifetime`: How long the cache is considered up-to-date (in seconds)
 - `grace`: How long to serve the old response while refreshing in the background (in seconds)
 - `tags`: Optional cache tags (array)

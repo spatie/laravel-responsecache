@@ -87,6 +87,21 @@ return [
     ],
 
     /*
+     * Query parameters listed here will be ignored when generating the cache key.
+     * This is useful for tracking parameters like UTM tags or gclid that don't
+     * affect the page content but would otherwise create separate cache entries.
+     */
+    'ignored_query_parameters' => [
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_term',
+        'utm_content',
+        'gclid',
+        'fbclid',
+    ],
+
+    /*
      * Customization - Class implementations
      */
 

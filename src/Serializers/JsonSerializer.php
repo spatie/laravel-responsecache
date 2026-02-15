@@ -6,6 +6,7 @@ use Illuminate\Http\Response as IlluminateResponse;
 use Spatie\ResponseCache\Enums\ResponseType;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use JsonException;
 use Symfony\Component\HttpFoundation\Response;
 
 class JsonSerializer implements Serializer
@@ -33,7 +34,7 @@ class JsonSerializer implements Serializer
     {
         try {
             $data = json_decode($serializedResponse, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (JsonException) {
             throw CouldNotUnserialize::serializedResponse($serializedResponse);
         }
 
