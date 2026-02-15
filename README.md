@@ -381,41 +381,78 @@ For certain types of data, it can be useful to allow partially stale data to be 
 
 You can find more info how Laravel uses SWR: https://laravel.com/docs/12.x/cache#swr
 
-#### Using flexible caching
+#### Using attributes (recommended)
 
-Configure flexible caching per route using the `for()` method of the `FlexibleCacheResponse` middleware:
+The cleanest way to configure flexible caching is with the `#[FlexibleCache]` attribute on your controller methods:
+
+```php
+use Spatie\ResponseCache\Attributes\FlexibleCache;
+use Spatie\ResponseCache\Attributes\NoCache;
+
+class PostController extends Controller
+{
+    // Cache fresh for 180 seconds, then serve stale for 720 more seconds while revalidating
+    #[FlexibleCache(fresh: 180, stale: 720)]
+    public function index() {}
+
+    // With defer: serve stale immediately, refresh in background
+    #[FlexibleCache(fresh: 60, stale: 300, defer: true)]
+    public function show($id) {}
+
+    // With cache tags
+    #[FlexibleCache(fresh: 180, stale: 720, tags: ['posts', 'api'])]
+    public function apiIndex() {}
+
+    // Disable caching for this method
+    #[NoCache]
+    public function store() {}
+}
+```
+
+#### Using middleware
+
+Configure flexible caching per route using the `for()` method:
 
 ```php
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
-// Between 0 and 180 seconds, fresh data is served from cache.
-// After 180 seconds, stale data is served while the cache refreshes in the background.
-Route::get('/api/posts', 'PostController@index')
-    ->middleware(FlexibleCacheResponse::for(fresh: 180, stale: 900));
+// Fresh for 180 seconds, stale for 720 more seconds
+Route::get('/api/posts', [PostController::class, 'index'])
+    ->middleware(FlexibleCacheResponse::for(fresh: 180, stale: 720));
 
-// CarbonInterval is also accepted
-Route::get('/api/live-data', 'LiveDataController@index')
+// The for() method also accepts CarbonInterval
+Route::get('/api/live-data', [LiveDataController::class, 'index'])
     ->middleware(FlexibleCacheResponse::for(
-        fresh: CarbonInterval::minutes(1),
-        stale: CarbonInterval::seconds(120),
+        fresh: \Carbon\CarbonInterval::minutes(1),
+        stale: \Carbon\CarbonInterval::minutes(5),
+        defer: true
     ));
 
-// With cache tags (requires a tag-aware cache driver)
-Route::get('/api/posts', 'PostController@index')
-    ->middleware(FlexibleCacheResponse::for(fresh: 180, stale: 900, tags: ['posts', 'api']));
+// With cache tags
+Route::get('/api/posts', [PostController::class, 'index'])
+    ->middleware(FlexibleCacheResponse::for(
+        fresh: 180,
+        stale: 720,
+        tags: ['posts', 'api']
+    ));
 
-// Group routes with the same flexible cache settings
-Route::middleware(FlexibleCacheResponse::for(fresh: 5, stale: 10))->group(function () {
-    Route::get('/test', function () {
-        return rand();
-    });
+// Group routes with the same flexible cache configuration
+Route::middleware(FlexibleCacheResponse::for(fresh: 60, stale: 300))->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/stats', [StatsController::class, 'index']);
 });
 ```
 
 The `for()` method accepts:
-- `$fresh`: How long (in seconds) the cache is considered fresh
-- `$stale`: Total cache lifetime in seconds (fresh period + stale period)
-- `$tags`: Optional cache tags (string or array)
+- `fresh`: How long the cache is considered fresh (int seconds or CarbonInterval)
+- `stale`: How long to serve stale content while revalidating (int seconds or CarbonInterval)
+- `defer`: Whether to defer refresh to background during stale period (default: `false`)
+- `tags`: Optional cache tags (string or array)
+
+**Defer behavior:**
+- `defer: false` (default): During stale period, requests wait for synchronous refresh (slower but always current)
+- `defer: true`: During stale period, stale cache is served immediately while refresh happens in background (faster but briefly stale)
+- During fresh period: No refresh happens regardless of defer setting
 
 
 ### Caching specific routes

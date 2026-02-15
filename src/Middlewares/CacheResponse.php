@@ -5,6 +5,7 @@ namespace Spatie\ResponseCache\Middlewares;
 use Closure;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\Attributes\Cache;
+use Spatie\ResponseCache\Attributes\FlexibleCache;
 use Spatie\ResponseCache\Attributes\NoCache;
 use Spatie\ResponseCache\Configuration\CacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissed;
@@ -63,6 +64,10 @@ class CacheResponse extends BaseCacheMiddleware
             return $next($request);
         }
 
+        if ($attribute instanceof FlexibleCache) {
+            return app(FlexibleCacheResponse::class)->handle($request, $next);
+        }
+
         $config = $attribute instanceof Cache
             ? $attribute
             : $this->getConfigurationFromArgs($args);
@@ -73,10 +78,6 @@ class CacheResponse extends BaseCacheMiddleware
         } else {
             $lifetimeInSeconds = $this->getLifetime($args);
             $tags = $this->getTags($args);
-        }
-
-        if ($this->shouldSkipGlobalMiddleware($request, $lifetimeInSeconds, $attribute)) {
-            return $next($request);
         }
 
         try {
