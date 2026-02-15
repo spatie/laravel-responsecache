@@ -4,7 +4,6 @@
 build
 composer.lock
 coverage
-docs
 phpunit.xml
 psalm.xml
 testbench.yaml

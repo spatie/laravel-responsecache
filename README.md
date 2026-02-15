@@ -36,7 +36,7 @@ You can also use stale-while-revalidate caching for data that can be briefly sta
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(FlexibleCacheResponse::for(minutes(3), minutes(12)));
+    ->middleware(FlexibleCacheResponse::for(lifetime: minutes(3), grace: minutes(12)));
 ```
 
 ## Support us

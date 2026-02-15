@@ -51,24 +51,17 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
         return $this->handleFlexibleCache($request, $next, $flexibleTime, $tags);
     }
 
-    /**
-     * Create a middleware string for flexible/SWR caching.
-     *
-     * @param int|CarbonInterval $fresh How long the cache is considered fresh
-     * @param int|CarbonInterval $stale Stale period (time to serve stale while revalidating)
-     * @param string|array $tags Optional cache tags
-     */
     public static function for(
-        int|CarbonInterval $fresh,
-        int|CarbonInterval $stale,
+        int|CarbonInterval $lifetime,
+        int|CarbonInterval $grace,
         string|array $tags = [],
     ): string {
-        $freshSeconds = $fresh instanceof CarbonInterval ? (int) $fresh->totalSeconds : $fresh;
-        $staleSeconds = $stale instanceof CarbonInterval ? (int) $stale->totalSeconds : $stale;
+        $lifetimeSeconds = $lifetime instanceof CarbonInterval ? (int) $lifetime->totalSeconds : $lifetime;
+        $graceSeconds = $grace instanceof CarbonInterval ? (int) $grace->totalSeconds : $grace;
 
         $config = new FlexibleCacheConfiguration(
-            fresh: $freshSeconds,
-            stale: $staleSeconds,
+            fresh: $lifetimeSeconds,
+            stale: $graceSeconds,
             tags: is_array($tags) ? $tags : [$tags],
         );
 
