@@ -3,9 +3,6 @@
 namespace Spatie\ResponseCache\Test;
 
 use Illuminate\Database\Schema\Blueprint;
-
-use function Illuminate\Support\minutes;
-use function Illuminate\Support\seconds;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +13,9 @@ use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 use Spatie\ResponseCache\ResponseCacheServiceProvider;
+
+use function Illuminate\Support\minutes;
+use function Illuminate\Support\seconds;
 
 abstract class TestCase extends Orchestra
 {
@@ -35,8 +35,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
-     *
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -54,7 +53,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function getEnvironmentSetUp($app)
     {
@@ -69,7 +68,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function setUpDatabase($app)
     {
@@ -96,7 +95,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function setUpRoutes($app)
     {
@@ -153,7 +152,6 @@ abstract class TestCase extends Orchestra
         Route::any('/cache-for-given-lifetime-seconds', function () {
             return 'dummy response';
         })->middleware(CacheResponse::for(lifetime: 300));
-
 
         Route::prefix('/flexible')->group(function () {
             Route::middleware(FlexibleCacheResponse::for(fresh: 5, stale: 10))->group(function () {

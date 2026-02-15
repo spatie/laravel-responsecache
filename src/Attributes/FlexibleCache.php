@@ -11,6 +11,5 @@ class FlexibleCache
         public int $fresh,
         public int $stale,
         public array $tags = [],
-    ) {
-    }
+    ) {}
 }

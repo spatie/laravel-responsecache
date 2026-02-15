@@ -38,9 +38,9 @@ it('will handle race conditions between has and get', function () {
     // available and partialMock does not allow constructor arguments.
     $cacheRepository = Mockery::mock(Repository::class, [$cacheStore]);
     $cacheRepository
-            ->shouldReceive('get')
-            ->twice()
-            ->andReturns($cachedValues);
+        ->shouldReceive('get')
+        ->twice()
+        ->andReturns($cachedValues);
     $cacheRepository->makePartial();
     $this->instance(Repository::class, $cacheRepository);
 

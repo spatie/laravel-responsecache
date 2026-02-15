@@ -41,7 +41,7 @@ class CacheResponse extends BaseCacheMiddleware
             driver: $driver,
         );
 
-        return static::class . ':' . base64_encode(serialize($config));
+        return static::class.':'.base64_encode(serialize($config));
     }
 
     /**
@@ -195,5 +195,4 @@ class CacheResponse extends BaseCacheMiddleware
 
         return false;
     }
-
 }

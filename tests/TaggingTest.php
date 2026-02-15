@@ -1,10 +1,10 @@
 <?php
 
-use function PHPUnit\Framework\assertThat;
-use function PHPUnit\Framework\isTrue;
-
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Test\Concerns\CanChangeCacheStore;
+
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\isTrue;
 
 uses(CanChangeCacheStore::class);
 
