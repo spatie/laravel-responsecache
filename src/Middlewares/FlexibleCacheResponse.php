@@ -41,7 +41,7 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
             : $this->getConfigurationFromArgs($args);
 
         if ($config) {
-            $flexibleTime = [$config->fresh, $config->stale, $config->defer];
+            $flexibleTime = [$config->fresh, $config->stale];
             $tags = $config->tags;
         } else {
             $flexibleTime = $this->getFlexibleTime($args);
@@ -56,13 +56,11 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
      *
      * @param int|CarbonInterval $fresh How long the cache is considered fresh
      * @param int|CarbonInterval $stale Stale period (time to serve stale while revalidating)
-     * @param bool $defer Whether to always defer refresh to background (default: false)
      * @param string|array $tags Optional cache tags
      */
     public static function for(
         int|CarbonInterval $fresh,
         int|CarbonInterval $stale,
-        bool $defer = false,
         string|array $tags = [],
     ): string {
         $freshSeconds = $fresh instanceof CarbonInterval ? (int) $fresh->totalSeconds : $fresh;
@@ -71,7 +69,6 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
         $config = new FlexibleCacheConfiguration(
             fresh: $freshSeconds,
             stale: $staleSeconds,
-            defer: $defer,
             tags: is_array($tags) ? $tags : [$tags],
         );
 
@@ -81,13 +78,12 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
     /**
      * @deprecated Use for() instead. Will be removed in v9.0.
      */
-    public static function flexible(int|CarbonInterval $freshSeconds, int|CarbonInterval $totalSeconds, bool $defer = false, ...$tags): string
+    public static function flexible(int|CarbonInterval $freshSeconds, int|CarbonInterval $totalSeconds, ...$tags): string
     {
         $freshSeconds = $freshSeconds instanceof CarbonInterval ? (int) $freshSeconds->totalSeconds : $freshSeconds;
         $totalSeconds = $totalSeconds instanceof CarbonInterval ? (int) $totalSeconds->totalSeconds : $totalSeconds;
 
-        $deferFlag = $defer ? '1' : '0';
-        $flexibleTime = "{$freshSeconds}:{$totalSeconds}:{$deferFlag}";
+        $flexibleTime = "{$freshSeconds}:{$totalSeconds}";
 
         $middlewareString = static::class.':'.$flexibleTime;
 
@@ -105,7 +101,6 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
         $fresh = $flexibleTime[0];
         $stale = $flexibleTime[1];
-        $defer = $flexibleTime[2] ?? false;
 
         $response = $this->responseCache->flexible(
             $cacheKey,
@@ -131,7 +126,6 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
                 return $cachedResponse;
             },
             $tags,
-            $defer
         );
 
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->replaceInCachedResponse($response));
@@ -180,19 +174,18 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
         $parts = explode(':', $args[0]);
 
-        if (count($parts) < 2 || count($parts) > 3) {
+        if (count($parts) < 2 || count($parts) > 2) {
             return null;
         }
 
         $fresh = (int) $parts[0];
         $stale = (int) $parts[1];
-        $defer = isset($parts[2]) ? $parts[2] === '1' : false;
 
         if ($fresh <= 0 || $stale <= 0) {
             return null;
         }
 
-        return [$fresh, $stale, $defer];
+        return [$fresh, $stale];
     }
 
 }

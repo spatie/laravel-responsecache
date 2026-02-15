@@ -150,7 +150,7 @@ abstract class TestCase extends Orchestra
 
 
         Route::prefix('/flexible')->group(function () {
-            Route::middleware(FlexibleCacheResponse::flexible(5, 10))->group(function () {
+            Route::middleware(FlexibleCacheResponse::for(fresh: 5, stale: 10))->group(function () {
                 Route::any('/basic', function () {
                     return 'random-'.Str::random(10);
                 });
@@ -158,15 +158,15 @@ abstract class TestCase extends Orchestra
 
             Route::any('/carbon-interval', function () {
                 return 'custom-'.Str::random(10);
-            })->middleware(FlexibleCacheResponse::flexible(CarbonInterval::seconds(5), CarbonInterval::seconds(10)));
+            })->middleware(FlexibleCacheResponse::for(fresh: CarbonInterval::seconds(5), stale: CarbonInterval::seconds(10)));
 
             Route::any('/with-tags', function () {
                 return 'tagged-'.Str::random(10);
-            })->middleware(FlexibleCacheResponse::flexible(5, 10, false, 'tag1', 'tag2'));
+            })->middleware(FlexibleCacheResponse::for(fresh: 5, stale: 10, tags: ['tag1', 'tag2']));
 
             Route::any('/custom-time', function () {
                 return 'custom-'.Str::random(10);
-            })->middleware(FlexibleCacheResponse::flexible(3, 15));
+            })->middleware(FlexibleCacheResponse::for(fresh: 3, stale: 15));
         });
     }
 

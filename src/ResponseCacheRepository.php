@@ -29,10 +29,9 @@ class ResponseCacheRepository
      * @param string $key
      * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
      * @param Closure $callback Callback that returns a Response object
-     * @param bool|null $defer
      * @return Response
      */
-    public function flexible(string $key, array $seconds, Closure $callback, ?bool $defer = false): Response
+    public function flexible(string $key, array $seconds, Closure $callback): Response
     {
         $result = $this->cache->flexible(
             $key,
@@ -42,8 +41,6 @@ class ResponseCacheRepository
 
                 return $this->responseSerializer->serialize($response);
             },
-            null,
-            $defer
         );
 
         return $this->responseSerializer->unserialize($result);

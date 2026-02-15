@@ -21,6 +21,7 @@ Laravel ResponseCache v8 modernizes the package with PHP 8.5+ features and an im
 2. Config structure reorganized with nesting
 3. Default serializer changed to JSON
 4. Enum usage internally (affects custom implementations)
+5. The `defer` parameter has been removed from `FlexibleCacheResponse::for()`, `#[FlexibleCache]`, and all related classes
 
 ### Breaking Changes Detail
 
@@ -42,7 +43,6 @@ Route::get('/posts')->middleware(CacheResponse::for(
 Route::get('/live')->middleware(FlexibleCacheResponse::for(
     fresh: CarbonInterval::minutes(3),
     stale: CarbonInterval::minutes(15),
-    defer: true
 ));
 ```
 
@@ -51,14 +51,28 @@ Route::get('/live')->middleware(FlexibleCacheResponse::for(
 #[Cache(lifetime: 300, tags: ['posts', 'api'])]
 public function index() {}
 
-#[FlexibleCache(fresh: 180, stale: 900, defer: true)]
+#[FlexibleCache(fresh: 180, stale: 900)]
 public function show($id) {}
 
 #[NoCache]
 public function store() {}
 ```
 
-#### 2. Config Structure Changes
+#### 2. `defer` parameter removed from flexible caching
+
+The `defer` parameter has been removed from `FlexibleCacheResponse::for()`, the `#[FlexibleCache]` attribute, and all underlying classes. The parameter was misleading — both code paths returned stale data immediately during the stale window. Simply remove any `defer` arguments:
+
+```php
+// Before
+FlexibleCacheResponse::for(fresh: 10, stale: 30, defer: true)
+#[FlexibleCache(fresh: 180, stale: 900, defer: true)]
+
+// After
+FlexibleCacheResponse::for(fresh: 10, stale: 30)
+#[FlexibleCache(fresh: 180, stale: 900)]
+```
+
+#### 3. Config Structure Changes
 
 **Old flat structure:**
 ```php
@@ -92,14 +106,14 @@ public function store() {}
 - `config('responsecache.add_cache_time_header')` → `config('responsecache.debug.add_time_header')`
 - `config('responsecache.cache_bypass_header.name')` → `config('responsecache.bypass.header_name')`
 
-#### 3. Default Serializer Changed
+#### 4. Default Serializer Changed
 
 **Old:** `DefaultSerializer` using PHP `serialize()` (security risk)
 **New:** `JsonSerializer` using JSON encoding (more secure)
 
 The `DefaultSerializer` class has been removed. If you had customized the serializer, implement the `Serializer` interface directly.
 
-#### 4. Enum Usage (Internal)
+#### 5. Enum Usage (Internal)
 
 If you've extended the package:
 - HTTP methods now use `HttpMethod` enum with PascalCase: `HttpMethod::Get`, `HttpMethod::Post`

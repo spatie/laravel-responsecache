@@ -146,11 +146,10 @@ class ResponseCache
      * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
      * @param Closure $callback Callback that returns a Response object
      * @param array $tags
-     * @param bool|null $defer
      * @return Response
      */
-    public function flexible(string $key, array $seconds, Closure $callback, array $tags = [], ?bool $defer = false): Response
+    public function flexible(string $key, array $seconds, Closure $callback, array $tags = []): Response
     {
-        return $this->taggedCache($tags)->flexible($key, $seconds, $callback, $defer);
+        return $this->taggedCache($tags)->flexible($key, $seconds, $callback);
     }
 }
