@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "php": "^8.5",
+        "php": "^8.4",
         "illuminate/cache": "^12.0",
         "illuminate/container": "^12.0",
         "illuminate/console": "^12.0",
@@ -30,10 +30,11 @@
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
+        "larastan/larastan": "^3.9",
         "laravel/framework": "^12.0",
+        "laravel/pint": "^1.13.7",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^10.0",
-        "laravel/pint": "^1.13.7",
         "pestphp/pest": "^4.0"
     },
     "autoload": {
@@ -48,7 +49,8 @@
     },
     "scripts": {
         "test": "vendor/bin/pest",
-        "format": "vendor/bin/pint"
+        "format": "vendor/bin/pint",
+        "analyse": "vendor/bin/phpstan analyse"
     },
     "config": {
         "sort-packages": true,

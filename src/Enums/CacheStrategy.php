@@ -6,4 +6,5 @@ enum CacheStrategy
 {
     case Standard;
     case Flexible;     
-    case Disabled;     
+    case Disabled;
+}

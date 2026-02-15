@@ -4,88 +4,62 @@ Because there are many breaking changes an upgrade is not that easy. There are m
 
 ## 8.0.0
 
-### Summary of Changes
+Laravel ResponseCache v8 modernizes the package for PHP 8.4+ and Laravel 12+.
 
-Laravel ResponseCache v8 modernizes the package with PHP 8.5+ features and an improved developer experience:
+### Middleware API
 
-**New Features:**
-- Enum-based type safety for HTTP methods and response types
-- Attribute-based cache configuration using `#[Cache]` and `#[FlexibleCache]`
-- Restructured config with logical grouping (cache.*, debug.*, bypass.*)
-- JSON serialization by default (replacing PHP serialize() for security)
-- Enhanced fluent API with named parameters
-- Better debug headers for troubleshooting
+The old string-based middleware syntax has been replaced with a fluent `::for()` method using named parameters.
 
-**Breaking Changes:**
-1. Middleware API completely redesigned
-2. Config structure reorganized with nesting
-3. Default serializer changed to JSON
-4. Enum usage internally (affects custom implementations)
-5. The `defer` parameter has been removed from `FlexibleCacheResponse::for()`, `#[FlexibleCache]`, and all related classes
-
-### Breaking Changes Detail
-
-#### 1. Middleware API Changes
-
-**Old string-based syntax (removed):**
 ```php
+// Before
 Route::get('/posts')->middleware('cacheResponse:300,posts,api');
-Route::get('/live')->middleware(FlexibleCacheResponse::flexible(180, 900));
-```
 
-**New fluent syntax:**
-```php
+// After
 Route::get('/posts')->middleware(CacheResponse::for(
-    lifetime: 300,
-    tags: ['posts', 'api']
-));
-
-Route::get('/live')->middleware(FlexibleCacheResponse::for(
-    fresh: CarbonInterval::minutes(3),
-    stale: CarbonInterval::minutes(15),
+    lifetime: CarbonInterval::minutes(5),
+    tags: ['posts', 'api'],
 ));
 ```
 
-**Or use attributes (recommended):**
-```php
-#[Cache(lifetime: 300, tags: ['posts', 'api'])]
-public function index() {}
+You can also use attributes directly on controller methods:
 
-#[FlexibleCache(fresh: 180, stale: 900)]
-public function show($id) {}
+```php
+#[Cache(lifetime: 5 * 60, tags: ['posts', 'api'])]
+public function index() {}
 
 #[NoCache]
 public function store() {}
 ```
 
-#### 2. `defer` parameter removed from flexible caching
+### Flexible caching (stale-while-revalidate)
 
-The `defer` parameter has been removed from `FlexibleCacheResponse::for()`, the `#[FlexibleCache]` attribute, and all underlying classes. The parameter was misleading — both code paths returned stale data immediately during the stale window. Simply remove any `defer` arguments:
+A new `FlexibleCacheResponse` middleware uses Laravel's `Cache::flexible()` to serve stale content instantly while refreshing in the background.
+
+```php
+Route::get('/dashboard')->middleware(FlexibleCacheResponse::for(
+    lifetime: CarbonInterval::minutes(3),
+    grace: CarbonInterval::minutes(15),
+));
+
+// Or using an attribute
+#[FlexibleCache(lifetime: 3 * 60, grace: 15 * 60)]
+public function dashboard() {}
+```
+
+### Config structure
+
+The config file has been reorganized from flat keys into logical groups.
 
 ```php
 // Before
-FlexibleCacheResponse::for(fresh: 10, stale: 30, defer: true)
-#[FlexibleCache(fresh: 180, stale: 900, defer: true)]
+'cache_lifetime_in_seconds' => 604800,
+'cache_store' => 'file',
+'add_cache_time_header' => false,
+'cache_bypass_header' => ['name' => null, 'value' => null],
 
 // After
-FlexibleCacheResponse::for(fresh: 10, stale: 30)
-#[FlexibleCache(fresh: 180, stale: 900)]
-```
-
-#### 3. Config Structure Changes
-
-**Old flat structure:**
-```php
-'cache_lifetime_in_seconds' => 604800,
-'add_cache_time_header' => false,
-'cache_store' => 'file',
-'cache_bypass_header' => [...],
-```
-
-**New nested structure:**
-```php
 'cache' => [
-    'lifetime' => 604800,
+    'lifetime_in_seconds' => 604800,
     'store' => 'file',
     'tag' => '',
 ],
@@ -100,51 +74,43 @@ FlexibleCacheResponse::for(fresh: 10, stale: 30)
 ],
 ```
 
-**Update your code:**
+Update your code accordingly:
 - `config('responsecache.cache_lifetime_in_seconds')` → `config('responsecache.cache.lifetime_in_seconds')`
 - `config('responsecache.cache_store')` → `config('responsecache.cache.store')`
 - `config('responsecache.add_cache_time_header')` → `config('responsecache.debug.add_time_header')`
 - `config('responsecache.cache_bypass_header.name')` → `config('responsecache.bypass.header_name')`
 
-#### 4. Default Serializer Changed
+### Default serializer changed to JSON
 
-**Old:** `DefaultSerializer` using PHP `serialize()` (security risk)
-**New:** `JsonSerializer` using JSON encoding (more secure)
+The default serializer is now `JsonSerializer` which uses JSON encoding instead of PHP `serialize()`. The old `DefaultSerializer` has been removed. If you had a custom serializer, implement the `Serializer` interface directly.
 
-The `DefaultSerializer` class has been removed. If you had customized the serializer, implement the `Serializer` interface directly.
+You must clear your cache after upgrading since the serialization format has changed.
 
-#### 5. Enum Usage (Internal)
+### Event classes renamed
 
-If you've extended the package:
-- HTTP methods now use `HttpMethod` enum with PascalCase: `HttpMethod::Get`, `HttpMethod::Post`
-- Response types use `ResponseType` enum: `ResponseType::Normal`, `ResponseType::File`
-- Update custom cache profiles to use enums instead of strings
+All event classes now have an `Event` suffix:
 
-### Migration Steps
+- `CacheMissed` → `CacheMissedEvent`
+- `ResponseCacheHit` → `ResponseCacheHitEvent`
+- `ClearingResponseCache` → `ClearingResponseCacheEvent`
+- `ClearedResponseCache` → `ClearedResponseCacheEvent`
+- `ClearingResponseCacheFailed` → `ClearingResponseCacheFailedEvent`
 
-1. **Update middleware in routes:**
-   ```bash
-   # Search for: 'cacheResponse:
-   # Replace with: CacheResponse::for(lifetime:
-   ```
+### Ignored query parameters
 
-2. **Update config file:**
-   ```bash
-   php artisan vendor:publish --tag="responsecache-config" --force
-   ```
-   Then merge your custom settings into the new structure.
+A new `ignored_query_parameters` config option strips tracking parameters (like `utm_source`, `gclid`, `fbclid`) from cache keys. This prevents duplicate cache entries for the same page with different tracking parameters.
 
-3. **Clear cache:**
-   ```bash
-   php artisan responsecache:clear
-   ```
-   This is necessary because the serializer format changed.
+### Enums
 
-4. **Update tests:**
-   Update any tests that reference config keys or middleware syntax.
+If you've extended the package, note that HTTP methods now use the `HttpMethod` enum and response types use the `ResponseType` enum internally.
 
-5. **Consider using attributes:**
-   Migrate your most common cache configurations to controller attributes for better readability.
+### Migration steps
+
+1. Update your middleware calls to use `::for()` or switch to attributes
+2. Republish and merge the config file: `php artisan vendor:publish --tag="responsecache-config" --force`
+3. Clear the cache: `php artisan responsecache:clear`
+4. Update any event class references to use the new `Event` suffix
+5. Update any config references in your code
 
 ## 6.0.0
 

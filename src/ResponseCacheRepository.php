@@ -80,15 +80,15 @@ class ResponseCacheRepository
 
     public function tags(array $tags): self
     {
-        if ($this->isTagged($this->cache)) {
+        if ($this->cache instanceof TaggedCache) {
             $tags = array_merge($this->cache->getTags()->getNames(), $tags);
         }
 
         return new self($this->responseSerializer, $this->cache->tags($tags));
     }
 
-    public function isTagged($repository): bool
+    public function isTagged(mixed $repository): bool
     {
-        return $repository instanceof TaggedCache && ! empty($repository->getTags());
+        return $repository instanceof TaggedCache;
     }
 }

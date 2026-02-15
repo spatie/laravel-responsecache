@@ -25,7 +25,7 @@ class BaseCacheMiddleware
             if (config('responsecache.debug.time_header_name')) {
                 $time = $response->headers->get(config('responsecache.debug.time_header_name'));
                 $ageInSeconds = (int) Carbon::parse($time)->diffInSeconds(Carbon::now(), true);
-                $response->headers->set(config('responsecache.debug.age_header_name'), $ageInSeconds);
+                $response->headers->set(config('responsecache.debug.age_header_name'), (string) $ageInSeconds);
             }
         }
 

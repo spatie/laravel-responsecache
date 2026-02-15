@@ -22,7 +22,7 @@ class JsonSerializer implements Serializer
             'type' => $type->value,
             'status' => $response->getStatusCode(),
             'headers' => $response->headers->all(),
-            'content' => $type === ResponseType::File
+            'content' => $response instanceof BinaryFileResponse
                 ? $response->getFile()->getPathname()
                 : $response->getContent(),
         ];

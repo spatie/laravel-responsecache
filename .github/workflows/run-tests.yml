@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.5]
+        php: [8.4, 8.5]
         laravel: [12.*]
         dependency-version: [prefer-stable]
 

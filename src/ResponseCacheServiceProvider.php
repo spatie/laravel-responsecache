@@ -40,8 +40,11 @@ class ResponseCacheServiceProvider extends PackageServiceProvider
         $this->app->when(ResponseCacheRepository::class)
             ->needs(Repository::class)
             ->give(function (): Repository {
+                /** @var Repository $repository */
                 $repository = app('cache')->store(config('responsecache.cache.store'));
+
                 if (! empty(config('responsecache.cache.tag'))) {
+                    /** @var Repository */
                     return $repository->tags(config('responsecache.cache.tag'));
                 }
 
