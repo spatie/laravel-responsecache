@@ -33,6 +33,7 @@
         "laravel/framework": "^12.0",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^10.0",
+        "laravel/pint": "^1.13.7",
         "pestphp/pest": "^4.0"
     },
     "autoload": {
@@ -46,7 +47,8 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/pest"
+        "test": "vendor/bin/pest",
+        "format": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true,

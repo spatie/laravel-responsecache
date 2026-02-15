@@ -1,5 +1,4 @@
 .idea
-.php_cs
 .php-cs-fixer.cache
 .phpunit.result.cache
 build
