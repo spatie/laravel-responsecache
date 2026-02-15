@@ -12,7 +12,7 @@ class AttributeReader
      *
      * @param  string  $action  The controller action in "Controller@method" format
      * @param  array  $attributeClasses  Array of attribute class names to search for
-     * @return object|null  The first matching attribute instance or null if none found
+     * @return object|null The first matching attribute instance or null if none found
      */
     public static function getFirstAttribute(string $action, array $attributeClasses): ?object
     {

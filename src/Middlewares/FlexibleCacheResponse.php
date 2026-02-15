@@ -54,9 +54,9 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
     /**
      * Create a middleware string for flexible/SWR caching.
      *
-     * @param int|CarbonInterval $fresh How long the cache is considered fresh
-     * @param int|CarbonInterval $stale Stale period (time to serve stale while revalidating)
-     * @param string|array $tags Optional cache tags
+     * @param  int|CarbonInterval  $fresh  How long the cache is considered fresh
+     * @param  int|CarbonInterval  $stale  Stale period (time to serve stale while revalidating)
+     * @param  string|array  $tags  Optional cache tags
      */
     public static function for(
         int|CarbonInterval $fresh,
@@ -72,7 +72,7 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
             tags: is_array($tags) ? $tags : [$tags],
         );
 
-        return static::class . ':' . base64_encode(serialize($config));
+        return static::class.':'.base64_encode(serialize($config));
     }
 
     /**
@@ -93,7 +93,6 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
         return $middlewareString;
     }
-
 
     protected function handleFlexibleCache(Request $request, Closure $next, array $flexibleTime, array $tags): Response
     {
@@ -187,5 +186,4 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
         return [$fresh, $stale];
     }
-
 }

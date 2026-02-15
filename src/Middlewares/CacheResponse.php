@@ -28,9 +28,9 @@ class CacheResponse extends BaseCacheMiddleware
     /**
      * Create a middleware string for standard cache configuration.
      *
-     * @param int|null $lifetime Cache lifetime in seconds
-     * @param string|array $tags Cache tags
-     * @param string|null $driver Cache driver to use
+     * @param  int|null  $lifetime  Cache lifetime in seconds
+     * @param  string|array  $tags  Cache tags
+     * @param  string|null  $driver  Cache driver to use
      * @return string Middleware string
      */
     public static function for(
@@ -44,7 +44,7 @@ class CacheResponse extends BaseCacheMiddleware
             driver: $driver,
         );
 
-        return static::class . ':' . base64_encode(serialize($config));
+        return static::class.':'.base64_encode(serialize($config));
     }
 
     /**
@@ -198,5 +198,4 @@ class CacheResponse extends BaseCacheMiddleware
 
         return false;
     }
-
 }

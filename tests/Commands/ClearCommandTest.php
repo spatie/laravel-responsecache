@@ -3,12 +3,11 @@
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
-
-use function PHPUnit\Framework\assertNull;
-
 use Spatie\ResponseCache\Events\ClearedResponseCache;
 use Spatie\ResponseCache\Events\ClearingResponseCache;
 use Spatie\ResponseCache\ResponseCacheRepository;
+
+use function PHPUnit\Framework\assertNull;
 
 beforeEach(function () {
     $this->createTaggableResponseCacheStore = function ($tag): Repository {
@@ -19,7 +18,6 @@ beforeEach(function () {
         return $this->app->contextual[ResponseCacheRepository::class][$this->app->getAlias(Repository::class)]();
     };
 });
-
 
 it('will clear the cache', function () {
     $firstResponse = $this->get('/random');
