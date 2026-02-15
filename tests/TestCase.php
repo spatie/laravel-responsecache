@@ -3,9 +3,6 @@
 namespace Spatie\ResponseCache\Test;
 
 use Illuminate\Database\Schema\Blueprint;
-
-use function Illuminate\Support\minutes;
-use function Illuminate\Support\seconds;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +13,9 @@ use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 use Spatie\ResponseCache\ResponseCacheServiceProvider;
+
+use function Illuminate\Support\minutes;
+use function Illuminate\Support\seconds;
 
 abstract class TestCase extends Orchestra
 {

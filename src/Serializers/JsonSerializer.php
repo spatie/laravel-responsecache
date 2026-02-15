@@ -3,10 +3,10 @@
 namespace Spatie\ResponseCache\Serializers;
 
 use Illuminate\Http\Response as IlluminateResponse;
+use JsonException;
 use Spatie\ResponseCache\Enums\ResponseType;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use JsonException;
 use Symfony\Component\HttpFoundation\Response;
 
 class JsonSerializer implements Serializer

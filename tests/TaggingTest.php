@@ -1,6 +1,5 @@
 <?php
 
-use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Test\Concerns\CanChangeCacheStore;
 
 use function PHPUnit\Framework\assertThat;
@@ -78,4 +77,3 @@ it('can forget requests using multiple route cache tags', function () {
     assertRegularResponse($secondResponse);
     assertDifferentResponse($firstResponse, $secondResponse);
 });
-
