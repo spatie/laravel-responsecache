@@ -19,34 +19,24 @@ This Laravel package can cache an entire response. By default it will cache all 
 
 The first time a request comes in, the package will save the response before sending it to the user. When the same request comes in again, the cached response is returned without going through the entire application.
 
-Here's a quick example using attributes:
+Here's a quick example:
 
 ```php
-use Spatie\ResponseCache\Attributes\Cache;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 
-class PostController
-{
-    #[Cache(lifetime: 300, tags: ['posts'])]
-    public function index()
-    {
-        return view('posts.index', ['posts' => Post::all()]);
-    }
-}
+Route::middleware(CacheResponse::for(minutes(10)))->group(function () {
+    Route::get('/posts', [PostController::class, 'index']);
+    Route::get('/posts/{post}', [PostController::class, 'show']);
+});
 ```
 
 You can also use stale-while-revalidate caching for data that can be briefly stale:
 
 ```php
-use Spatie\ResponseCache\Attributes\FlexibleCache;
+use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
-class DashboardController
-{
-    #[FlexibleCache(fresh: 180, stale: 720)]
-    public function index()
-    {
-        return view('dashboard');
-    }
-}
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(FlexibleCacheResponse::for(minutes(3), minutes(12)));
 ```
 
 ## Support us

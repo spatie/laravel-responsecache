@@ -2,8 +2,10 @@
 
 namespace Spatie\ResponseCache\Test;
 
-use Carbon\CarbonInterval;
 use Illuminate\Database\Schema\Blueprint;
+
+use function Illuminate\Support\minutes;
+use function Illuminate\Support\seconds;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -146,7 +148,11 @@ abstract class TestCase extends Orchestra
 
         Route::any('/cache-for-given-lifetime', function () {
             return 'dummy response';
-        })->middleware('cacheResponse:300');
+        })->middleware(CacheResponse::for(lifetime: minutes(5)));
+
+        Route::any('/cache-for-given-lifetime-seconds', function () {
+            return 'dummy response';
+        })->middleware(CacheResponse::for(lifetime: 300));
 
 
         Route::prefix('/flexible')->group(function () {
@@ -158,7 +164,7 @@ abstract class TestCase extends Orchestra
 
             Route::any('/carbon-interval', function () {
                 return 'custom-'.Str::random(10);
-            })->middleware(FlexibleCacheResponse::for(fresh: CarbonInterval::seconds(5), stale: CarbonInterval::seconds(10)));
+            })->middleware(FlexibleCacheResponse::for(fresh: seconds(5), stale: seconds(10)));
 
             Route::any('/with-tags', function () {
                 return 'tagged-'.Str::random(10);

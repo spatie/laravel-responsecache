@@ -2,6 +2,7 @@
 
 namespace Spatie\ResponseCache\Middlewares;
 
+use Carbon\CarbonInterval;
 use Closure;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\Attributes\Cache;
@@ -25,21 +26,17 @@ class CacheResponse extends BaseCacheMiddleware
         $this->responseCache = $responseCache;
     }
 
-    /**
-     * Create a middleware string for standard cache configuration.
-     *
-     * @param int|null $lifetime Cache lifetime in seconds
-     * @param string|array $tags Cache tags
-     * @param string|null $driver Cache driver to use
-     * @return string Middleware string
-     */
     public static function for(
-        ?int $lifetime = null,
+        int|CarbonInterval|null $lifetime = null,
         string|array $tags = [],
         ?string $driver = null,
     ): string {
+        $lifetimeInSeconds = $lifetime instanceof CarbonInterval
+            ? (int) $lifetime->totalSeconds
+            : $lifetime;
+
         $config = new CacheConfiguration(
-            lifetime: $lifetime,
+            lifetime: $lifetimeInSeconds,
             tags: is_array($tags) ? $tags : [$tags],
             driver: $driver,
         );
