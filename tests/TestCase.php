@@ -35,8 +35,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
-     *
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -54,7 +53,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function getEnvironmentSetUp($app)
     {
@@ -69,7 +68,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function setUpDatabase($app)
     {
@@ -96,7 +95,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function setUpRoutes($app)
     {
@@ -153,7 +152,6 @@ abstract class TestCase extends Orchestra
         Route::any('/cache-for-given-lifetime-seconds', function () {
             return 'dummy response';
         })->middleware(CacheResponse::for(lifetime: 300));
-
 
         Route::prefix('/flexible')->group(function () {
             Route::middleware(FlexibleCacheResponse::for(lifetime: 5, grace: 10))->group(function () {

@@ -91,13 +91,13 @@ class ResponseCache
 
     public function clear(array $tags = []): bool
     {
-        event(new ClearingResponseCacheEvent());
+        event(new ClearingResponseCacheEvent);
 
         $result = $this->taggedCache($tags)->clear();
 
         $resultEvent = $result
-            ? new ClearedResponseCacheEvent()
-            : new ClearingResponseCacheFailedEvent();
+            ? new ClearedResponseCacheEvent
+            : new ClearingResponseCacheFailedEvent;
 
         event($resultEvent);
 
@@ -117,19 +117,16 @@ class ResponseCache
     }
 
     /**
-     * @param string|array $uris
-     * @param string[] $tags
-     *
-     * @return \Spatie\ResponseCache\ResponseCache
+     * @param  string[]  $tags
      */
-    public function forget(string | array $uris, array $tags = []): self
+    public function forget(string|array $uris, array $tags = []): self
     {
-        event(new ClearingResponseCacheEvent());
+        event(new ClearingResponseCacheEvent);
 
         $uris = is_array($uris) ? $uris : func_get_args();
         $this->selectCachedItems()->forUrls($uris)->forget();
 
-        event(new ClearedResponseCacheEvent());
+        event(new ClearedResponseCacheEvent);
 
         return $this;
     }
@@ -142,11 +139,8 @@ class ResponseCache
     /**
      * Get a cached response using flexible/SWR (stale-while-revalidate) strategy.
      *
-     * @param string $key
-     * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
-     * @param Closure $callback Callback that returns a Response object
-     * @param array $tags
-     * @return Response
+     * @param  array{0: int, 1: int}  $seconds  [fresh_seconds, total_seconds]
+     * @param  Closure  $callback  Callback that returns a Response object
      */
     public function flexible(string $key, array $seconds, Closure $callback, array $tags = []): Response
     {

@@ -42,7 +42,6 @@ it('returns cached response within fresh period using carbon functions in flexib
     expect($secondContent)->toBe($firstContent);
 });
 
-
 it('adds cache time header when configured', function () {
     config()->set('responsecache.debug.add_time_header', true);
     config()->set('responsecache.debug.time_header_name', 'X-Cached-At');
@@ -140,7 +139,6 @@ it('blocks during recomputation when cache is expired', function () {
     expect($thirdResponse->getContent())->toBe($secondResponse->getContent());
 });
 
-
 it('respects custom fresh and stale periods', function () {
     $firstResponse = $this->get('/flexible/custom-time');
     $firstContent = $firstResponse->getContent();
@@ -209,7 +207,6 @@ it('fires CacheMissed event on first request', function () {
 
     Event::assertDispatched(CacheMissedEvent::class);
 })->skip('Currently this test does not work due to a bug in Laravel 11');
-
 
 it('parses flexible time format correctly', function () {
     $firstResponse = $this->get('/flexible/basic');

@@ -18,7 +18,7 @@ class ResponseCacheRepository
         //
     }
 
-    public function put(string $key, Response $response, DateTime | int $seconds): void
+    public function put(string $key, Response $response, DateTime|int $seconds): void
     {
         $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
     }
@@ -26,10 +26,8 @@ class ResponseCacheRepository
     /**
      * Get a cached response using flexible/SWR strategy.
      *
-     * @param string $key
-     * @param array{0: int, 1: int} $seconds [fresh_seconds, total_seconds]
-     * @param Closure $callback Callback that returns a Response object
-     * @return Response
+     * @param  array{0: int, 1: int}  $seconds  [fresh_seconds, total_seconds]
+     * @param  Closure  $callback  Callback that returns a Response object
      */
     public function flexible(string $key, array $seconds, Closure $callback): Response
     {
@@ -59,6 +57,7 @@ class ResponseCacheRepository
     /**
      * If the response cache tag is empty, or a Store doesn't support tags, the whole cache will be cleared.
 
+     *
      * @return bool Whether the cache was cleared successfully.
      */
     public function clear(): bool

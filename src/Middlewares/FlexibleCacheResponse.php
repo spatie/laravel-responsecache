@@ -65,7 +65,7 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
             tags: is_array($tags) ? $tags : [$tags],
         );
 
-        return static::class . ':' . base64_encode(serialize($config));
+        return static::class.':'.base64_encode(serialize($config));
     }
 
     protected function handleFlexibleCache(Request $request, Closure $next, array $flexibleTime, array $tags): Response
@@ -160,5 +160,4 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
         return [$fresh, $stale];
     }
-
 }

@@ -81,5 +81,4 @@ class BaseCacheMiddleware
 
         return $response;
     }
-
 }
