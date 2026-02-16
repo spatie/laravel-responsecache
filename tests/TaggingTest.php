@@ -1,10 +1,9 @@
 <?php
 
+use Spatie\ResponseCache\Test\Concerns\CanChangeCacheStore;
+
 use function PHPUnit\Framework\assertThat;
 use function PHPUnit\Framework\isTrue;
-
-use Spatie\ResponseCache\Middlewares\CacheResponse;
-use Spatie\ResponseCache\Test\Concerns\CanChangeCacheStore;
 
 uses(CanChangeCacheStore::class);
 
@@ -45,7 +44,7 @@ it('can forget requests using route cache tags from global cache', function () {
     $firstResponse = $this->get('/tagged/1');
     assertRegularResponse($firstResponse);
 
-    $this->app['cache']->store(config('responsecache.cache_store'))->tags('laravel-responsecache')->clear('foo');
+    $this->app['cache']->store(config('responsecache.cache.store'))->tags('laravel-responsecache')->clear('foo');
 
     $secondResponse = $this->get('/tagged/1');
     assertRegularResponse($secondResponse);
@@ -53,7 +52,7 @@ it('can forget requests using route cache tags from global cache', function () {
 });
 
 it('can forget requests using route cache tags without deleting unrelated cache', function () {
-    $this->app['cache']->store(config('responsecache.cache_store'))->tags('unrelated-cache')->put('baz', true);
+    $this->app['cache']->store(config('responsecache.cache.store'))->tags('unrelated-cache')->put('baz', true);
 
     $firstResponse = $this->get('/tagged/1');
     assertRegularResponse($firstResponse);
@@ -64,7 +63,7 @@ it('can forget requests using route cache tags without deleting unrelated cache'
     assertRegularResponse($secondResponse);
     assertDifferentResponse($firstResponse, $secondResponse);
 
-    $cacheValue = $this->app['cache']->store(config('responsecache.cache_store'))->tags('unrelated-cache')->get('baz');
+    $cacheValue = $this->app['cache']->store(config('responsecache.cache.store'))->tags('unrelated-cache')->get('baz');
     assertThat($cacheValue, isTrue(), 'Failed to assert that a cached value is present');
 });
 
@@ -77,15 +76,4 @@ it('can forget requests using multiple route cache tags', function () {
     $secondResponse = $this->get('/tagged/2');
     assertRegularResponse($secondResponse);
     assertDifferentResponse($firstResponse, $secondResponse);
-});
-
-it('can generate middleware string for different tag combinations using the using method', function () {
-    $singleTag = CacheResponse::using('foo');
-    expect($singleTag)->toBe(CacheResponse::class.':foo');
-
-    $multipleTags = CacheResponse::using('foo', 'bar');
-    expect($multipleTags)->toBe(CacheResponse::class.':foo,bar');
-
-    $lifetime = CacheResponse::using(300);
-    expect($lifetime)->toBe(CacheResponse::class.':300');
 });

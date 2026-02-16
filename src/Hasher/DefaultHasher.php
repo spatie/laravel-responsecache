@@ -15,21 +15,51 @@ class DefaultHasher implements RequestHasher
 
     public function getHashFor(Request $request): string
     {
-        $cacheNameSuffix = $this->getCacheNameSuffix($request);
+        $strings = [
+            'responsecache',
+            $request->getHost(),
+            $this->getNormalizedRequestUri($request),
+            $request->getMethod(),
+            $this->getCacheNameSuffix($request),
+        ];
 
-        return 'responsecache-' . hash(
-            'xxh128',
-            "{$request->getHost()}-{$this->getNormalizedRequestUri($request)}-{$request->getMethod()}/$cacheNameSuffix"
-        );
+        return hash('xxh128', implode('-', $strings));
     }
 
     protected function getNormalizedRequestUri(Request $request): string
     {
-        if ($queryString = $request->getQueryString()) {
+        $queryString = $this->getNormalizedQueryString($request);
+
+        if ($queryString !== '') {
             $queryString = '?'.$queryString;
         }
 
         return $request->getBaseUrl().$request->getPathInfo().$queryString;
+    }
+
+    protected function getNormalizedQueryString(Request $request): string
+    {
+        $queryString = $request->getQueryString();
+
+        if ($queryString === null || $queryString === '') {
+            return '';
+        }
+
+        $ignoredParameters = config('responsecache.ignored_query_parameters', []);
+
+        if (empty($ignoredParameters)) {
+            return $queryString;
+        }
+
+        parse_str($queryString, $parameters);
+
+        $parameters = array_diff_key($parameters, array_flip($ignoredParameters));
+
+        if (empty($parameters)) {
+            return '';
+        }
+
+        return http_build_query($parameters);
     }
 
     protected function getCacheNameSuffix(Request $request)

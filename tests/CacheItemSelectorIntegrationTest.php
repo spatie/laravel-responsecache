@@ -115,7 +115,7 @@ it('can forget a specific cached request using cache cleaner suffix', function (
         ->withParameters(['foo' => 'bar'])
         // BaseCacheProfile an user is logged in
         // use user id as suffix
-        ->usingSuffix((string)$userId)
+        ->usingSuffix((string) $userId)
         ->forUrls('/random')->forget();
 
     $this->actingAs(User::findOrFail(1));

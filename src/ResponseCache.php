@@ -2,18 +2,22 @@
 
 namespace Spatie\ResponseCache;
 
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
-use Spatie\ResponseCache\Events\ClearedResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCache;
-use Spatie\ResponseCache\Events\ClearingResponseCacheFailed;
+use Spatie\ResponseCache\Concerns\TaggedCacheAware;
+use Spatie\ResponseCache\Events\ClearedResponseCacheEvent;
+use Spatie\ResponseCache\Events\ClearingResponseCacheEvent;
+use Spatie\ResponseCache\Events\ClearingResponseCacheFailedEvent;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseCache
 {
+    use TaggedCacheAware;
+
     public function __construct(
         protected ResponseCacheRepository $cache,
         protected RequestHasher $hasher,
@@ -43,15 +47,15 @@ class ResponseCache
     public function shouldBypass(Request $request): bool
     {
         // Ensure we return if cache_bypass_header is not setup
-        if (! config('responsecache.cache_bypass_header.name')) {
+        if (! config('responsecache.bypass.header_name')) {
             return false;
         }
         // Ensure we return if cache_bypass_header is not setup
-        if (! config('responsecache.cache_bypass_header.value')) {
+        if (! config('responsecache.bypass.header_value')) {
             return false;
         }
 
-        return $request->header(config('responsecache.cache_bypass_header.name')) === (string) config('responsecache.cache_bypass_header.value');
+        return $request->header(config('responsecache.bypass.header_name')) === (string) config('responsecache.bypass.header_value');
     }
 
     public function cacheResponse(
@@ -60,7 +64,7 @@ class ResponseCache
         ?int $lifetimeInSeconds = null,
         array $tags = []
     ): Response {
-        if (config('responsecache.add_cache_time_header')) {
+        if (config('responsecache.debug.add_time_header')) {
             $response = $this->addCachedHeader($response);
         }
 
@@ -87,13 +91,13 @@ class ResponseCache
 
     public function clear(array $tags = []): bool
     {
-        event(new ClearingResponseCache());
+        event(new ClearingResponseCacheEvent);
 
         $result = $this->taggedCache($tags)->clear();
 
         $resultEvent = $result
-            ? new ClearedResponseCache()
-            : new ClearingResponseCacheFailed();
+            ? new ClearedResponseCacheEvent
+            : new ClearingResponseCacheFailedEvent;
 
         event($resultEvent);
 
@@ -105,7 +109,7 @@ class ResponseCache
         $clonedResponse = clone $response;
 
         $clonedResponse->headers->set(
-            config('responsecache.cache_time_header_name'),
+            config('responsecache.debug.time_header_name'),
             Carbon::now()->toRfc2822String(),
         );
 
@@ -113,19 +117,16 @@ class ResponseCache
     }
 
     /**
-     * @param string|array $uris
-     * @param string[] $tags
-     *
-     * @return \Spatie\ResponseCache\ResponseCache
+     * @param  string[]  $tags
      */
-    public function forget(string | array $uris, array $tags = []): self
+    public function forget(string|array $uris, array $tags = []): self
     {
-        event(new ClearingResponseCache());
+        event(new ClearingResponseCacheEvent);
 
         $uris = is_array($uris) ? $uris : func_get_args();
         $this->selectCachedItems()->forUrls($uris)->forget();
 
-        event(new ClearedResponseCache());
+        event(new ClearedResponseCacheEvent);
 
         return $this;
     }
@@ -135,12 +136,14 @@ class ResponseCache
         return new CacheItemSelector($this->hasher, $this->cache);
     }
 
-    protected function taggedCache(array $tags = []): ResponseCacheRepository
+    /**
+     * Get a cached response using flexible/SWR (stale-while-revalidate) strategy.
+     *
+     * @param  array{0: int, 1: int}  $seconds  [fresh_seconds, total_seconds]
+     * @param  Closure  $callback  Callback that returns a Response object
+     */
+    public function flexible(string $key, array $seconds, Closure $callback, array $tags = []): Response
     {
-        if (empty($tags)) {
-            return $this->cache;
-        }
-
-        return $this->cache->tags($tags);
+        return $this->taggedCache($tags)->flexible($key, $seconds, $callback);
     }
 }

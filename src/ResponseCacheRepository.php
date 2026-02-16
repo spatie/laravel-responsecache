@@ -2,6 +2,8 @@
 
 namespace Spatie\ResponseCache;
 
+use Closure;
+use DateTime;
 use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
 use Spatie\ResponseCache\Serializers\Serializer;
@@ -16,9 +18,30 @@ class ResponseCacheRepository
         //
     }
 
-    public function put(string $key, Response $response, \DateTime | int $seconds): void
+    public function put(string $key, Response $response, DateTime|int $seconds): void
     {
         $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
+    }
+
+    /**
+     * Get a cached response using flexible/SWR strategy.
+     *
+     * @param  array{0: int, 1: int}  $seconds  [fresh_seconds, total_seconds]
+     * @param  Closure  $callback  Callback that returns a Response object
+     */
+    public function flexible(string $key, array $seconds, Closure $callback): Response
+    {
+        $result = $this->cache->flexible(
+            $key,
+            $seconds,
+            function () use ($callback) {
+                $response = $callback();
+
+                return $this->responseSerializer->serialize($response);
+            },
+        );
+
+        return $this->responseSerializer->unserialize($result);
     }
 
     public function has(string $key): bool
@@ -34,6 +57,7 @@ class ResponseCacheRepository
     /**
      * If the response cache tag is empty, or a Store doesn't support tags, the whole cache will be cleared.
 
+     *
      * @return bool Whether the cache was cleared successfully.
      */
     public function clear(): bool
@@ -42,11 +66,11 @@ class ResponseCacheRepository
             return $this->cache->flush();
         }
 
-        if (empty(config('responsecache.cache_tag'))) {
+        if (empty(config('responsecache.cache.tag'))) {
             return $this->cache->clear();
         }
 
-        return $this->cache->tags(config('responsecache.cache_tag'))->flush();
+        return $this->cache->tags(config('responsecache.cache.tag'))->flush();
     }
 
     public function forget(string $key): bool
@@ -56,15 +80,15 @@ class ResponseCacheRepository
 
     public function tags(array $tags): self
     {
-        if ($this->isTagged($this->cache)) {
+        if ($this->cache instanceof TaggedCache) {
             $tags = array_merge($this->cache->getTags()->getNames(), $tags);
         }
 
         return new self($this->responseSerializer, $this->cache->tags($tags));
     }
 
-    public function isTagged($repository): bool
+    public function isTagged(mixed $repository): bool
     {
-        return $repository instanceof TaggedCache && ! empty($repository->getTags());
+        return $repository instanceof TaggedCache;
     }
 }

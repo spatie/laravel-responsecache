@@ -8,9 +8,13 @@ use Illuminate\Support\Str;
 abstract class AbstractRequestBuilder
 {
     protected string $method = 'GET';
+
     protected array $parameters = [];
+
     protected array $cookies = [];
+
     protected array $server = [];
+
     protected ?string $cacheNameSuffix = null;
 
     public function withPutMethod(): self
@@ -58,7 +62,7 @@ abstract class AbstractRequestBuilder
             ->filter(fn (string $val, string $key) => ! str_starts_with($key, 'HTTP_'))
             ->merge(collect($headers)
                 ->mapWithKeys(function (string $val, string $key) {
-                    return ['HTTP_' . str_replace('-', '_', Str::upper($key)) => $val];
+                    return ['HTTP_'.str_replace('-', '_', Str::upper($key)) => $val];
                 }))
             ->toArray();
 

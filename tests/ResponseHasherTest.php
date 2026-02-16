@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
+use Spatie\ResponseCache\Hasher\DefaultHasher;
 
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotEquals;
-
-use Spatie\ResponseCache\CacheProfiles\CacheProfile;
-use Spatie\ResponseCache\Hasher\DefaultHasher;
 
 beforeEach(function () {
     $this->cacheProfile = Mockery::mock(CacheProfile::class);
@@ -20,7 +19,7 @@ it('can generate a hash for a request', function () {
     $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
 
     assertEquals(
-        'responsecache-9937bec32aa1918917ad64b2b25f2982',
+        'efb1af613392e6d53391e8c792ef2d24',
         $this->requestHasher->getHashFor($this->request)
     );
 });
@@ -34,5 +33,57 @@ it('generates a different hash per request host', function () {
     assertNotEquals(
         $this->requestHasher->getHashFor($request),
         $this->requestHasher->getHashFor($requestForSubdomain)
+    );
+});
+
+it('generates the same hash when ignored query parameters are present', function () {
+    $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
+
+    config()->set('responsecache.ignored_query_parameters', ['utm_source', 'gclid']);
+
+    $request = Request::create('https://spatie.be/page');
+    $requestWithUtm = Request::create('https://spatie.be/page?utm_source=google');
+    $requestWithGclid = Request::create('https://spatie.be/page?gclid=abc123');
+    $requestWithBoth = Request::create('https://spatie.be/page?utm_source=google&gclid=abc123');
+
+    $baseHash = $this->requestHasher->getHashFor($request);
+
+    assertEquals($baseHash, $this->requestHasher->getHashFor($requestWithUtm));
+    assertEquals($baseHash, $this->requestHasher->getHashFor($requestWithGclid));
+    assertEquals($baseHash, $this->requestHasher->getHashFor($requestWithBoth));
+});
+
+it('preserves non-ignored query parameters in the hash', function () {
+    $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
+
+    config()->set('responsecache.ignored_query_parameters', ['utm_source']);
+
+    $request = Request::create('https://spatie.be/page?category=news');
+    $requestWithUtm = Request::create('https://spatie.be/page?category=news&utm_source=google');
+
+    assertEquals(
+        $this->requestHasher->getHashFor($request),
+        $this->requestHasher->getHashFor($requestWithUtm),
+    );
+
+    $requestDifferentCategory = Request::create('https://spatie.be/page?category=sports');
+
+    assertNotEquals(
+        $this->requestHasher->getHashFor($request),
+        $this->requestHasher->getHashFor($requestDifferentCategory),
+    );
+});
+
+it('does not ignore query parameters when the config is empty', function () {
+    $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
+
+    config()->set('responsecache.ignored_query_parameters', []);
+
+    $request = Request::create('https://spatie.be/page');
+    $requestWithParam = Request::create('https://spatie.be/page?utm_source=google');
+
+    assertNotEquals(
+        $this->requestHasher->getHashFor($request),
+        $this->requestHasher->getHashFor($requestWithParam),
     );
 });

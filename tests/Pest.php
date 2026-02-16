@@ -8,12 +8,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Testing\TestResponse;
+use Spatie\ResponseCache\Test\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 use function PHPUnit\Framework\isFalse;
 use function PHPUnit\Framework\isTrue;
-
-use Spatie\ResponseCache\Test\TestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 uses(TestCase::class)->in('.');
 
@@ -54,7 +53,7 @@ function assertDifferentResponse(TestResponse $firstResponse, TestResponse $seco
  */
 function createRequest(string $method): Request
 {
-    $request = new Request();
+    $request = new Request;
 
     $request->setMethod($method);
 
@@ -66,7 +65,7 @@ function createRequest(string $method): Request
  */
 function createResponse(int $statusCode, string $contentType = 'text/html; charset=UTF-8'): Response
 {
-    $response = new Response();
+    $response = new Response;
 
     $response
         ->setStatusCode($statusCode)

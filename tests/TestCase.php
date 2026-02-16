@@ -11,7 +11,11 @@ use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\ResponseCache\Facades\ResponseCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
+use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 use Spatie\ResponseCache\ResponseCacheServiceProvider;
+
+use function Illuminate\Support\minutes;
+use function Illuminate\Support\seconds;
 
 abstract class TestCase extends Orchestra
 {
@@ -31,8 +35,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
-     *
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -50,7 +53,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function getEnvironmentSetUp($app)
     {
@@ -65,7 +68,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function setUpDatabase($app)
     {
@@ -92,7 +95,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function setUpRoutes($app)
     {
@@ -144,7 +147,31 @@ abstract class TestCase extends Orchestra
 
         Route::any('/cache-for-given-lifetime', function () {
             return 'dummy response';
-        })->middleware('cacheResponse:300');
+        })->middleware(CacheResponse::for(lifetime: minutes(5)));
+
+        Route::any('/cache-for-given-lifetime-seconds', function () {
+            return 'dummy response';
+        })->middleware(CacheResponse::for(lifetime: 300));
+
+        Route::prefix('/flexible')->group(function () {
+            Route::middleware(FlexibleCacheResponse::for(lifetime: 5, grace: 10))->group(function () {
+                Route::any('/basic', function () {
+                    return 'random-'.Str::random(10);
+                });
+            });
+
+            Route::any('/carbon-interval', function () {
+                return 'custom-'.Str::random(10);
+            })->middleware(FlexibleCacheResponse::for(lifetime: seconds(5), grace: seconds(10)));
+
+            Route::any('/with-tags', function () {
+                return 'tagged-'.Str::random(10);
+            })->middleware(FlexibleCacheResponse::for(lifetime: 5, grace: 10, tags: ['tag1', 'tag2']));
+
+            Route::any('/custom-time', function () {
+                return 'custom-'.Str::random(10);
+            })->middleware(FlexibleCacheResponse::for(lifetime: 3, grace: 15));
+        });
     }
 
     public function getTempDirectory($suffix = '')
