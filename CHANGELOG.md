@@ -2,6 +2,23 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.0.0 - 2026-02-16
+
+### What's Changed
+
+* Add support for PHP 8.4 and Laravel 12
+* Drop support for PHP 8.3 and below
+* Drop support for Laravel 11 and below
+* Add flexible caching via `FlexibleCacheResponse` middleware — serves stale responses instantly while refreshing the cache in the background
+* Add PHP attributes (`#[Cache]`, `#[FlexibleCache]`, `#[NoCache]`) for controller-level cache configuration
+* Rename event classes to use `Event` suffix (e.g. `CacheMissed` → `CacheMissedEvent`)
+* Replace `cacheRequestUntil()` with `cacheLifetimeInSeconds()` in `CacheProfile` interface
+* Replace `CacheResponse::using()` with `CacheResponse::for()` and `FlexibleCacheResponse::for()`
+* Improved debug headers configuration
+* Fix return types in Facade PHPDoc for clear() and forget()
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/7.7.2...8.0.0
+
 ## 7.7.2 - 2025-08-28
 
 ### What's Changed
