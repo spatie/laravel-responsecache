@@ -202,8 +202,8 @@ it('will reproduce cache if given lifetime is expired', function () {
 });
 
 it('can add a cache time header', function () {
-    $this->app['config']->set('responsecache.debug.add_time_header', true);
-    $this->app['config']->set('responsecache.debug.time_header_name', 'X-Cached-At');
+    $this->app['config']->set('responsecache.debug.enabled', true);
+    $this->app['config']->set('responsecache.debug.cache_time_header_name', 'X-Cached-At');
 
     $firstResponse = $this->get('/random');
     $secondResponse = $this->get('/random');
@@ -216,9 +216,8 @@ it('can add a cache time header', function () {
 });
 
 it('can add a cache age header', function () {
-    $this->app['config']->set('responsecache.debug.add_time_header', true);
-    $this->app['config']->set('responsecache.debug.add_age_header', true);
-    $this->app['config']->set('responsecache.debug.age_header_name', 'X-Cached-Age');
+    $this->app['config']->set('responsecache.debug.enabled', true);
+    $this->app['config']->set('responsecache.debug.cache_age_header_name', 'X-Cached-Age');
 
     $firstResponse = $this->get('/random');
     $secondResponse = $this->get('/random');

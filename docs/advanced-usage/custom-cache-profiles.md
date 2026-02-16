@@ -10,7 +10,6 @@ You can create your own cache profile by implementing the `CacheProfile` interfa
 ```php
 namespace App\CacheProfiles;
 
-use DateTime;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,9 +32,9 @@ class CustomCacheProfile implements CacheProfile
         return $response->isSuccessful();
     }
 
-    public function cacheRequestUntil(Request $request): DateTime
+    public function cacheLifetimeInSeconds(Request $request): int
     {
-        return now()->addMinutes(30);
+        return 30 * 60;
     }
 
     public function useCacheNameSuffix(Request $request): string

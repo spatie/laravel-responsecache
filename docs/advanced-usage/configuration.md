@@ -53,17 +53,22 @@ Set this to an empty array if you want all query parameters to be included in th
 
 ## Debug headers
 
-When `APP_DEBUG` is `true`, the package adds a header to cached responses showing when the response was cached. You can customize this behavior.
+When `APP_DEBUG` is `true`, the package adds debug headers to cached responses. You can customize this behavior.
 
 ```php
 // config/responsecache.php
 
 'debug' => [
-    'add_time_header' => env('APP_DEBUG', false),
-    'time_header_name' => 'laravel-responsecache',
-    'add_age_header' => env('RESPONSE_CACHE_AGE_HEADER', false),
-    'age_header_name' => 'laravel-responsecache-age',
+    'enabled' => env('APP_DEBUG', false),
+    'cache_time_header_name' => 'X-Cache-Time',
+    'cache_status_header_name' => 'X-Cache-Status',
+    'cache_age_header_name' => 'X-Cache-Age',
+    'cache_key_header_name' => 'X-Cache-Key',
 ],
 ```
 
-When `add_age_header` is enabled (requires `add_time_header` to also be active), cached responses will include a header showing how many seconds ago the response was cached.
+When enabled, cached responses will include the following headers:
+- `X-Cache-Status`: `HIT` or `MISS` indicating whether the response was served from cache
+- `X-Cache-Time`: the timestamp when the response was cached
+- `X-Cache-Age`: how many seconds ago the response was cached (only on cache hits)
+- `X-Cache-Key`: the cache key used (only when `app.debug` is `true`)

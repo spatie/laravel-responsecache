@@ -47,7 +47,9 @@ class TestSerializer implements Serializer
 
         if ($type === ResponseType::File) {
             $response = new BinaryFileResponse($data['content'], $data['status']);
-        } else {
+        }
+
+        if ($type !== ResponseType::File) {
             $class = $data['class'] ?? Response::class;
             $response = new $class($data['content'], $data['status']);
         }

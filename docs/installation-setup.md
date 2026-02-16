@@ -55,16 +55,16 @@ return [
     ],
 
     'bypass' => [
-        'enabled' => env('CACHE_BYPASS_HEADER_NAME') !== null,
         'header_name' => env('CACHE_BYPASS_HEADER_NAME'),
         'header_value' => env('CACHE_BYPASS_HEADER_VALUE'),
     ],
 
     'debug' => [
-        'add_time_header' => env('APP_DEBUG', false),
-        'time_header_name' => env('RESPONSE_CACHE_HEADER_NAME', 'laravel-responsecache'),
-        'add_age_header' => env('RESPONSE_CACHE_AGE_HEADER', false),
-        'age_header_name' => env('RESPONSE_CACHE_AGE_HEADER_NAME', 'laravel-responsecache-age'),
+        'enabled' => env('APP_DEBUG', false),
+        'cache_time_header_name' => 'X-Cache-Time',
+        'cache_status_header_name' => 'X-Cache-Status',
+        'cache_age_header_name' => 'X-Cache-Age',
+        'cache_key_header_name' => 'X-Cache-Key',
     ],
 
     'ignored_query_parameters' => [

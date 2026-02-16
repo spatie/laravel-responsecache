@@ -11,6 +11,7 @@ use Spatie\ResponseCache\Attributes\NoCache;
 use Spatie\ResponseCache\Configuration\CacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissedEvent;
 use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
+use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +26,6 @@ class CacheResponse extends BaseCacheMiddleware
     public static function for(
         int|CarbonInterval|null $lifetime = null,
         string|array $tags = [],
-        ?string $driver = null,
     ): string {
         $lifetimeInSeconds = $lifetime instanceof CarbonInterval
             ? (int) $lifetime->totalSeconds
@@ -34,7 +34,6 @@ class CacheResponse extends BaseCacheMiddleware
         $config = new CacheConfiguration(
             lifetime: $lifetimeInSeconds,
             tags: is_array($tags) ? $tags : [$tags],
-            driver: $driver,
         );
 
         return static::class.':'.base64_encode(serialize($config));
@@ -60,13 +59,8 @@ class CacheResponse extends BaseCacheMiddleware
             ? $attribute
             : $this->getConfigurationFromArgs($args);
 
-        if ($config) {
-            $lifetimeInSeconds = $config->lifetime;
-            $tags = $config->tags;
-        } else {
-            $lifetimeInSeconds = $this->getLifetime($args);
-            $tags = $this->getTags($args);
-        }
+        $lifetimeInSeconds = $config?->lifetime;
+        $tags = $config?->tags ?? [];
 
         if ($cachedResponse = $this->getCachedResponse($request, $tags)) {
             return $cachedResponse;
@@ -77,6 +71,9 @@ class CacheResponse extends BaseCacheMiddleware
         if ($this->responseCache->shouldCache($request, $response)) {
             $this->cacheResponse($request, $response, $lifetimeInSeconds, $tags);
         }
+
+        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+        $response = $this->addDebugHeaders($response, false, $cacheKey);
 
         event(new CacheMissedEvent($request));
 
@@ -89,6 +86,8 @@ class CacheResponse extends BaseCacheMiddleware
             return null;
         }
 
+        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+
         try {
             $response = $this->responseCache->getCachedResponseFor($request, $tags);
         } catch (Throwable $exception) {
@@ -97,9 +96,11 @@ class CacheResponse extends BaseCacheMiddleware
             return null;
         }
 
-        event(new ResponseCacheHitEvent($request));
+        $ageInSeconds = $this->getAgeInSeconds($response);
 
-        $response = $this->addCacheAgeHeader($response);
+        event(new ResponseCacheHitEvent($request, $ageInSeconds, $tags));
+
+        $response = $this->addDebugHeaders($response, true, $cacheKey, $ageInSeconds);
 
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->replaceInCachedResponse($response));
 
@@ -113,6 +114,8 @@ class CacheResponse extends BaseCacheMiddleware
         array $tags,
     ): void {
         $cachedResponse = clone $response;
+
+        $this->addCacheTimeHeader($cachedResponse);
 
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
 
@@ -138,14 +141,5 @@ class CacheResponse extends BaseCacheMiddleware
         } catch (Throwable) {
             return null;
         }
-    }
-
-    protected function getLifetime(array $args): ?int
-    {
-        if (isset($args[0]) && is_numeric($args[0])) {
-            return (int) $args[0];
-        }
-
-        return null;
     }
 }

@@ -11,9 +11,4 @@ enum HttpMethod: string
     case Delete = 'delete';
     case Head = 'head';
     case Options = 'options';
-
-    public static function fromString(string $method): self
-    {
-        return self::from(strtolower($method));
-    }
 }

@@ -62,7 +62,7 @@ class DefaultHasher implements RequestHasher
         return http_build_query($parameters);
     }
 
-    protected function getCacheNameSuffix(Request $request)
+    protected function getCacheNameSuffix(Request $request): string
     {
         if ($request->attributes->has('responsecache.cacheNameSuffix')) {
             return $request->attributes->get('responsecache.cacheNameSuffix');

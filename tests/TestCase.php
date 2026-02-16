@@ -138,11 +138,11 @@ abstract class TestCase extends Orchestra
 
             Route::any('/tagged/1', function () {
                 return Str::random();
-            })->middleware('cacheResponse:,foo');
+            })->middleware(CacheResponse::for(tags: 'foo'));
 
             Route::any('/tagged/2', function () {
                 return Str::random();
-            })->middleware('cacheResponse:,foo,bar');
+            })->middleware(CacheResponse::for(tags: ['foo', 'bar']));
         });
 
         Route::any('/cache-for-given-lifetime', function () {

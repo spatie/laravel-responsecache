@@ -3,7 +3,6 @@
 namespace Spatie\ResponseCache;
 
 use Closure;
-use DateTime;
 use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
 use Spatie\ResponseCache\Serializers\Serializer;
@@ -18,9 +17,9 @@ class ResponseCacheRepository
         //
     }
 
-    public function put(string $key, Response $response, DateTime|int $seconds): void
+    public function put(string $key, Response $response, int $seconds): void
     {
-        $this->cache->put($key, $this->responseSerializer->serialize($response), is_numeric($seconds) ? now()->addSeconds($seconds) : $seconds);
+        $this->cache->put($key, $this->responseSerializer->serialize($response), now()->addSeconds($seconds));
     }
 
     /**
@@ -56,7 +55,6 @@ class ResponseCacheRepository
 
     /**
      * If the response cache tag is empty, or a Store doesn't support tags, the whole cache will be cleared.
-
      *
      * @return bool Whether the cache was cleared successfully.
      */

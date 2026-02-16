@@ -43,8 +43,8 @@ it('returns cached response within fresh period using carbon functions in flexib
 });
 
 it('adds cache time header when configured', function () {
-    config()->set('responsecache.debug.add_time_header', true);
-    config()->set('responsecache.debug.time_header_name', 'X-Cached-At');
+    config()->set('responsecache.debug.enabled', true);
+    config()->set('responsecache.debug.cache_time_header_name', 'X-Cached-At');
 
     $this->get('/flexible/basic');
 
@@ -54,9 +54,8 @@ it('adds cache time header when configured', function () {
 });
 
 it('adds cache age header when configured', function () {
-    config()->set('responsecache.debug.add_time_header', true);
-    config()->set('responsecache.debug.add_age_header', true);
-    config()->set('responsecache.debug.age_header_name', 'X-Cache-Age');
+    config()->set('responsecache.debug.enabled', true);
+    config()->set('responsecache.debug.cache_age_header_name', 'X-Cache-Age');
 
     $this->get('/flexible/basic');
 

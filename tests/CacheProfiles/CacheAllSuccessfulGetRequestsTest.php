@@ -60,8 +60,7 @@ it('will use the id of the logged in user to differentiate caches', function () 
 });
 
 it('will determine to cache responses for a certain amount of time', function () {
-    /** @var $expirationDate \Carbon\Carbon */
-    $expirationDate = $this->cacheProfile->cacheRequestUntil(createRequest('get'));
+    $lifetimeInSeconds = $this->cacheProfile->cacheLifetimeInSeconds(createRequest('get'));
 
-    assertTrue($expirationDate->isFuture());
+    assertTrue($lifetimeInSeconds > 0);
 });

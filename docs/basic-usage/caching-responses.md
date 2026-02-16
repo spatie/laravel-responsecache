@@ -26,9 +26,6 @@ Route::get('/posts', [PostController::class, 'index'])
 Route::get('/posts/{post}', [PostController::class, 'show'])
     ->middleware(CacheResponse::for(hours(1), tags: ['posts']));
 
-// Cache with a specific driver
-Route::get('/api/posts', [ApiPostController::class, 'index'])
-    ->middleware(CacheResponse::for(minutes(5), tags: ['api', 'posts'], driver: 'redis'));
 ```
 
 The `lifetime` parameter accepts Laravel's `minutes()`, `hours()`, and `days()` helpers (or any `CarbonInterval`), or an `int` in seconds.
@@ -48,7 +45,7 @@ class PostController
         return view('posts.index', ['posts' => Post::all()]);
     }
 
-    #[Cache(lifetime: 10 * 60, driver: 'redis')]
+    #[Cache(lifetime: 10 * 60)]
     public function show(Post $post)
     {
         return view('posts.show', ['post' => $post]);
@@ -59,7 +56,6 @@ class PostController
 The `#[Cache]` attribute accepts the following parameters.
 - `lifetime`: Cache duration in seconds (defaults to the config value)
 - `tags`: Cache tags (array)
-- `driver`: Cache driver to use (defaults to the config value)
 
 Attributes can also be applied at the class level to cache all methods in the controller.
 

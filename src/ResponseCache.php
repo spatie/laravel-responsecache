@@ -4,7 +4,6 @@ namespace Spatie\ResponseCache;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Concerns\TaggedCacheAware;
@@ -46,11 +45,10 @@ class ResponseCache
 
     public function shouldBypass(Request $request): bool
     {
-        // Ensure we return if cache_bypass_header is not setup
         if (! config('responsecache.bypass.header_name')) {
             return false;
         }
-        // Ensure we return if cache_bypass_header is not setup
+
         if (! config('responsecache.bypass.header_value')) {
             return false;
         }
@@ -64,14 +62,10 @@ class ResponseCache
         ?int $lifetimeInSeconds = null,
         array $tags = []
     ): Response {
-        if (config('responsecache.debug.add_time_header')) {
-            $response = $this->addCachedHeader($response);
-        }
-
         $this->taggedCache($tags)->put(
             $this->hasher->getHashFor($request),
             $response,
-            $lifetimeInSeconds ?? $this->cacheProfile->cacheRequestUntil($request),
+            $lifetimeInSeconds ?? $this->cacheProfile->cacheLifetimeInSeconds($request),
         );
 
         return $response;
@@ -104,18 +98,6 @@ class ResponseCache
         return $result;
     }
 
-    protected function addCachedHeader(Response $response): Response
-    {
-        $clonedResponse = clone $response;
-
-        $clonedResponse->headers->set(
-            config('responsecache.debug.time_header_name'),
-            Carbon::now()->toRfc2822String(),
-        );
-
-        return $clonedResponse;
-    }
-
     /**
      * @param  string[]  $tags
      */
@@ -123,8 +105,8 @@ class ResponseCache
     {
         event(new ClearingResponseCacheEvent);
 
-        $uris = is_array($uris) ? $uris : func_get_args();
-        $this->selectCachedItems()->forUrls($uris)->forget();
+        $uris = is_array($uris) ? $uris : [$uris];
+        $this->selectCachedItems()->forUrls($uris)->usingTags($tags)->forget();
 
         event(new ClearedResponseCacheEvent);
 

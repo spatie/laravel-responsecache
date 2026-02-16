@@ -30,12 +30,12 @@ uses(TestCase::class)->in('.');
 
 function assertCachedResponse(TestResponse $response)
 {
-    test()->assertThat($response->headers->has('laravel-responsecache'), isTrue(), 'Failed to assert that the response has been cached');
+    test()->assertThat($response->headers->has('X-Cache-Time'), isTrue(), 'Failed to assert that the response has been cached');
 }
 
 function assertRegularResponse(TestResponse $response)
 {
-    test()->assertThat($response->headers->has('laravel-responsecache'), isFalse(), 'Failed to assert that the response was a regular response');
+    test()->assertThat($response->headers->has('X-Cache-Time'), isFalse(), 'Failed to assert that the response was a regular response');
 }
 
 function assertSameResponse(TestResponse $firstResponse, TestResponse $secondResponse)

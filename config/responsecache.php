@@ -6,45 +6,35 @@ return [
      */
     'enabled' => env('RESPONSE_CACHE_ENABLED', true),
 
-    /*
-     * Cache configuration settings
-     */
     'cache' => [
         /*
-         * Here you may define the cache store that should be used to store
-         * requests. This can be the name of any store that is
-         * configured in app/config/cache.php
+         * Here you may define the cache store that should be used
+         * to store requests. This can be the name of any store
+         * that is configured in your app's cache.php config
          */
         'store' => env('RESPONSE_CACHE_DRIVER', 'file'),
 
         /*
-         * When using the default CacheRequestFilter this setting controls the
-         * default number of seconds responses must be cached.
+         * The default number of seconds responses will be cached
+         * when using the default CacheProfile settings.
          */
         'lifetime_in_seconds' => (int) env('RESPONSE_CACHE_LIFETIME', 60 * 60 * 24 * 7),
 
         /*
-         * If the cache driver you configured supports tags, you may specify a tag name
-         * here. All responses will be tagged. When clearing the responsecache only
-         * items with that tag will be flushed.
+         * If your cache driver supports tags, you may specify a tag
+         * name here. All responses will be tagged. When clearing
+         * the responsecache only items with that tag flushed.
          *
          * You may use a string or an array here.
          */
         'tag' => env('RESPONSE_CACHE_TAG', ''),
     ],
 
-    /*
-     * Cache bypass header configuration
-     */
     'bypass' => [
         /*
-         * Whether cache bypass functionality is enabled
-         */
-        'enabled' => env('CACHE_BYPASS_HEADER_NAME') !== null,
-
-        /*
-         * The header name that will force a cache bypass.
-         * This can be useful to monitor the performance of your application.
+         * The header name that will force a bypass of the cache.
+         * This is useful when you want to see the performance
+         * of your application without the caching enabled.
          */
         'header_name' => env('CACHE_BYPASS_HEADER_NAME'),
 
@@ -54,42 +44,42 @@ return [
         'header_value' => env('CACHE_BYPASS_HEADER_VALUE'),
     ],
 
-    /*
-     * Debug and development settings
-     */
     'debug' => [
         /*
-         * This setting determines if a http header named with the cache time
-         * should be added to a cached response. This can be handy when
-         * debugging.
+         * Determines if debug headers are added to cached
+         * responses. This can be handy for debugging how
+         * response caching is performing in your app.
          */
-        'add_time_header' => env('APP_DEBUG', false),
+        'enabled' => env('APP_DEBUG', false),
 
         /*
-         * This setting determines the name of the http header that contains
-         * the time at which the response was cached
+         * The name of the http header containing the
+         * point at which the response was cached.
          */
-        'time_header_name' => env('RESPONSE_CACHE_HEADER_NAME', 'laravel-responsecache'),
+        'cache_time_header_name' => 'X-Cache-Time',
 
         /*
-         * This setting determines if a http header named with the cache age
-         * should be added to a cached response. This can be handy when
-         * debugging.
-         * ONLY works when "add_time_header" is also active!
+         * The name of the header for the cache status that
+         * indicates whether a response was HIT or MISS.
          */
-        'add_age_header' => env('RESPONSE_CACHE_AGE_HEADER', false),
+        'cache_status_header_name' => 'X-Cache-Status',
 
         /*
-         * This setting determines the name of the http header that contains
-         * the age of cache
+         * The header name for the cache age in seconds.
          */
-        'age_header_name' => env('RESPONSE_CACHE_AGE_HEADER_NAME', 'laravel-responsecache-age'),
+        'cache_age_header_name' => 'X-Cache-Age',
+
+        /*
+         * The header name used for the response cache key.
+         * This is only added when app.debug is enabled.
+         */
+        'cache_key_header_name' => 'X-Cache-Key',
     ],
 
     /*
-     * Query parameters listed here will be ignored when generating the cache key.
-     * This is useful for tracking parameters like UTM tags or gclid that don't
-     * affect the page content but would otherwise create separate cache entries.
+     * These query parameters will be ignored when generating
+     * the cache key. This is useful for ignoring tracking
+     * parameters like UTM tags, gclid and also fbclid.
      */
     'ignored_query_parameters' => [
         'utm_source',
@@ -102,21 +92,15 @@ return [
     ],
 
     /*
-     * Customization - Class implementations
-     */
-
-    /*
-     *  The given class will determinate if a request should be cached. The
-     *  default class will cache all successful GET-requests.
-     *
-     *  You can provide your own class given that it implements the
-     *  CacheProfile interface.
+     * The given class determines if a request should be cached.
+     * By default all successful GET-requests will be cached.
+     * You can provide your own by using the CacheProfile.
      */
     'cache_profile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
     /*
-     * This class is responsible for generating a hash for a request. This hash
-     * is used to look up a cached response.
+     * This class is responsible for generating a hash for
+     * a request. Used for looking up cached responses.
      */
     'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,
 
@@ -126,8 +110,9 @@ return [
     'serializer' => \Spatie\ResponseCache\Serializers\JsonSerializer::class,
 
     /*
-     * Here you may define replacers that dynamically replace content from the response.
-     * Each replacer must implement the Replacer interface.
+     * Here you may define the replacers that will replace
+     * dynamic content from the response. Each replacer
+     * must always implement the Replacer interface.
      */
     'replacers' => [
         \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,

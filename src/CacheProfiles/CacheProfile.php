@@ -2,7 +2,6 @@
 
 namespace Spatie\ResponseCache\CacheProfiles;
 
-use DateTime;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,7 +13,7 @@ interface CacheProfile
 
     public function shouldCacheResponse(Response $response): bool;
 
-    public function cacheRequestUntil(Request $request): DateTime;
+    public function cacheLifetimeInSeconds(Request $request): int;
 
     /*
      * Return a string to differentiate this request from others.
