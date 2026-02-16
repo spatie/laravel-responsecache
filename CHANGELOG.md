@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.1.0 - 2026-02-16
+
+### What's Changed
+
+* Switch SVG diagrams to light theme for readable text on docs
+* Add responsecache development skill
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.0.0...8.1.0
+
 ## 8.0.0 - 2026-02-16
 
 ### What's Changed
