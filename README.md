@@ -30,7 +30,7 @@ Route::middleware(CacheResponse::for(minutes(10)))->group(function () {
 });
 ```
 
-You can also use stale-while-revalidate caching for data that can be briefly stale:
+For pages where brief staleness is acceptable, you can use flexible caching. After the lifetime expires, the stale response is still served instantly while the cache refreshes in the background. Once the grace period is over, the cache is considered expired and the next request will be fully recalculated:
 
 ```php
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
