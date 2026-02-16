@@ -1,33 +1,33 @@
 <svg viewBox="0 0 560 310" fill="none" xmlns="http://www.w3.org/2000/svg" style="font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
-    <rect x="20" y="0" width="100" height="24" rx="12" fill="#1f2937" stroke="#374151" stroke-width="1" />
-    <text x="70" y="12" text-anchor="middle" dominant-baseline="central" fill="#f3f4f6" font-size="10" font-weight="600" letter-spacing="0.03em">BROWSER</text>
-    <rect x="210" y="0" width="140" height="24" rx="12" fill="#1f2937" stroke="#374151" stroke-width="1" />
-    <text x="280" y="12" text-anchor="middle" dominant-baseline="central" fill="#f3f4f6" font-size="10" font-weight="600" letter-spacing="0.03em">SERVER CACHE</text>
-    <rect x="440" y="0" width="80" height="24" rx="12" fill="#1f2937" stroke="#374151" stroke-width="1" />
-    <text x="480" y="12" text-anchor="middle" dominant-baseline="central" fill="#f3f4f6" font-size="10" font-weight="600" letter-spacing="0.03em">SERVER</text>
-    <line x1="70" y1="28" x2="70" y2="300" stroke="#374151" stroke-width="1" stroke-dasharray="4 3" />
-    <line x1="280" y1="28" x2="280" y2="300" stroke="#374151" stroke-width="1" stroke-dasharray="4 3" />
-    <line x1="480" y1="28" x2="480" y2="300" stroke="#374151" stroke-width="1" stroke-dasharray="4 3" />
-    <line x1="74" y1="60" x2="272" y2="60" stroke="#6b7280" stroke-width="1.5" />
-    <polygon points="268,56 268,64 276,60" fill="#6b7280" />
-    <text x="175" y="50" text-anchor="middle" fill="#9ca3af" font-size="11">request</text>
-    <line x1="276" y1="100" x2="78" y2="100" stroke="#f3f4f6" stroke-width="1.5" />
-    <polygon points="82,96 82,104 74,100" fill="#f3f4f6" />
-    <text x="175" y="90" text-anchor="middle" fill="#f3f4f6" font-size="11" font-weight="600">stale response, instant!</text>
-    <line x1="284" y1="100" x2="472" y2="100" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4 3" />
-    <polygon points="468,96 468,104 476,100" fill="#6b7280" />
+    <rect x="20" y="0" width="100" height="24" rx="12" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1" />
+    <text x="70" y="12" text-anchor="middle" dominant-baseline="central" fill="#1a1a1a" font-size="10" font-weight="600" letter-spacing="0.03em">BROWSER</text>
+    <rect x="210" y="0" width="140" height="24" rx="12" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1" />
+    <text x="280" y="12" text-anchor="middle" dominant-baseline="central" fill="#1a1a1a" font-size="10" font-weight="600" letter-spacing="0.03em">SERVER CACHE</text>
+    <rect x="440" y="0" width="80" height="24" rx="12" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1" />
+    <text x="480" y="12" text-anchor="middle" dominant-baseline="central" fill="#1a1a1a" font-size="10" font-weight="600" letter-spacing="0.03em">SERVER</text>
+    <line x1="70" y1="28" x2="70" y2="300" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3" />
+    <line x1="280" y1="28" x2="280" y2="300" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3" />
+    <line x1="480" y1="28" x2="480" y2="300" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3" />
+    <line x1="74" y1="60" x2="272" y2="60" stroke="#9ca3af" stroke-width="1.5" />
+    <polygon points="268,56 268,64 276,60" fill="#9ca3af" />
+    <text x="175" y="50" text-anchor="middle" fill="#4b5563" font-size="11">request</text>
+    <line x1="276" y1="100" x2="78" y2="100" stroke="#1a1a1a" stroke-width="1.5" />
+    <polygon points="82,96 82,104 74,100" fill="#1a1a1a" />
+    <text x="175" y="90" text-anchor="middle" fill="#1a1a1a" font-size="11" font-weight="600">stale response, instant!</text>
+    <line x1="284" y1="100" x2="472" y2="100" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4 3" />
+    <polygon points="468,96 468,104 476,100" fill="#9ca3af" />
     <text x="383" y="90" text-anchor="middle" fill="#6b7280" font-size="11" font-style="italic">defer: regenerate</text>
-    <rect x="474" y="108" width="12" height="30" rx="2" fill="#1f2937" stroke="#374151" stroke-width="1" />
-    <text x="498" y="123" fill="#4b5563" font-size="9" font-style="italic">processing</text>
-    <line x1="476" y1="148" x2="288" y2="148" stroke="#6b7280" stroke-width="1.5" />
-    <polygon points="292,144 292,152 284,148" fill="#6b7280" />
-    <text x="383" y="140" text-anchor="middle" fill="#9ca3af" font-size="11">fresh result cached</text>
-    <line x1="20" y1="188" x2="540" y2="188" stroke="#374151" stroke-width="1" stroke-dasharray="2 4" />
+    <rect x="474" y="108" width="12" height="30" rx="2" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1" />
+    <text x="498" y="123" fill="#6b7280" font-size="9" font-style="italic">processing</text>
+    <line x1="476" y1="148" x2="288" y2="148" stroke="#9ca3af" stroke-width="1.5" />
+    <polygon points="292,144 292,152 284,148" fill="#9ca3af" />
+    <text x="383" y="140" text-anchor="middle" fill="#4b5563" font-size="11">fresh result cached</text>
+    <line x1="20" y1="188" x2="540" y2="188" stroke="#d1d5db" stroke-width="1" stroke-dasharray="2 4" />
     <text x="280" y="206" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">next visitor</text>
-    <line x1="74" y1="236" x2="272" y2="236" stroke="#6b7280" stroke-width="1.5" />
-    <polygon points="268,232 268,240 276,236" fill="#6b7280" />
-    <text x="175" y="228" text-anchor="middle" fill="#9ca3af" font-size="11">request</text>
-    <line x1="276" y1="272" x2="78" y2="272" stroke="#f3f4f6" stroke-width="1.5" />
-    <polygon points="82,268 82,276 74,272" fill="#f3f4f6" />
-    <text x="175" y="264" text-anchor="middle" fill="#f3f4f6" font-size="11" font-weight="600">fresh response, instant!</text>
+    <line x1="74" y1="236" x2="272" y2="236" stroke="#9ca3af" stroke-width="1.5" />
+    <polygon points="268,232 268,240 276,236" fill="#9ca3af" />
+    <text x="175" y="228" text-anchor="middle" fill="#4b5563" font-size="11">request</text>
+    <line x1="276" y1="272" x2="78" y2="272" stroke="#1a1a1a" stroke-width="1.5" />
+    <polygon points="82,268 82,276 74,272" fill="#1a1a1a" />
+    <text x="175" y="264" text-anchor="middle" fill="#1a1a1a" font-size="11" font-weight="600">fresh response, instant!</text>
 </svg>
