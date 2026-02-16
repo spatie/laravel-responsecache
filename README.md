@@ -36,7 +36,7 @@ For pages where brief staleness is acceptable, you can use flexible caching. Aft
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(FlexibleCacheResponse::for(lifetime: minutes(3), grace: minutes(12)));
+    ->middleware(FlexibleCacheResponse::for(lifetime: hours(1), grace: minutes(5)));
 ```
 
 ## Support us

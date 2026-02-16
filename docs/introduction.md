@@ -18,13 +18,17 @@ Route::middleware(CacheResponse::for(minutes(10)))->group(function () {
 });
 ```
 
-For pages where brief staleness is acceptable, you can use flexible caching. After the lifetime expires, the stale response is still served instantly while the cache refreshes in the background. Once the grace period is over, the cache is considered expired and the next request will be fully recalculated:
+For pages where brief staleness is acceptable, you can use flexible caching. After the lifetime expires, the stale response is still served instantly while the cache refreshes in the background. Once the grace period is over, the cache is considered expired and the next request will be fully recalculated.
+
+<img src="/docs/laravel-responsecache/v8/images/regular-vs-flexible.svg">
+
+Here's an example:
 
 ```php
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(FlexibleCacheResponse::for(lifetime: minutes(3), grace: minutes(12)));
+    ->middleware(FlexibleCacheResponse::for(lifetime: hours(1), grace: minutes(5)));
 ```
 
 The cache can be cleared programmatically or via an artisan command.

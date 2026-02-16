@@ -37,12 +37,12 @@ A new `FlexibleCacheResponse` middleware uses Laravel's `Cache::flexible()` to s
 
 ```php
 Route::get('/dashboard')->middleware(FlexibleCacheResponse::for(
-    lifetime: CarbonInterval::minutes(3),
-    grace: CarbonInterval::minutes(15),
+    lifetime: CarbonInterval::hours(1),
+    grace: CarbonInterval::minutes(5),
 ));
 
 // Or using an attribute
-#[FlexibleCache(lifetime: 3 * 60, grace: 15 * 60)]
+#[FlexibleCache(lifetime: 60 * 60, grace: 5 * 60)]
 public function dashboard() {}
 ```
 
@@ -64,11 +64,13 @@ The config file has been reorganized from flat keys into logical groups.
     'tag' => '',
 ],
 'debug' => [
-    'add_time_header' => false,
-    'time_header_name' => 'laravel-responsecache',
+    'enabled' => false,
+    'cache_time_header_name' => 'X-Cache-Time',
+    'cache_status_header_name' => 'X-Cache-Status',
+    'cache_age_header_name' => 'X-Cache-Age',
+    'cache_key_header_name' => 'X-Cache-Key',
 ],
 'bypass' => [
-    'enabled' => false,
     'header_name' => null,
     'header_value' => null,
 ],
@@ -77,7 +79,7 @@ The config file has been reorganized from flat keys into logical groups.
 Update your code accordingly:
 - `config('responsecache.cache_lifetime_in_seconds')` → `config('responsecache.cache.lifetime_in_seconds')`
 - `config('responsecache.cache_store')` → `config('responsecache.cache.store')`
-- `config('responsecache.add_cache_time_header')` → `config('responsecache.debug.add_time_header')`
+- `config('responsecache.add_cache_time_header')` → `config('responsecache.debug.enabled')`
 - `config('responsecache.cache_bypass_header.name')` → `config('responsecache.bypass.header_name')`
 
 ### Default serializer changed to JSON

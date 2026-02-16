@@ -1,0 +1,17 @@
+<svg viewBox="0 0 560 132" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="8" width="300" height="42" rx="6" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1" />
+    <rect x="300" y="8" width="150" height="42" rx="6" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3" />
+    <rect x="450" y="8" width="110" height="42" rx="6" fill="#fff" stroke="#e5e7eb" stroke-width="1" />
+    <text x="150" y="29" text-anchor="middle" dominant-baseline="central" fill="#1a1a1a" font-size="13" font-weight="500" font-family="Inter, sans-serif">Fresh (lifetime)</text>
+    <text x="375" y="29" text-anchor="middle" dominant-baseline="central" fill="#6b7280" font-size="13" font-weight="500" font-family="Inter, sans-serif">Grace</text>
+    <text x="505" y="29" text-anchor="middle" dominant-baseline="central" fill="#9ca3af" font-size="13" font-family="Inter, sans-serif">Expired</text>
+    <text x="0" y="72" fill="#9ca3af" font-size="11" font-family="JetBrains Mono, monospace">0</text>
+    <text x="300" y="72" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="JetBrains Mono, monospace">lifetime</text>
+    <text x="450" y="72" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="JetBrains Mono, monospace">lifetime + grace</text>
+    <text x="150" y="96" text-anchor="middle" fill="#6b7280" font-size="11" font-family="Inter, sans-serif">Served from server cache</text>
+    <text x="150" y="113" text-anchor="middle" fill="#6b7280" font-size="11" font-family="Inter, sans-serif">Controller doesn't run</text>
+    <text x="375" y="96" text-anchor="middle" fill="#6b7280" font-size="11" font-family="Inter, sans-serif">Stale sent to browser</text>
+    <text x="375" y="113" text-anchor="middle" fill="#1a1a1a" font-size="11" font-weight="600" font-family="Inter, sans-serif">Controller runs via defer</text>
+    <text x="505" y="96" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Inter, sans-serif">No cache</text>
+    <text x="505" y="113" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Inter, sans-serif">Browser waits</text>
+</svg>

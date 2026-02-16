@@ -9,16 +9,22 @@ Here's an example:
 
 ```php
 Route::get('/api/posts', [PostController::class, 'index'])
-    ->middleware(FlexibleCacheResponse::for(lifetime: minutes(3), grace: minutes(12)));
+    ->middleware(FlexibleCacheResponse::for(lifetime: hours(1), grace: minutes(5)));
 ```
 
 This is what happens with the configuration above.
 
-- **0–3 minutes** (`lifetime`): The cached response is served directly. No regeneration happens.
-- **3–15 minutes** (`grace`): The cached response is still served instantly, but a background refresh is triggered so the next request gets fresh data.
-- **After 15 minutes**: The cache has fully expired. The next request will wait for a fresh response, which is then cached and the cycle starts over.
+- **0–60 minutes** (`lifetime`): The cached response is served directly. No regeneration happens.
+- **60–65 minutes** (`grace`): The cached response is still served instantly, but a background refresh is triggered so the next request gets fresh data.
+- **After 65 minutes**: The cache has fully expired. The next request will wait for a fresh response, which is then cached and the cycle starts over.
+
+<img src="/docs/laravel-responsecache/v8/images/flexible-cache-timeline.svg">
 
 The `lifetime` parameter defines how long a cached response is considered up-to-date. The `grace` parameter defines how much additional time the old response can still be served while a new one is being generated in the background.
+
+During the grace period, two things happen simultaneously: the stale response is sent to the browser instantly, while the server regenerates a fresh response in the background using Laravel's `defer`.
+
+<img src="/docs/laravel-responsecache/v8/images/grace-period.svg">
 
 Under the hood, this package uses Laravel's `Cache::flexible()` method. Laravel's docs refer to these concepts as "fresh" and "stale" — our `lifetime` maps to "fresh" and `grace` maps to "stale". You can find more info in the [Laravel documentation](https://laravel.com/docs/12.x/cache#swr).
 
@@ -30,7 +36,7 @@ You can configure flexible caching per route using the `FlexibleCacheResponse::f
 use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 
 Route::get('/api/posts', [PostController::class, 'index'])
-    ->middleware(FlexibleCacheResponse::for(lifetime: minutes(3), grace: minutes(12)));
+    ->middleware(FlexibleCacheResponse::for(lifetime: hours(1), grace: minutes(5)));
 
 // With cache tags
 Route::get('/api/stats', [StatsController::class, 'index'])
@@ -58,13 +64,13 @@ use Spatie\ResponseCache\Attributes\FlexibleCache;
 
 class PostController
 {
-    #[FlexibleCache(lifetime: 3 * 60, grace: 12 * 60)]
+    #[FlexibleCache(lifetime: 60 * 60, grace: 5 * 60)]
     public function index()
     {
         return view('posts.index', ['posts' => Post::all()]);
     }
 
-    #[FlexibleCache(lifetime: 3 * 60, grace: 12 * 60, tags: ['posts', 'api'])]
+    #[FlexibleCache(lifetime: 60 * 60, grace: 5 * 60, tags: ['posts', 'api'])]
     public function apiIndex()
     {
         return response()->json(Post::all());
@@ -77,7 +83,7 @@ The attribute can also be applied at the class level to apply to all methods.
 ```php
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 
-#[FlexibleCache(lifetime: 3 * 60, grace: 12 * 60)]
+#[FlexibleCache(lifetime: 60 * 60, grace: 5 * 60)]
 class DashboardController
 {
     public function index() { /* ... */ }
