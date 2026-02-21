@@ -5,9 +5,6 @@
       <directory>tests</directory>
     </testsuite>
   </testsuites>
-  <logging>
-    <junit outputFile="build/report.junit.xml"/>
-  </logging>
   <php>
     <env name="APP_DEBUG" value="true"/>
   </php>

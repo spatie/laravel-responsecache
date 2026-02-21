@@ -51,6 +51,9 @@ it('will clear only one page from cache', function () {
 });
 
 it('will fire events when clearing the cache', function () {
+    $this->app['config']->set('responsecache.cache.store', 'array');
+    $this->app->forgetInstance('responsecache');
+
     Event::fake();
 
     Artisan::call('responsecache:clear');
