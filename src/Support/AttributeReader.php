@@ -2,8 +2,7 @@
 
 namespace Spatie\ResponseCache\Support;
 
-use ReflectionClass;
-use ReflectionMethod;
+use Spatie\Attributes\Attributes;
 
 class AttributeReader
 {
@@ -26,21 +25,25 @@ class AttributeReader
             return null;
         }
 
-        try {
-            $reflectionClass = new ReflectionClass($controller);
-            $reflectionMethod = $reflectionClass->getMethod($method);
+        // Check method-level attributes first (they take precedence)
+        foreach ($attributeClasses as $attributeClass) {
+            $attribute = Attributes::onMethod($controller, $method, $attributeClass);
 
-            // Check method-level attributes first (they take precedence)
-            $attribute = static::findAttributeInReflection($reflectionMethod, $attributeClasses);
             if ($attribute) {
                 return $attribute;
             }
-
-            // Then check class-level attributes
-            return static::findAttributeInReflection($reflectionClass, $attributeClasses);
-        } catch (\ReflectionException) {
-            return null;
         }
+
+        // Then check class-level attributes
+        foreach ($attributeClasses as $attributeClass) {
+            $attribute = Attributes::get($controller, $attributeClass);
+
+            if ($attribute) {
+                return $attribute;
+            }
+        }
+
+        return null;
     }
 
     protected static function parseAction(string $action): array
@@ -50,20 +53,5 @@ class AttributeReader
         }
 
         return explode('@', $action);
-    }
-
-    protected static function findAttributeInReflection(
-        ReflectionClass|ReflectionMethod $reflection,
-        array $attributeClasses
-    ): ?object {
-        foreach ($attributeClasses as $attributeClass) {
-            $attributes = $reflection->getAttributes($attributeClass);
-
-            if (! empty($attributes)) {
-                return $attributes[0]->newInstance();
-            }
-        }
-
-        return null;
     }
 }
