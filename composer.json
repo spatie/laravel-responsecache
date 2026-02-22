@@ -22,12 +22,13 @@
     "require": {
         "php": "^8.4",
         "illuminate/cache": "^12.0|^13.0",
-        "illuminate/container": "^12.0|^13.0",
         "illuminate/console": "^12.0|^13.0",
+        "illuminate/container": "^12.0|^13.0",
         "illuminate/http": "^12.0|^13.0",
         "illuminate/support": "^12.0|^13.0",
         "nesbot/carbon": "^3.0",
-        "spatie/laravel-package-tools": "^1.9"
+        "spatie/laravel-package-tools": "^1.9",
+        "spatie/php-attribute-reader": "^1.0"
     },
     "require-dev": {
         "larastan/larastan": "^3.9",
