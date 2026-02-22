@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.2.0 - 2026-02-22
+
+### What's Changed
+
+* Add Laravel 13 and PHP 8.5 support by @freekmurze in https://github.com/spatie/laravel-responsecache/pull/511
+* Use spatie/php-attribute-reader by @freekmurze in https://github.com/spatie/laravel-responsecache/pull/512
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.1.0...8.2.0
+
 ## 8.1.0 - 2026-02-16
 
 ### What's Changed
