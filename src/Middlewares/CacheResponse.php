@@ -48,8 +48,6 @@ class CacheResponse extends BaseCacheMiddleware
 
     public function handle(Request $request, Closure $next, ...$args): Response
     {
-        // Reset state at the start of each request to prevent state from leaking
-        // between requests in long-lived processes such as Laravel Octane.
         $this->shouldCache = false;
         $this->pendingLifetime = null;
         $this->pendingTags = [];
@@ -82,9 +80,6 @@ class CacheResponse extends BaseCacheMiddleware
         $response = $next($request);
 
         if ($this->responseCache->shouldCache($request, $response)) {
-            // Defer caching to terminate() so that any post-response modifications
-            // made via the RequestHandled event (e.g. Livewire asset auto-injection)
-            // are included in the cached response.
             $this->shouldCache = true;
             $this->pendingLifetime = $lifetimeInSeconds;
             $this->pendingTags = $tags;
@@ -142,9 +137,6 @@ class CacheResponse extends BaseCacheMiddleware
     ): void {
         $cachedResponse = clone $response;
 
-        // Remove the cache-status debug header so it is not stored with a stale
-        // MISS value — it will be re-added with the correct HIT value when
-        // the cached response is later served.
         $cachedResponse->headers->remove(config('responsecache.debug.cache_status_header_name'));
 
         $this->addCacheTimeHeader($cachedResponse);
