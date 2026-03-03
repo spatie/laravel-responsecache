@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.3.0 - 2026-03-03
+
+### What's Changed
+
+* Fix: defer cache storage to terminate() to include post-response modifications by @eguiluz in https://github.com/spatie/laravel-responsecache/pull/513
+
+### New Contributors
+
+* @eguiluz made their first contribution in https://github.com/spatie/laravel-responsecache/pull/513
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.2.0...8.3.0
+
 ## 8.2.0 - 2026-02-22
 
 ### What's Changed
