@@ -19,6 +19,13 @@ use Throwable;
 
 class CacheResponse extends BaseCacheMiddleware
 {
+    private bool $shouldCache = false;
+
+    private ?int $pendingLifetime = null;
+
+    /** @var string[] */
+    private array $pendingTags = [];
+
     public function __construct(
         protected ResponseCache $responseCache,
     ) {}
@@ -41,6 +48,12 @@ class CacheResponse extends BaseCacheMiddleware
 
     public function handle(Request $request, Closure $next, ...$args): Response
     {
+        // Reset state at the start of each request to prevent state from leaking
+        // between requests in long-lived processes such as Laravel Octane.
+        $this->shouldCache = false;
+        $this->pendingLifetime = null;
+        $this->pendingTags = [];
+
         $attribute = $this->getAttributeFromRequest($request);
 
         if ($attribute instanceof NoCache) {
@@ -69,7 +82,12 @@ class CacheResponse extends BaseCacheMiddleware
         $response = $next($request);
 
         if ($this->responseCache->shouldCache($request, $response)) {
-            $this->cacheResponse($request, $response, $lifetimeInSeconds, $tags);
+            // Defer caching to terminate() so that any post-response modifications
+            // made via the RequestHandled event (e.g. Livewire asset auto-injection)
+            // are included in the cached response.
+            $this->shouldCache = true;
+            $this->pendingLifetime = $lifetimeInSeconds;
+            $this->pendingTags = $tags;
         }
 
         $cacheKey = app(RequestHasher::class)->getHashFor($request);
@@ -78,6 +96,15 @@ class CacheResponse extends BaseCacheMiddleware
         event(new CacheMissedEvent($request));
 
         return $response;
+    }
+
+    public function terminate(Request $request, Response $response): void
+    {
+        if (! $this->shouldCache) {
+            return;
+        }
+
+        $this->cacheResponse($request, $response, $this->pendingLifetime, $this->pendingTags);
     }
 
     protected function getCachedResponse(Request $request, array $tags): ?Response
@@ -114,6 +141,11 @@ class CacheResponse extends BaseCacheMiddleware
         array $tags,
     ): void {
         $cachedResponse = clone $response;
+
+        // Remove the cache-status debug header so it is not stored with a stale
+        // MISS value — it will be re-added with the correct HIT value when
+        // the cached response is later served.
+        $cachedResponse->headers->remove(config('responsecache.debug.cache_status_header_name'));
 
         $this->addCacheTimeHeader($cachedResponse);
 

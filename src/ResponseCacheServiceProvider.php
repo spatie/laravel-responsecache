@@ -9,6 +9,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Commands\ClearCommand;
 use Spatie\ResponseCache\Hasher\RequestHasher;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Serializers\Serializer;
 
 class ResponseCacheServiceProvider extends PackageServiceProvider
@@ -25,6 +26,11 @@ class ResponseCacheServiceProvider extends PackageServiceProvider
 
     public function packageBooted()
     {
+        // CacheResponse must be a singleton so that terminate() is called on the
+        // same instance that processed the request, giving it access to the state
+        // set in handle().
+        $this->app->singleton(CacheResponse::class);
+
         $this->app->bind(CacheProfile::class, function (Container $app) {
             return $app->make(config('responsecache.cache_profile'));
         });
