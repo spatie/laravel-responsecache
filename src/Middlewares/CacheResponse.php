@@ -108,6 +108,10 @@ class CacheResponse extends BaseCacheMiddleware
 
         try {
             $response = $this->responseCache->getCachedResponseFor($request, $tags);
+
+            if ($response === null) {
+                return null;
+            }
         } catch (Throwable $exception) {
             report("Could not serve cached response: {$exception->getMessage()}");
 
