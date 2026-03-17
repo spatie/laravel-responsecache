@@ -242,3 +242,17 @@ it('wont cache nor serve a cached response if request has bypass header', functi
     assertRegularResponse($firstResponse);
     assertRegularResponse($secondResponse);
 });
+
+it('performs only one cache query per request, not two', function () {
+    $spy = $this->spy(Spatie\ResponseCache\ResponseCache::class);
+
+    $spy->shouldReceive('enabled')->andReturn(true);
+    $spy->shouldReceive('shouldBypass')->andReturn(false);
+    $spy->shouldReceive('shouldCache')->andReturn(false);
+    $spy->shouldReceive('getCachedResponseFor')->once()->andReturn(null);
+    $spy->shouldNotReceive('hasBeenCached');
+
+    $this->app->instance(Spatie\ResponseCache\ResponseCache::class, $spy);
+
+    $this->get('/random');
+});
