@@ -36,3 +36,20 @@ it('includes modifications made by RequestHandled listeners in the cached respon
 
     assertSameResponse($firstResponse, $secondResponse);
 });
+
+it('caches the response even when the middleware is resolved as a fresh instance in terminate', function () {
+    // Simulate environments where CacheResponse is not resolved as a singleton,
+    // so handle() and terminate() receive different instances. State must travel
+    // with the request instead of on the middleware object.
+    app()->bind(CacheResponse::class);
+
+    Route::get('/non-singleton', fn () => 'fresh content')
+        ->middleware(CacheResponse::class);
+
+    $firstResponse = $this->get('/non-singleton');
+    assertRegularResponse($firstResponse);
+
+    $secondResponse = $this->get('/non-singleton');
+    assertCachedResponse($secondResponse);
+    assertSameResponse($firstResponse, $secondResponse);
+});

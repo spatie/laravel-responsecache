@@ -19,12 +19,11 @@ use Throwable;
 
 class CacheResponse extends BaseCacheMiddleware
 {
-    private bool $shouldCache = false;
+    private const SHOULD_CACHE_ATTRIBUTE = '_response_cache.should_cache';
 
-    private ?int $pendingLifetime = null;
+    private const PENDING_LIFETIME_ATTRIBUTE = '_response_cache.pending_lifetime';
 
-    /** @var string[] */
-    private array $pendingTags = [];
+    private const PENDING_TAGS_ATTRIBUTE = '_response_cache.pending_tags';
 
     public function __construct(
         protected ResponseCache $responseCache,
@@ -48,10 +47,6 @@ class CacheResponse extends BaseCacheMiddleware
 
     public function handle(Request $request, Closure $next, ...$args): Response
     {
-        $this->shouldCache = false;
-        $this->pendingLifetime = null;
-        $this->pendingTags = [];
-
         $attribute = $this->getAttributeFromRequest($request);
 
         if ($attribute instanceof NoCache) {
@@ -80,9 +75,9 @@ class CacheResponse extends BaseCacheMiddleware
         $response = $next($request);
 
         if ($this->responseCache->shouldCache($request, $response)) {
-            $this->shouldCache = true;
-            $this->pendingLifetime = $lifetimeInSeconds;
-            $this->pendingTags = $tags;
+            $request->attributes->set(self::SHOULD_CACHE_ATTRIBUTE, true);
+            $request->attributes->set(self::PENDING_LIFETIME_ATTRIBUTE, $lifetimeInSeconds);
+            $request->attributes->set(self::PENDING_TAGS_ATTRIBUTE, $tags);
         }
 
         $cacheKey = app(RequestHasher::class)->getHashFor($request);
@@ -95,11 +90,16 @@ class CacheResponse extends BaseCacheMiddleware
 
     public function terminate(Request $request, Response $response): void
     {
-        if (! $this->shouldCache) {
+        if (! $request->attributes->get(self::SHOULD_CACHE_ATTRIBUTE, false)) {
             return;
         }
 
-        $this->cacheResponse($request, $response, $this->pendingLifetime, $this->pendingTags);
+        $this->cacheResponse(
+            $request,
+            $response,
+            $request->attributes->get(self::PENDING_LIFETIME_ATTRIBUTE),
+            $request->attributes->get(self::PENDING_TAGS_ATTRIBUTE, []),
+        );
     }
 
     protected function getCachedResponse(Request $request, array $tags): ?Response
