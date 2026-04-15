@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.3.1 - 2026-04-15
+
+- Fix state sharing in `CacheResponse` middleware between `handle()` and `terminate()` when the middleware is not resolved as the same instance. State now travels on the request attributes. (#518)
+
 ## 8.3.0 - 2026-03-03
 
 ### What's Changed
