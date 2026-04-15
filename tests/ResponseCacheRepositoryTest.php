@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Cache\ArrayStore;
 use Illuminate\Cache\Repository;
 use Illuminate\Testing\TestResponse;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
@@ -21,7 +22,7 @@ it('will handle race conditions between has and get', function () {
 
     /** @var Serializer $responseSerializer */
     $responseSerializer = app(Serializer::class);
-    /** @var Illuminate\Cache\ArrayStore $cacheStore */
+    /** @var ArrayStore $cacheStore */
     $cacheStore = app('cache')
         ->store('array')
         ->getStore();
