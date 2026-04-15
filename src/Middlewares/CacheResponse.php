@@ -19,7 +19,7 @@ use Throwable;
 
 class CacheResponse extends BaseCacheMiddleware
 {
-    private const PENDING_CACHE_ATTRIBUTE = '_response_cache.pending';
+    protected string $pendingCacheAttribute = '_response_cache.pending';
 
     public function __construct(
         protected ResponseCache $responseCache,
@@ -71,7 +71,7 @@ class CacheResponse extends BaseCacheMiddleware
         $response = $next($request);
 
         if ($this->responseCache->shouldCache($request, $response)) {
-            $request->attributes->set(self::PENDING_CACHE_ATTRIBUTE, [
+            $request->attributes->set($this->pendingCacheAttribute, [
                 'lifetime' => $lifetimeInSeconds,
                 'tags' => $tags,
             ]);
@@ -87,7 +87,7 @@ class CacheResponse extends BaseCacheMiddleware
 
     public function terminate(Request $request, Response $response): void
     {
-        $pending = $request->attributes->get(self::PENDING_CACHE_ATTRIBUTE);
+        $pending = $request->attributes->get($this->pendingCacheAttribute);
 
         if (! $pending) {
             return;
