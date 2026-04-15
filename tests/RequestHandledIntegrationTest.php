@@ -38,9 +38,7 @@ it('includes modifications made by RequestHandled listeners in the cached respon
 });
 
 it('caches the response even when the middleware is resolved as a fresh instance in terminate', function () {
-    // Simulate environments where CacheResponse is not resolved as a singleton,
-    // so handle() and terminate() receive different instances. State must travel
-    // with the request instead of on the middleware object.
+    // Override the singleton binding so handle() and terminate() receive different middleware instances.
     app()->bind(CacheResponse::class);
 
     Route::get('/non-singleton', fn () => 'fresh content')
