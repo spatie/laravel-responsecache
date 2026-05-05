@@ -98,10 +98,6 @@ class CacheResponse extends BaseCacheMiddleware
 
     protected function getCachedResponse(Request $request, array $tags): ?Response
     {
-        if (! $this->responseCache->hasBeenCached($request, $tags)) {
-            return null;
-        }
-
         $cacheKey = app(RequestHasher::class)->getHashFor($request);
 
         try {
@@ -109,6 +105,10 @@ class CacheResponse extends BaseCacheMiddleware
         } catch (Throwable $exception) {
             report("Could not serve cached response: {$exception->getMessage()}");
 
+            return null;
+        }
+
+        if ($response === null) {
             return null;
         }
 
