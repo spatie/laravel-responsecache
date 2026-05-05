@@ -1,52 +1,37 @@
 <?php
 
-use Illuminate\Cache\ArrayStore;
 use Illuminate\Cache\Repository;
-use Illuminate\Testing\TestResponse;
-use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
+use Illuminate\Support\Facades\Exceptions;
 use Spatie\ResponseCache\ResponseCacheRepository;
 use Spatie\ResponseCache\Serializers\Serializer;
 
-it('handles missed cache gracefully', function () {
-    // Instantiate a default serializer
+it('returns null when the cache has no value for the given key', function () {
     $responseSerializer = app(Serializer::class);
 
     $cacheRepository = Mockery::mock(Repository::class);
     $cacheRepository->shouldReceive('get')->with('missed-cache')->once()->andReturn(null);
 
     $repository = new ResponseCacheRepository($responseSerializer, $cacheRepository);
-    $repository->get('missed-cache');
-})->throws(CouldNotUnserialize::class);
 
-it('will handle race conditions between has and get', function () {
+    expect($repository->get('missed-cache'))->toBeNull();
+});
 
-    /** @var Serializer $responseSerializer */
-    $responseSerializer = app(Serializer::class);
-    /** @var ArrayStore $cacheStore */
-    $cacheStore = app('cache')
-        ->store('array')
-        ->getStore();
+it('treats a cache key that vanished mid-request as a miss without reporting', function () {
+    // Simulates the race where a cached key exists at one moment but the
+    // value is gone microseconds later (TTL expiry, eviction, or a
+    // concurrent forget). The middleware must treat this as a regular cache
+    // miss and serve a fresh response without reporting an exception.
+    Exceptions::fake();
 
-    // This order of operations simulates a cache lookup happening during a
-    // cache expiration or purge event. The `has()` call should succeed, but
-    // after that the cache has 'expired' and is unavailable.
-    $cachedValues = [
-        $responseSerializer->serialize(createResponse(200)),
-        null,
-    ];
+    $cacheStore = app('cache')->store('array')->getStore();
 
-    // We cannot use the partialMock helper because the cache store must be
-    // available and partialMock does not allow constructor arguments.
-    $cacheRepository = Mockery::mock(Repository::class, [$cacheStore]);
-    $cacheRepository
-        ->shouldReceive('get')
-        ->twice()
-        ->andReturns($cachedValues);
-    $cacheRepository->makePartial();
+    $cacheRepository = Mockery::mock(Repository::class, [$cacheStore])->makePartial();
+    $cacheRepository->shouldReceive('has')->andReturn(true);
+    $cacheRepository->shouldReceive('get')->andReturn(null);
     $this->instance(Repository::class, $cacheRepository);
 
-    /** @var TestResponse $response */
     $response = $this->get('/random');
+
     assertRegularResponse($response);
-    expect($response->exception)->toBeNull();
+    Exceptions::assertNothingReported();
 });

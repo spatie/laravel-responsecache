@@ -48,9 +48,15 @@ class ResponseCacheRepository
         return $this->cache->has($key);
     }
 
-    public function get(string $key): Response
+    public function get(string $key): ?Response
     {
-        return $this->responseSerializer->unserialize($this->cache->get($key) ?? '');
+        $cachedValue = $this->cache->get($key);
+
+        if ($cachedValue === null) {
+            return null;
+        }
+
+        return $this->responseSerializer->unserialize($cachedValue);
     }
 
     /**
