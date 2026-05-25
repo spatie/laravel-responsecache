@@ -125,3 +125,18 @@ it('can forget a specific cached request using cache cleaner suffix', function (
     assertRegularResponse($secondResponse);
     assertDifferentResponse($firstResponse, $secondResponse);
 });
+
+it('forgets a cached url even when an earlier url in the list was never cached', function () {
+    $firstResponse = $this->get('/random/2?foo=bar');
+    assertRegularResponse($firstResponse);
+
+    assertCachedResponse($this->get('/random/2?foo=bar'));
+
+    ResponseCache::selectCachedItems()->withParameters(['foo' => 'bar'])
+        ->forUrls(['/random/1', '/random/2'])->forget();
+
+    $responseAfterForget = $this->get('/random/2?foo=bar');
+
+    assertRegularResponse($responseAfterForget);
+    assertDifferentResponse($firstResponse, $responseAfterForget);
+});

@@ -41,6 +41,8 @@ class CacheItemSelector extends AbstractRequestBuilder
 
                 return $this->hasher->getHashFor($request);
             })
-            ->each(fn ($hash) => $this->taggedCache($this->tags)->forget($hash));
+            ->each(function (string $hash) {
+                $this->taggedCache($this->tags)->forget($hash);
+            });
     }
 }
