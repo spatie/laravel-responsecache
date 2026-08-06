@@ -111,6 +111,33 @@ it('returns stale content on first request in stale window', function () {
     expect($thirdResponse->getContent())->not->toBe($firstContent);
 });
 
+it('serves stale response for the full grace period after lifetime expires', function () {
+    $firstResponse = $this->get('/flexible/basic');
+    $firstContent = $firstResponse->getContent();
+
+    // lifetime is 5 seconds and grace is 10 seconds: at 12 seconds we are past
+    // the lifetime but still within the grace period, so the stale response
+    // should be served instantly
+    Carbon::setTestNow(Carbon::now()->addSeconds(12));
+
+    $secondResponse = $this->get('/flexible/basic');
+
+    expect($secondResponse->getContent())->toBe($firstContent);
+});
+
+it('serves fresh response for the full lifetime when grace is shorter than lifetime', function () {
+    $firstResponse = $this->get('/flexible/long-lifetime');
+    $firstContent = $firstResponse->getContent();
+
+    // lifetime is 100 seconds: at 50 seconds the cached response is still
+    // fresh, regardless of the shorter 10 second grace period
+    Carbon::setTestNow(Carbon::now()->addSeconds(50));
+
+    $secondResponse = $this->get('/flexible/long-lifetime');
+
+    expect($secondResponse->getContent())->toBe($firstContent);
+});
+
 it('recomputes response when beyond stale window', function () {
     $firstResponse = $this->get('/flexible/basic');
     $firstContent = $firstResponse->getContent();
