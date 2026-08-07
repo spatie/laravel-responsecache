@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.4.3 - 2026-08-07
+
+### What's Changed
+
+* Read cache attributes from invokable controllers registered without a method by @freekmurze in https://github.com/spatie/laravel-responsecache/pull/527
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.4.2...8.4.3
+
 ## 8.4.2 - 2026-08-07
 
 ### What's Changed
