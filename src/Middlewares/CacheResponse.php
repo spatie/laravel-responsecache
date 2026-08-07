@@ -59,10 +59,10 @@ class CacheResponse extends BaseCacheMiddleware
 
         $config = $attribute instanceof Cache
             ? $attribute
-            : $this->getConfigurationFromArgs($args);
+            : $this->getConfigurationFromArgs($args) ?? new CacheConfiguration;
 
-        $lifetimeInSeconds = $config?->lifetime;
-        $tags = $config?->tags ?? [];
+        $lifetimeInSeconds = $config->lifetime;
+        $tags = $config->tags;
 
         if ($cachedResponse = $this->getCachedResponse($request, $tags)) {
             return $cachedResponse;
