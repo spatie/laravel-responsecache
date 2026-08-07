@@ -42,7 +42,7 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
             return $next($request);
         }
 
-        return $this->handleFlexibleCache($request, $next, [$config->lifetime, $config->grace], $config->tags);
+        return $this->handleFlexibleCache($request, $next, [$config->lifetime, $config->lifetime + $config->grace], $config->tags);
     }
 
     public static function for(

@@ -172,6 +172,10 @@ abstract class TestCase extends Orchestra
             Route::any('/custom-time', function () {
                 return 'custom-'.Str::random(10);
             })->middleware(FlexibleCacheResponse::for(lifetime: 3, grace: 15));
+
+            Route::any('/long-lifetime', function () {
+                return 'long-'.Str::random(10);
+            })->middleware(FlexibleCacheResponse::for(lifetime: 100, grace: 10));
         });
     }
 
