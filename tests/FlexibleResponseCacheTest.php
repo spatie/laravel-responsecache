@@ -197,7 +197,7 @@ it('fires ResponseCacheHit event when serving from cache', function () {
     $this->get('/flexible/basic');
 
     Event::assertDispatched(ResponseCacheHitEvent::class);
-})->skip('Currently this test does not work due to a bug in Laravel 11');
+});
 
 it('fires CacheMissed event on first request', function () {
     Event::fake();
@@ -205,7 +205,7 @@ it('fires CacheMissed event on first request', function () {
     $this->get('/flexible/basic');
 
     Event::assertDispatched(CacheMissedEvent::class);
-})->skip('Currently this test does not work due to a bug in Laravel 11');
+});
 
 it('parses flexible time format correctly', function () {
     $firstResponse = $this->get('/flexible/basic');
