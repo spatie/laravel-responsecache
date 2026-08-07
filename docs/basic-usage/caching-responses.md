@@ -69,3 +69,20 @@ class PostController
     public function show(Post $post) { /* ... */ }
 }
 ```
+
+Invokable controllers are supported too, whether or not you register the route with an explicit method.
+
+```php
+use Spatie\ResponseCache\Attributes\Cache;
+
+class ShowPostsController
+{
+    #[Cache(lifetime: 5 * 60, tags: ['posts'])]
+    public function __invoke()
+    {
+        return view('posts.index', ['posts' => Post::all()]);
+    }
+}
+
+Route::get('posts', ShowPostsController::class);
+```
