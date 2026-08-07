@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.4.2 - 2026-08-07
+
+### What's Changed
+
+* Bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/spatie/laravel-responsecache/pull/522
+* Remove obsolete Laravel 11 skips from event dispatch tests by @nikosv in https://github.com/spatie/laravel-responsecache/pull/526
+* Fix flexible cache expiring after grace instead of lifetime + grace by @nikosv in https://github.com/spatie/laravel-responsecache/pull/525
+
+### New Contributors
+
+* @nikosv made their first contribution in https://github.com/spatie/laravel-responsecache/pull/526
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.4.1...8.4.2
+
 ## 8.4.1 - 2026-05-25
 
 ### What's Changed
