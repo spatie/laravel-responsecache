@@ -9,7 +9,7 @@ class AttributeReader
     /**
      * Get the first matching attribute from a controller action.
      *
-     * @param  string  $action  The controller action in "Controller@method" format
+     * @param  string  $action  The controller action in "Controller@method" format, or an invokable controller class name
      * @param  array  $attributeClasses  Array of attribute class names to search for
      * @return object|null The first matching attribute instance or null if none found
      */
@@ -48,8 +48,9 @@ class AttributeReader
 
     protected static function parseAction(string $action): array
     {
+        // An invokable controller can be registered without a method: Route::get('/', MyController::class)
         if (! str_contains($action, '@')) {
-            return [null, null];
+            return [$action, '__invoke'];
         }
 
         return explode('@', $action);
