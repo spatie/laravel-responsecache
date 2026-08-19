@@ -10,7 +10,7 @@ it('returns null when the cache has no value for the given key', function () {
     $responseSerializer = app(Serializer::class);
 
     $cacheRepository = Double::for(Repository::class);
-    $cacheRepository->shouldReceive('get')->with('missed-cache')->once()->andReturn(null);
+    $cacheRepository->expects('get')->with('missed-cache')->returns(null);
 
     $repository = new ResponseCacheRepository($responseSerializer, $cacheRepository);
 
@@ -27,8 +27,8 @@ it('treats a cache key that vanished mid-request as a miss without reporting', f
     $cacheStore = app('cache')->store('array')->getStore();
 
     $cacheRepository = Double::for(Repository::class)->passthru(new Repository($cacheStore));
-    $cacheRepository->shouldReceive('has')->andReturn(true);
-    $cacheRepository->shouldReceive('get')->andReturn(null);
+    $cacheRepository->allows('has')->returns(true);
+    $cacheRepository->allows('get')->returns(null);
     $this->instance(Repository::class, $cacheRepository);
 
     $response = $this->get('/random');

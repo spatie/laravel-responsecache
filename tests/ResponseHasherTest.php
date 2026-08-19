@@ -17,7 +17,7 @@ beforeEach(function () {
 });
 
 it('can generate a hash for a request', function () {
-    $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
+    $this->cacheProfile->allows('useCacheNameSuffix')->returns('cacheProfileSuffix');
 
     assertEquals(
         'efb1af613392e6d53391e8c792ef2d24',
@@ -26,7 +26,7 @@ it('can generate a hash for a request', function () {
 });
 
 it('generates a different hash per request host', function () {
-    $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
+    $this->cacheProfile->allows('useCacheNameSuffix')->returns('cacheProfileSuffix');
 
     $request = Request::create('https://spatie.be/example-page');
     $requestForSubdomain = Request::create('https://de.spatie.be/example-page');
@@ -38,7 +38,7 @@ it('generates a different hash per request host', function () {
 });
 
 it('generates the same hash when ignored query parameters are present', function () {
-    $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
+    $this->cacheProfile->allows('useCacheNameSuffix')->returns('cacheProfileSuffix');
 
     config()->set('responsecache.ignored_query_parameters', ['utm_source', 'gclid']);
 
@@ -55,7 +55,7 @@ it('generates the same hash when ignored query parameters are present', function
 });
 
 it('preserves non-ignored query parameters in the hash', function () {
-    $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
+    $this->cacheProfile->allows('useCacheNameSuffix')->returns('cacheProfileSuffix');
 
     config()->set('responsecache.ignored_query_parameters', ['utm_source']);
 
@@ -76,7 +76,7 @@ it('preserves non-ignored query parameters in the hash', function () {
 });
 
 it('does not ignore query parameters when the config is empty', function () {
-    $this->cacheProfile->shouldReceive('useCacheNameSuffix')->andReturn('cacheProfileSuffix');
+    $this->cacheProfile->allows('useCacheNameSuffix')->returns('cacheProfileSuffix');
 
     config()->set('responsecache.ignored_query_parameters', []);
 

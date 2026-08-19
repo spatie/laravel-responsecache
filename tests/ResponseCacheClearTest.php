@@ -14,9 +14,7 @@ beforeEach(function () {
 
 it('will fire appropriate events when clearing the cache successfully', function () {
     $this->mock(ResponseCacheRepository::class, function (MockInterface $mock) {
-        $mock->shouldReceive('clear')
-            ->once()
-            ->andReturn(true);
+        $mock->expects('clear')->returns(true);
     });
     $result = app(ResponseCache::class)->clear();
 
@@ -28,9 +26,7 @@ it('will fire appropriate events when clearing the cache successfully', function
 
 it('will fire appropriate events when clearing the cache fails', function () {
     $this->mock(ResponseCacheRepository::class, function (MockInterface $mock) {
-        $mock->shouldReceive('clear')
-            ->once()
-            ->andReturn(false);
+        $mock->expects('clear')->returns(false);
     });
 
     $result = app(ResponseCache::class)->clear();
