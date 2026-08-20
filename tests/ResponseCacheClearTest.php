@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Event;
+use JMac\Testing\Double;
 use Mockery\MockInterface;
 use Spatie\ResponseCache\Events\ClearedResponseCacheEvent;
 use Spatie\ResponseCache\Events\ClearingResponseCacheEvent;
@@ -13,11 +14,10 @@ beforeEach(function () {
 });
 
 it('will fire appropriate events when clearing the cache successfully', function () {
-    $this->mock(ResponseCacheRepository::class, function (MockInterface $mock) {
-        $mock->shouldReceive('clear')
-            ->once()
-            ->andReturn(true);
-    });
+    $mock = Double::for(ResponseCacheRepository::class);
+    $mock->expects('clear')->returns(true);
+    $this->swap(ResponseCacheRepository::class, $mock);
+
     $result = app(ResponseCache::class)->clear();
 
     expect($result)->toBeTrue();
@@ -27,11 +27,9 @@ it('will fire appropriate events when clearing the cache successfully', function
 });
 
 it('will fire appropriate events when clearing the cache fails', function () {
-    $this->mock(ResponseCacheRepository::class, function (MockInterface $mock) {
-        $mock->shouldReceive('clear')
-            ->once()
-            ->andReturn(false);
-    });
+    $mock = Double::for(ResponseCacheRepository::class);
+    $mock->expects('clear')->returns(false);
+    $this->swap(ResponseCacheRepository::class, $mock);
 
     $result = app(ResponseCache::class)->clear();
 

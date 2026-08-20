@@ -1,5 +1,6 @@
 <?php
 
+use JMac\Testing\Double;
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Exceptions;
 use Spatie\ResponseCache\ResponseCacheRepository;
@@ -8,8 +9,8 @@ use Spatie\ResponseCache\Serializers\Serializer;
 it('returns null when the cache has no value for the given key', function () {
     $responseSerializer = app(Serializer::class);
 
-    $cacheRepository = Mockery::mock(Repository::class);
-    $cacheRepository->shouldReceive('get')->with('missed-cache')->once()->andReturn(null);
+    $cacheRepository = Double::for(Repository::class);
+    $cacheRepository->expects('get')->with('missed-cache')->returns(null);
 
     $repository = new ResponseCacheRepository($responseSerializer, $cacheRepository);
 
@@ -25,9 +26,9 @@ it('treats a cache key that vanished mid-request as a miss without reporting', f
 
     $cacheStore = app('cache')->store('array')->getStore();
 
-    $cacheRepository = Mockery::mock(Repository::class, [$cacheStore])->makePartial();
-    $cacheRepository->shouldReceive('has')->andReturn(true);
-    $cacheRepository->shouldReceive('get')->andReturn(null);
+    $cacheRepository = Double::for(Repository::class)->passthru(new Repository($cacheStore));
+    $cacheRepository->allows('has')->returns(true);
+    $cacheRepository->allows('get')->returns(null);
     $this->instance(Repository::class, $cacheRepository);
 
     $response = $this->get('/random');

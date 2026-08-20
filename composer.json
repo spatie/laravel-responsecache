@@ -36,7 +36,8 @@
         "laravel/pint": "^1.13.7",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^10.0|^11.0",
-        "pestphp/pest": "^4.0"
+        "pestphp/pest": "^4.0",
+        "jasonmccreary/double": "~0.6"
     },
     "autoload": {
         "psr-4": {
