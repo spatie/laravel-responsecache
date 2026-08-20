@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Event;
 use JMac\Testing\Double;
-use Mockery\MockInterface;
 use Spatie\ResponseCache\Events\ClearedResponseCacheEvent;
 use Spatie\ResponseCache\Events\ClearingResponseCacheEvent;
 use Spatie\ResponseCache\Events\ClearingResponseCacheFailedEvent;

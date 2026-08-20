@@ -1,7 +1,7 @@
 <?php
 
-use JMac\Testing\Double;
 use Illuminate\Http\Request;
+use JMac\Testing\Double;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Hasher\DefaultHasher;
 

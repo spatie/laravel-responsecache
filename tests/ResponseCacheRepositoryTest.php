@@ -1,8 +1,8 @@
 <?php
 
-use JMac\Testing\Double;
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Exceptions;
+use JMac\Testing\Double;
 use Spatie\ResponseCache\ResponseCacheRepository;
 use Spatie\ResponseCache\Serializers\Serializer;
 
