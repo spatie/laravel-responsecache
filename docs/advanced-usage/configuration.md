@@ -51,6 +51,22 @@ You can customize the list of ignored parameters in the config file.
 
 Set this to an empty array if you want all query parameters to be included in the cache key.
 
+## Excluded request headers
+
+Requests containing any of the configured headers will not be cached. By default, this skips Livewire and Inertia requests, which would otherwise risk serving stale responses.
+
+```php
+// config/responsecache.php
+
+'excluded_request_headers' => [
+    'X-Livewire',
+    'X-Livewire-Navigate',
+    'X-Inertia',
+],
+```
+
+You can add your own headers to this list, or set it to an empty array to disable the check.
+
 ## Debug headers
 
 When `APP_DEBUG` is `true`, the package adds debug headers to cached responses. You can customize this behavior.
