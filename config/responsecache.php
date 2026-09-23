@@ -97,6 +97,17 @@ return [
     ],
 
     /*
+     * Requests containing any of these headers will not be
+     * cached. This prevents stale responses from being
+     * served to Livewire and Inertia partial requests.
+     */
+    'excluded_request_headers' => [
+        'X-Livewire',
+        'X-Livewire-Navigate',
+        'X-Inertia',
+    ],
+
+    /*
      * The given class determines if a request should be cached.
      * By default all successful GET-requests will be cached.
      * You can provide your own by using the CacheProfile.
