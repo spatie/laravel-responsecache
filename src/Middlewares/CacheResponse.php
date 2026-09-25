@@ -5,6 +5,7 @@ namespace Spatie\ResponseCache\Middlewares;
 use Carbon\CarbonInterval;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Spatie\ResponseCache\Attributes\Cache;
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 use Spatie\ResponseCache\Attributes\NoCache;
@@ -70,14 +71,17 @@ class CacheResponse extends BaseCacheMiddleware
 
         $response = $next($request);
 
+        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+
         if ($this->responseCache->shouldCache($request, $response)) {
             $request->attributes->set($this->pendingCacheAttribute, [
                 'lifetime' => $lifetimeInSeconds,
                 'tags' => $tags,
+                'cacheKey' => $cacheKey,
+                'mediaType' => $this->getMediaType($response),
             ]);
         }
 
-        $cacheKey = app(RequestHasher::class)->getHashFor($request);
         $response = $this->addDebugHeaders($response, false, $cacheKey);
 
         event(new CacheMissedEvent($request));
@@ -93,7 +97,22 @@ class CacheResponse extends BaseCacheMiddleware
             return;
         }
 
-        $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
+        if ($this->getMediaType($response) !== $pending['mediaType']) {
+            return;
+        }
+
+        if (! $this->responseCache->shouldCache($request, $response)) {
+            return;
+        }
+
+        $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags'], $pending['cacheKey']);
+    }
+
+    protected function getMediaType(Response $response): string
+    {
+        $contentType = $response->headers->get('Content-Type', '');
+
+        return strtolower(trim(Str::before($contentType, ';')));
     }
 
     protected function getCachedResponse(Request $request, array $tags): ?Response
@@ -128,6 +147,7 @@ class CacheResponse extends BaseCacheMiddleware
         Response $response,
         ?int $lifetimeInSeconds,
         array $tags,
+        ?string $cacheKey = null,
     ): void {
         $cachedResponse = clone $response;
 
@@ -137,7 +157,7 @@ class CacheResponse extends BaseCacheMiddleware
 
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
 
-        $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
+        $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags, $cacheKey);
     }
 
     protected function getConfigurationFromArgs(array $args): ?CacheConfiguration

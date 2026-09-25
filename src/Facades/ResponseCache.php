@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @method static bool enabled(Request $request)
  * @method static bool shouldCache(Request $request, Response $response)
  * @method static bool shouldBypass(Request $request)
- * @method static Response cacheResponse(Request $request, Response $response, ?int $lifetimeInSeconds = null, array $tags = [])
+ * @method static Response cacheResponse(Request $request, Response $response, ?int $lifetimeInSeconds = null, array $tags = [], ?string $cacheKey = null)
  * @method static bool hasBeenCached(Request $request, array $tags = [])
  * @method static ?Response getCachedResponseFor(Request $request, array $tags = [])
  * @method static CacheItemSelector selectCachedItems()
