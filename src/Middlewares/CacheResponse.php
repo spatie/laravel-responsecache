@@ -98,7 +98,9 @@ class CacheResponse extends BaseCacheMiddleware
             return;
         }
 
-        if ($this->getMediaType($response) !== $pending['mediaType']) {
+        $approvedMediaType = $pending['mediaType'] ?? $this->getMediaType($response);
+
+        if ($this->getMediaType($response) !== $approvedMediaType) {
             return;
         }
 
@@ -106,7 +108,9 @@ class CacheResponse extends BaseCacheMiddleware
             return;
         }
 
-        $request->attributes->set('responsecache.cacheKey', $pending['cacheKey']);
+        if (isset($pending['cacheKey'])) {
+            $request->attributes->set('responsecache.cacheKey', $pending['cacheKey']);
+        }
 
         $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
     }

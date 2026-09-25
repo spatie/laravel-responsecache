@@ -105,3 +105,15 @@ it('stores the response under the cache key computed while handling the request'
     $secondResponse = $this->get('/changed-suffix');
     assertCachedResponse($secondResponse);
 });
+
+it('caches the response when the pending cache attribute only contains the lifetime and tags', function () {
+    $request = Request::create('/legacy-pending');
+    $request->attributes->set('_response_cache.pending', [
+        'lifetime' => null,
+        'tags' => [],
+    ]);
+
+    app(CacheResponse::class)->terminate($request, response('page content', 200, ['Content-Type' => 'text/html']));
+
+    expect(ResponseCache::hasBeenCached(Request::create('/legacy-pending')))->toBeTrue();
+});
