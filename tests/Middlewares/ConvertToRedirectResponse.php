@@ -6,10 +6,12 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ConvertToServerErrorResponse
+class ConvertToRedirectResponse
 {
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request)->setStatusCode(500);
+        $next($request);
+
+        return redirect('/accept-terms');
     }
 }

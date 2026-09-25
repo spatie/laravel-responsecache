@@ -7,7 +7,7 @@ use Spatie\ResponseCache\Facades\ResponseCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Test\Middlewares\ChangeCacheNameSuffixAfterResponse;
 use Spatie\ResponseCache\Test\Middlewares\ConvertToMarkdownResponse;
-use Spatie\ResponseCache\Test\Middlewares\ConvertToServerErrorResponse;
+use Spatie\ResponseCache\Test\Middlewares\ConvertToRedirectResponse;
 use Spatie\ResponseCache\Test\Middlewares\TrimResponseContent;
 
 it('includes modifications made by RequestHandled listeners in the cached response', function () {
@@ -74,13 +74,13 @@ it('does not cache a response that an outer middleware replaced with a different
     expect($cachedHtmlResponse->headers->get('Content-Type'))->toStartWith('text/html');
 });
 
-it('does not cache a response that an outer middleware replaced with an uncacheable one', function () {
-    Route::get('/server-error', fn () => 'page content')
-        ->middleware([ConvertToServerErrorResponse::class, CacheResponse::class]);
+it('does not cache a response whose status code was changed by an outer middleware', function () {
+    Route::get('/redirected', fn () => 'page content')
+        ->middleware([ConvertToRedirectResponse::class, CacheResponse::class]);
 
-    $this->get('/server-error')->assertStatus(500);
+    $this->get('/redirected')->assertRedirect('/accept-terms');
 
-    expect(ResponseCache::hasBeenCached(Request::create('/server-error')))->toBeFalse();
+    expect(ResponseCache::hasBeenCached(Request::create('/redirected')))->toBeFalse();
 });
 
 it('caches a response that an outer middleware replaced with one of the same content type', function () {

@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use Spatie\ResponseCache\Attributes\Cache;
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 use Spatie\ResponseCache\Attributes\NoCache;
-use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Configuration\CacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissedEvent;
 use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
@@ -79,6 +78,7 @@ class CacheResponse extends BaseCacheMiddleware
                 'lifetime' => $lifetimeInSeconds,
                 'tags' => $tags,
                 'cacheKey' => $cacheKey,
+                'statusCode' => $response->getStatusCode(),
                 'mediaType' => $this->getMediaType($response),
             ]);
         }
@@ -98,13 +98,7 @@ class CacheResponse extends BaseCacheMiddleware
             return;
         }
 
-        $approvedMediaType = $pending['mediaType'] ?? $this->getMediaType($response);
-
-        if ($this->getMediaType($response) !== $approvedMediaType) {
-            return;
-        }
-
-        if (! app(CacheProfile::class)->shouldCacheResponse($response)) {
+        if ($this->differsFromApprovedResponse($response, $pending)) {
             return;
         }
 
@@ -113,6 +107,19 @@ class CacheResponse extends BaseCacheMiddleware
         }
 
         $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
+    }
+
+    protected function differsFromApprovedResponse(Response $response, array $pending): bool
+    {
+        if (! isset($pending['statusCode'], $pending['mediaType'])) {
+            return false;
+        }
+
+        if ($response->getStatusCode() !== $pending['statusCode']) {
+            return true;
+        }
+
+        return $this->getMediaType($response) !== $pending['mediaType'];
     }
 
     protected function getMediaType(Response $response): string
