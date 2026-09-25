@@ -60,11 +60,10 @@ class ResponseCache
         Request $request,
         Response $response,
         ?int $lifetimeInSeconds = null,
-        array $tags = [],
-        ?string $cacheKey = null,
+        array $tags = []
     ): Response {
         $this->taggedCache($tags)->put(
-            $cacheKey ?? $this->hasher->getHashFor($request),
+            $request->attributes->get('responsecache.cacheKey') ?? $this->hasher->getHashFor($request),
             $response,
             $lifetimeInSeconds ?? $this->cacheProfile->cacheLifetimeInSeconds($request),
         );

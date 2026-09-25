@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Spatie\ResponseCache\Attributes\Cache;
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 use Spatie\ResponseCache\Attributes\NoCache;
+use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Configuration\CacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissedEvent;
 use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
@@ -101,11 +102,13 @@ class CacheResponse extends BaseCacheMiddleware
             return;
         }
 
-        if (! $this->responseCache->shouldCache($request, $response)) {
+        if (! app(CacheProfile::class)->shouldCacheResponse($response)) {
             return;
         }
 
-        $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags'], $pending['cacheKey']);
+        $request->attributes->set('responsecache.cacheKey', $pending['cacheKey']);
+
+        $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
     }
 
     protected function getMediaType(Response $response): string
@@ -147,7 +150,6 @@ class CacheResponse extends BaseCacheMiddleware
         Response $response,
         ?int $lifetimeInSeconds,
         array $tags,
-        ?string $cacheKey = null,
     ): void {
         $cachedResponse = clone $response;
 
@@ -157,7 +159,7 @@ class CacheResponse extends BaseCacheMiddleware
 
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
 
-        $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags, $cacheKey);
+        $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }
 
     protected function getConfigurationFromArgs(array $args): ?CacheConfiguration
