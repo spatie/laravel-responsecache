@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.4.5 - 2026-09-29
+
+### What's Changed
+
+* Bump to Double v1 by @jasonmccreary in https://github.com/spatie/laravel-responsecache/pull/533
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.4.4...8.4.5
+
 ## 8.4.4 - 2026-09-25
 
 ### What's Changed
