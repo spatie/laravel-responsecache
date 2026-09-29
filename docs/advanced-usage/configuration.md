@@ -21,6 +21,30 @@ The default cache lifetime is one week (604800 seconds). You can change it via t
 RESPONSE_CACHE_LIFETIME=3600
 ```
 
+## Minimum requests before caching
+
+By default, every cacheable response is stored on its first request. When a large share of your traffic consists of URLs that are requested only once, such as crawlers walking through a catalog, those responses fill the cache without ever being served from it.
+
+You can require a page to be requested a number of times before its response is stored. This works like the `proxy_cache_min_uses` directive in nginx.
+
+```env
+RESPONSE_CACHE_MINIMUM_REQUESTS=2
+```
+
+Requests are counted per cache key. A request only counts when its response could have been cached, so an error response does not bring a page closer to the minimum.
+
+The counters expire after one day by default. A page must reach the minimum within that window, otherwise the count starts over.
+
+```env
+RESPONSE_CACHE_MINIMUM_REQUESTS_LIFETIME=86400
+```
+
+The counters live on the response cache store. When that store evicts entries under memory pressure, the counters are usually the first to go and a page may never reach the minimum. You can keep them on a separate store:
+
+```env
+RESPONSE_CACHE_MINIMUM_REQUESTS_STORE=redis
+```
+
 ## Disabling the cache
 
 You can disable response caching entirely:

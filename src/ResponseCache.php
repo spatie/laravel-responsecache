@@ -40,7 +40,36 @@ class ResponseCache
             return false;
         }
 
-        return $this->cacheProfile->shouldCacheResponse($response);
+        if (! $this->cacheProfile->shouldCacheResponse($response)) {
+            return false;
+        }
+
+        return $this->hasMinimumRequests($request);
+    }
+
+    /**
+     * A request only counts toward the minimum when its response
+     * could have been cached.
+     */
+    protected function hasMinimumRequests(Request $request): bool
+    {
+        $minimumRequests = (int) config('responsecache.minimum_requests.count');
+
+        if ($minimumRequests <= 1) {
+            return true;
+        }
+
+        $store = app('cache')->store(
+            config('responsecache.minimum_requests.store') ?: config('responsecache.cache.store')
+        );
+
+        $key = 'responsecache-requests-'.$this->hasher->getHashFor($request);
+
+        if ($store->add($key, 1, (int) config('responsecache.minimum_requests.lifetime_in_seconds'))) {
+            return false;
+        }
+
+        return (int) $store->increment($key) >= $minimumRequests;
     }
 
     public function shouldBypass(Request $request): bool
