@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache\CacheProfiles;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Spatie\ResponseCache\Enums\HttpMethod;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +16,21 @@ class CacheAllSuccessfulGetRequests extends BaseCacheProfile
             return false;
         }
 
+        if ($this->hasExcludedHeader($request)) {
+            return false;
+        }
+
         if ($this->isRunningInConsole()) {
             return false;
         }
 
         return $request->isMethod(HttpMethod::Get->value);
+    }
+
+    public function hasExcludedHeader(Request $request): bool
+    {
+        return Collection::make(config('responsecache.excluded_request_headers', []))
+            ->contains(fn (string $header) => $request->hasHeader($header));
     }
 
     public function shouldCacheResponse(Response $response): bool

@@ -77,6 +77,12 @@ return [
         'fbclid',
     ],
 
+    'excluded_request_headers' => [
+        'X-Livewire',
+        'X-Livewire-Navigate',
+        'X-Inertia',
+    ],
+
     'cache_profile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
 
     'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,

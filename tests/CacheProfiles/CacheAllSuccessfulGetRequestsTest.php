@@ -22,6 +22,52 @@ it('will determine that all non get request should not be cached', function () {
     assertFalse($this->cacheProfile->shouldCacheRequest(createRequest('delete')));
 });
 
+it('will determine that ajax requests should not be cached', function () {
+    $request = createRequest('get');
+    $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+
+    assertFalse($this->cacheProfile->shouldCacheRequest($request));
+});
+
+it('will determine that livewire requests should not be cached', function () {
+    $request = createRequest('get');
+    $request->headers->set('X-Livewire', '1');
+
+    assertFalse($this->cacheProfile->shouldCacheRequest($request));
+});
+
+it('will determine that livewire navigate requests should not be cached', function () {
+    $request = createRequest('get');
+    $request->headers->set('X-Livewire-Navigate', '1');
+
+    assertFalse($this->cacheProfile->shouldCacheRequest($request));
+});
+
+it('will determine that inertia requests should not be cached', function () {
+    $request = createRequest('get');
+    $request->headers->set('X-Inertia', 'true');
+
+    assertFalse($this->cacheProfile->shouldCacheRequest($request));
+});
+
+it('will determine that requests with a custom excluded header should not be cached', function () {
+    config()->set('responsecache.excluded_request_headers', ['X-Custom-Header']);
+
+    $request = createRequest('get');
+    $request->headers->set('X-Custom-Header', '1');
+
+    assertFalse($this->cacheProfile->shouldCacheRequest($request));
+});
+
+it('will cache requests with livewire or inertia headers when no headers are excluded', function () {
+    config()->set('responsecache.excluded_request_headers', []);
+
+    $request = createRequest('get');
+    $request->headers->set('X-Livewire-Navigate', '1');
+
+    assertTrue($this->cacheProfile->shouldCacheRequest($request));
+});
+
 it('will determine that a successful response should be cached', function () {
     foreach (range(200, 399) as $statusCode) {
         assertTrue($this->cacheProfile->shouldCacheResponse(createResponse($statusCode)));

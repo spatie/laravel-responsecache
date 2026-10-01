@@ -257,6 +257,7 @@ Key configuration options in `config/responsecache.php`:
 - `bypass.header_name` / `bypass.header_value` — header to bypass cache for testing
 - `debug.enabled` — add `X-Cache-Status`, `X-Cache-Time`, `X-Cache-Age`, `X-Cache-Key` headers
 - `ignored_query_parameters` — query params excluded from cache key (UTM tags, gclid, fbclid)
+- `excluded_request_headers` — requests with any of these headers are not cached (Livewire, Inertia)
 - `cache_profile` — class determining what to cache
 - `hasher` — class generating cache keys
 - `serializer` — class serializing/unserializing responses
