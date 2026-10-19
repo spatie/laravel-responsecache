@@ -2,6 +2,21 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.5.0 - 2026-10-19
+
+### What’s Changed
+
+- Add configurable `excluded_request_headers`, defaulting to `X-Livewire`, `X-Livewire-Navigate`, and `X-Inertia`.
+- Bypass both cache reads and writes for excluded requests in regular and flexible caching, preventing cached full-page responses from being served to Livewire or Inertia requests.
+- Add integration coverage for cold and warm caches, case-insensitive and empty headers, custom exclusions, and disabling exclusions.
+- Update test tooling to Pest 5 / PHPUnit 13 for Laravel 13, while retaining the latest compatible Pest 4 for Laravel 12. Both are tested on PHP 8.4 and 8.5.
+
+No public API breaking changes and no supported PHP or Laravel versions removed. Requests with excluded headers now intentionally bypass caching. Applications opting back in should use a custom hasher when headers affect response content.
+
+Thanks to @francoism90 for the original contribution in #530.
+
+**Full changelog**: https://github.com/spatie/laravel-responsecache/compare/8.4.5...8.5.0
+
 ## 8.4.5 - 2026-09-29
 
 ### What's Changed
