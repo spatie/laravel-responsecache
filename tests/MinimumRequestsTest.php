@@ -1,13 +1,10 @@
 <?php
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Illuminate\Cache\ArrayStore;
 use Illuminate\Support\Facades\Cache;
-use Spatie\ResponseCache\Hasher\RequestHasher;
+use Spatie\ResponseCache\Facades\ResponseCache;
 
 use function PHPUnit\Framework\assertFalse;
-use function PHPUnit\Framework\assertNull;
-use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
 
 beforeEach(function () {
@@ -26,6 +23,27 @@ it('will cache a response once its request has been seen the minimum number of t
     assertSameResponse($secondResponse, $thirdResponse);
 });
 
+it('only counts a request once when cache middleware overlaps', function () {
+    config()->set('responsecache.cache.store', 'array');
+
+    $firstResponse = $this->get('/tagged/1');
+    $secondResponse = $this->get('/tagged/1');
+    $thirdResponse = $this->get('/tagged/1');
+
+    assertRegularResponse($firstResponse);
+    assertRegularResponse($secondResponse);
+    assertCachedResponse($thirdResponse);
+
+    assertSameResponse($secondResponse, $thirdResponse);
+});
+
+it('also waits for the minimum when using flexible caching', function () {
+    assertRegularResponse($this->get('/flexible/basic'));
+
+    $this->get('/flexible/basic')->assertHeader('X-Cache-Status', 'MISS');
+    $this->get('/flexible/basic')->assertHeader('X-Cache-Status', 'HIT');
+});
+
 it('will count requests per cache key', function () {
     $this->get('/random/1');
     $this->get('/random/1');
@@ -42,22 +60,66 @@ it('will not count a request whose response cannot be cached', function () {
 
     assertFalse($this->app['responsecache']->shouldCache($request, createResponse(500)));
     assertFalse($this->app['responsecache']->shouldCache($request, createResponse(200)));
-    assertTrue($this->app['responsecache']->shouldCache($request, createResponse(200)));
+    assertTrue($this->app['responsecache']->shouldCache(createRequest('get'), createResponse(200)));
 });
 
 it('will forget requests older than the lifetime', function () {
+    config()->set('responsecache.minimum_requests.count', 3);
     config()->set('responsecache.minimum_requests.lifetime_in_seconds', 60);
 
     $this->get('/random');
 
-    Carbon::setTestNow(Carbon::now()->addSeconds(61));
+    $this->travel(59)->seconds();
 
     $this->get('/random');
+
+    $this->travel(2)->seconds();
+
     $thirdResponse = $this->get('/random');
+    $fourthResponse = $this->get('/random');
+    $fifthResponse = $this->get('/random');
+    $sixthResponse = $this->get('/random');
 
     assertRegularResponse($thirdResponse);
+    assertRegularResponse($fourthResponse);
+    assertRegularResponse($fifthResponse);
+    assertCachedResponse($sixthResponse);
 
-    Carbon::setTestNow();
+    assertSameResponse($fifthResponse, $sixthResponse);
+});
+
+it('restarts the lifetime if a counter expires while being incremented', function () {
+    Cache::extend('expiring-array', fn () => Cache::repository(new class extends ArrayStore
+    {
+        protected bool $expireOnIncrement = true;
+
+        public function increment($key, $value = 1): int
+        {
+            if ($this->expireOnIncrement) {
+                $this->forget($key);
+                $this->expireOnIncrement = false;
+            }
+
+            return parent::increment($key, $value);
+        }
+    }));
+
+    config()->set('cache.stores.expiring-array', ['driver' => 'expiring-array']);
+    config()->set('responsecache.minimum_requests.store', 'expiring-array');
+    config()->set('responsecache.minimum_requests.lifetime_in_seconds', 60);
+
+    $this->get('/random');
+    $this->get('/random');
+
+    $this->travel(61)->seconds();
+
+    $thirdResponse = $this->get('/random');
+    $fourthResponse = $this->get('/random');
+    $fifthResponse = $this->get('/random');
+
+    assertRegularResponse($thirdResponse);
+    assertRegularResponse($fourthResponse);
+    assertCachedResponse($fifthResponse);
 });
 
 it('can keep the request counters on a separate store', function () {
@@ -65,8 +127,12 @@ it('can keep the request counters on a separate store', function () {
 
     $this->get('/random');
 
-    $key = 'responsecache-requests-'.app(RequestHasher::class)->getHashFor(Request::create('/random'));
+    ResponseCache::clear();
 
-    assertSame(1, Cache::store('array')->get($key));
-    assertNull(Cache::store(config('responsecache.cache.store'))->get($key));
+    $secondResponse = $this->get('/random');
+    $thirdResponse = $this->get('/random');
+
+    assertRegularResponse($secondResponse);
+    assertCachedResponse($thirdResponse);
+    assertSameResponse($secondResponse, $thirdResponse);
 });

@@ -47,29 +47,40 @@ class ResponseCache
         return $this->hasMinimumRequests($request);
     }
 
-    /**
-     * A request only counts toward the minimum when its response
-     * could have been cached.
-     */
     protected function hasMinimumRequests(Request $request): bool
     {
-        $minimumRequests = (int) config('responsecache.minimum_requests.count');
+        $minimumRequests = (int) config('responsecache.minimum_requests.count', 1);
 
         if ($minimumRequests <= 1) {
             return true;
+        }
+
+        $key = 'responsecache-requests-'.$this->hasher->getHashFor($request);
+
+        if ($request->attributes->has($key)) {
+            return $request->attributes->get($key);
         }
 
         $store = app('cache')->store(
             config('responsecache.minimum_requests.store') ?: config('responsecache.cache.store')
         );
 
-        $key = 'responsecache-requests-'.$this->hasher->getHashFor($request);
+        $lifetime = (int) config('responsecache.minimum_requests.lifetime_in_seconds', 60 * 60 * 24);
+        $requests = 1;
 
-        if ($store->add($key, 1, (int) config('responsecache.minimum_requests.lifetime_in_seconds'))) {
-            return false;
+        if (! $store->add($key, 1, $lifetime)) {
+            $requests = (int) $store->increment($key);
+
+            if ($requests === 1) {
+                $store->put($key, 1, $lifetime);
+            }
         }
 
-        return (int) $store->increment($key) >= $minimumRequests;
+        $hasMinimumRequests = $requests >= $minimumRequests;
+
+        $request->attributes->set($key, $hasMinimumRequests);
+
+        return $hasMinimumRequests;
     }
 
     public function shouldBypass(Request $request): bool
