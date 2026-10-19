@@ -97,9 +97,9 @@ return [
     ],
 
     /*
-     * Requests containing any of these headers will not be
-     * cached. This prevents stale responses from being
-     * served to Livewire and Inertia partial requests.
+     * Requests containing any of these headers will bypass cache reads
+     * and writes, with both regular and flexible caching. This prevents
+     * full-page responses from being served to Livewire and Inertia requests.
      */
     'excluded_request_headers' => [
         'X-Livewire',
