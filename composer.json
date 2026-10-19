@@ -31,13 +31,13 @@
         "spatie/php-attribute-reader": "^1.0"
     },
     "require-dev": {
+        "jasonmccreary/double": "^1.0",
         "larastan/larastan": "^3.9",
         "laravel/framework": "^12.0|^13.0",
         "laravel/pint": "^1.13.7",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^10.0|^11.0",
-        "pestphp/pest": "^4.0",
-        "jasonmccreary/double": "^1.0"
+        "pestphp/pest": "^4.7.8|^5.3.3"
     },
     "autoload": {
         "psr-4": {
