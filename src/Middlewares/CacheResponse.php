@@ -5,6 +5,7 @@ namespace Spatie\ResponseCache\Middlewares;
 use Carbon\CarbonInterval;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Spatie\ResponseCache\Attributes\Cache;
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 use Spatie\ResponseCache\Attributes\NoCache;
@@ -70,14 +71,18 @@ class CacheResponse extends BaseCacheMiddleware
 
         $response = $next($request);
 
+        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+
         if ($this->responseCache->shouldCache($request, $response)) {
             $request->attributes->set($this->pendingCacheAttribute, [
                 'lifetime' => $lifetimeInSeconds,
                 'tags' => $tags,
+                'cacheKey' => $cacheKey,
+                'statusCode' => $response->getStatusCode(),
+                'mediaType' => $this->getMediaType($response),
             ]);
         }
 
-        $cacheKey = app(RequestHasher::class)->getHashFor($request);
         $response = $this->addDebugHeaders($response, false, $cacheKey);
 
         event(new CacheMissedEvent($request));
@@ -93,7 +98,35 @@ class CacheResponse extends BaseCacheMiddleware
             return;
         }
 
+        if ($this->differsFromApprovedResponse($response, $pending)) {
+            return;
+        }
+
+        if (isset($pending['cacheKey'])) {
+            $request->attributes->set('responsecache.cacheKey', $pending['cacheKey']);
+        }
+
         $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
+    }
+
+    protected function differsFromApprovedResponse(Response $response, array $pending): bool
+    {
+        if (! isset($pending['statusCode'], $pending['mediaType'])) {
+            return false;
+        }
+
+        if ($response->getStatusCode() !== $pending['statusCode']) {
+            return true;
+        }
+
+        return $this->getMediaType($response) !== $pending['mediaType'];
+    }
+
+    protected function getMediaType(Response $response): string
+    {
+        $contentType = $response->headers->get('Content-Type', '');
+
+        return strtolower(trim(Str::before($contentType, ';')));
     }
 
     protected function getCachedResponse(Request $request, array $tags): ?Response

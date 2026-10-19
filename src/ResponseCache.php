@@ -63,7 +63,7 @@ class ResponseCache
         array $tags = []
     ): Response {
         $this->taggedCache($tags)->put(
-            $this->hasher->getHashFor($request),
+            $request->attributes->get('responsecache.cacheKey') ?? $this->hasher->getHashFor($request),
             $response,
             $lifetimeInSeconds ?? $this->cacheProfile->cacheLifetimeInSeconds($request),
         );

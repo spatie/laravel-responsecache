@@ -2,6 +2,27 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.4.5 - 2026-09-29
+
+### What's Changed
+
+* Bump to Double v1 by @jasonmccreary in https://github.com/spatie/laravel-responsecache/pull/533
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.4.4...8.4.5
+
+## 8.4.4 - 2026-09-25
+
+### What's Changed
+
+* Convert Mockery to Double by @jasonmccreary in https://github.com/spatie/laravel-responsecache/pull/528
+* Only cache the response that was approved when handling the request by @freekmurze in https://github.com/spatie/laravel-responsecache/pull/532
+
+### New Contributors
+
+* @jasonmccreary made their first contribution in https://github.com/spatie/laravel-responsecache/pull/528
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.4.3...8.4.4
+
 ## 8.4.3 - 2026-08-07
 
 ### What's Changed
