@@ -40,7 +40,47 @@ class ResponseCache
             return false;
         }
 
-        return $this->cacheProfile->shouldCacheResponse($response);
+        if (! $this->cacheProfile->shouldCacheResponse($response)) {
+            return false;
+        }
+
+        return $this->hasMinimumRequests($request);
+    }
+
+    protected function hasMinimumRequests(Request $request): bool
+    {
+        $minimumRequests = (int) config('responsecache.minimum_requests.count', 1);
+
+        if ($minimumRequests <= 1) {
+            return true;
+        }
+
+        $key = 'responsecache-requests-'.$this->hasher->getHashFor($request);
+
+        if ($request->attributes->has($key)) {
+            return $request->attributes->get($key);
+        }
+
+        $store = app('cache')->store(
+            config('responsecache.minimum_requests.store') ?: config('responsecache.cache.store')
+        );
+
+        $lifetime = (int) config('responsecache.minimum_requests.lifetime_in_seconds', 60 * 60 * 24);
+        $requests = 1;
+
+        if (! $store->add($key, 1, $lifetime)) {
+            $requests = (int) $store->increment($key);
+
+            if ($requests === 1) {
+                $store->put($key, 1, $lifetime);
+            }
+        }
+
+        $hasMinimumRequests = $requests >= $minimumRequests;
+
+        $request->attributes->set($key, $hasMinimumRequests);
+
+        return $hasMinimumRequests;
     }
 
     public function shouldBypass(Request $request): bool

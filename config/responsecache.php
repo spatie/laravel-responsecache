@@ -35,6 +35,27 @@ return [
         'tag' => env('RESPONSE_CACHE_TAG', ''),
     ],
 
+    'minimum_requests' => [
+        /*
+         * The number of times a request must be seen before its
+         * response is stored. A higher number keeps pages that
+         * are requested only once, such as crawler traffic,
+         * out of the cache.
+         */
+        'count' => (int) env('RESPONSE_CACHE_MINIMUM_REQUESTS', 1),
+
+        /*
+         * The number of seconds a request counts toward the minimum.
+         */
+        'lifetime_in_seconds' => (int) env('RESPONSE_CACHE_MINIMUM_REQUESTS_LIFETIME', 60 * 60 * 24),
+
+        /*
+         * The cache store that holds the request counters. Leave
+         * empty to use the response cache store above.
+         */
+        'store' => env('RESPONSE_CACHE_MINIMUM_REQUESTS_STORE'),
+    ],
+
     'bypass' => [
         /*
          * The header name that will force a bypass of the cache.
