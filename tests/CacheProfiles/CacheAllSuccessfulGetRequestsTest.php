@@ -22,6 +22,13 @@ it('will determine that all non get request should not be cached', function () {
     assertFalse($this->cacheProfile->shouldCacheRequest(createRequest('delete')));
 });
 
+it('will determine that ajax requests should not be cached', function () {
+    $request = createRequest('get');
+    $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+
+    assertFalse($this->cacheProfile->shouldCacheRequest($request));
+});
+
 it('will determine that a successful response should be cached', function () {
     foreach (range(200, 399) as $statusCode) {
         assertTrue($this->cacheProfile->shouldCacheResponse(createResponse($statusCode)));

@@ -85,6 +85,12 @@ class ResponseCache
 
     public function shouldBypass(Request $request): bool
     {
+        foreach (config('responsecache.excluded_request_headers', []) as $header) {
+            if ($request->hasHeader($header)) {
+                return true;
+            }
+        }
+
         if (! config('responsecache.bypass.header_name')) {
             return false;
         }
