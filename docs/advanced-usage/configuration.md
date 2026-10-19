@@ -31,7 +31,7 @@ You can require a page to be requested a number of times before its response is 
 RESPONSE_CACHE_MINIMUM_REQUESTS=2
 ```
 
-Requests are counted once per cache key per HTTP request, including when cache middleware overlaps. A request only counts when its response could have been cached, so an error response does not bring a page closer to the minimum. Cache hits do not increment the counter. This setting applies to both regular and flexible response caching.
+Requests are counted once per cache key per HTTP request, including when cache middleware overlaps. A request only counts when its response could have been cached, so an error response does not bring a page closer to the minimum. Fresh cache hits do not increment the counter. This setting applies to both regular and flexible response caching, including background refreshes of stale responses.
 
 The counters expire after one day by default. The window starts with the first cacheable request and is not extended by later requests. A page must reach the minimum within that window, otherwise the count starts over.
 

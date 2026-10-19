@@ -2,6 +2,7 @@
 
 use Illuminate\Cache\ArrayStore;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Exceptions;
 use Spatie\ResponseCache\Facades\ResponseCache;
 
 use function PHPUnit\Framework\assertFalse;
@@ -42,6 +43,26 @@ it('also waits for the minimum when using flexible caching', function () {
 
     $this->get('/flexible/basic')->assertHeader('X-Cache-Status', 'MISS');
     $this->get('/flexible/basic')->assertHeader('X-Cache-Status', 'HIT');
+});
+
+it('can skip a deferred refresh without reporting an error after the counter expires', function () {
+    Exceptions::fake();
+
+    config()->set('responsecache.minimum_requests.lifetime_in_seconds', 2);
+
+    $this->get('/flexible/basic');
+    $cachedResponse = $this->get('/flexible/basic');
+
+    $this->travel(6)->seconds();
+
+    $staleResponse = $this->get('/flexible/basic');
+    $secondStaleResponse = $this->get('/flexible/basic');
+    $refreshedResponse = $this->get('/flexible/basic');
+
+    assertSameResponse($cachedResponse, $staleResponse);
+    assertSameResponse($cachedResponse, $secondStaleResponse);
+    assertDifferentResponse($cachedResponse, $refreshedResponse);
+    Exceptions::assertNothingReported();
 });
 
 it('will count requests per cache key', function () {
