@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.6.0 - 2026-10-19
+
+### What is new
+
+- Add an opt-in minimum number of cacheable requests before storing a response, with an expiring per-key counter and an optional separate counter store, by @imilano-pla in #534.
+- Count overlapping cache middleware only once per HTTP request and preserve counter expiry when a counter disappears during an increment.
+- Do not report intentionally skipped background cache refreshes as application errors.
+- Test PHP 8.4 and 8.5 with Laravel 12/Pest 4 and Laravel 13/Pest 5, using the current PHPUnit configuration schema.
+
+The default minimum remains one request, so existing behavior and published configuration files are unchanged. No breaking changes.
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.5.0...8.6.0
+
 ## 8.5.0 - 2026-10-19
 
 ### What’s Changed
