@@ -51,6 +51,24 @@ You can customize the list of ignored parameters in the config file.
 
 Set this to an empty array if you want all query parameters to be included in the cache key.
 
+## Excluded request headers
+
+Requests containing any of the configured headers bypass both cache reads and writes, for both regular and flexible caching, regardless of the cache profile. By default, this skips Livewire and Inertia requests so they cannot receive a cached full-page response instead of the response they expect. Header names are case-insensitive; only their presence matters, not their value.
+
+```php
+// config/responsecache.php
+
+'excluded_request_headers' => [
+    'X-Livewire',
+    'X-Livewire-Navigate',
+    'X-Inertia',
+],
+```
+
+You can add your own headers to this list, or set it to an empty array to disable the check.
+
+Removing a header does not automatically make those requests safe to cache. If a URL can return different responses depending on request headers, use a custom [request hasher](/docs/laravel-responsecache/v8/advanced-usage/customizing-the-hasher) to keep those responses separate. The default cache profile also continues to exclude AJAX requests identified by `X-Requested-With: XMLHttpRequest`.
+
 ## Debug headers
 
 When `APP_DEBUG` is `true`, the package adds debug headers to cached responses. You can customize this behavior.

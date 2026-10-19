@@ -19,6 +19,47 @@ it('will cache a get request', function () {
     assertSameResponse($firstResponse, $secondResponse);
 });
 
+it('bypasses cache reads and writes for excluded request headers', function (string $uri, string $header, string $value) {
+    $firstExcludedResponse = $this->get($uri, [$header => $value]);
+    $secondExcludedResponse = $this->get($uri, [$header => $value]);
+
+    assertDifferentResponse($firstExcludedResponse, $secondExcludedResponse);
+
+    $regularResponse = $this->get($uri);
+    $cachedResponse = $this->get($uri);
+
+    assertDifferentResponse($secondExcludedResponse, $regularResponse);
+    assertSameResponse($regularResponse, $cachedResponse);
+    assertCachedResponse($cachedResponse);
+
+    $excludedResponse = $this->get($uri, [$header => $value]);
+
+    assertRegularResponse($excludedResponse);
+    assertDifferentResponse($regularResponse, $excludedResponse);
+    assertSameResponse($regularResponse, $this->get($uri));
+})->with(['/random', '/flexible/basic'])->with([
+    ['X-Livewire', '1'],
+    ['x-livewire-navigate', ''],
+    ['X-Inertia', 'true'],
+]);
+
+it('allows configuring excluded request headers', function (string $uri) {
+    config()->set('responsecache.excluded_request_headers', ['X-Custom-Header']);
+
+    $firstResponse = $this->get($uri, ['X-Custom-Header' => '1']);
+    $secondResponse = $this->get($uri, ['X-Custom-Header' => '1']);
+
+    assertDifferentResponse($firstResponse, $secondResponse);
+
+    config()->set('responsecache.excluded_request_headers', []);
+
+    $firstResponse = $this->get($uri, ['X-Livewire' => '1', 'X-Livewire-Navigate' => '1', 'X-Inertia' => 'true']);
+    $secondResponse = $this->get($uri, ['X-Livewire' => '1', 'X-Livewire-Navigate' => '1', 'X-Inertia' => 'true']);
+
+    assertSameResponse($firstResponse, $secondResponse);
+    assertCachedResponse($secondResponse);
+})->with(['/random', '/flexible/basic']);
+
 it('will fire an event when responding without cache', function () {
     Event::fake();
 
