@@ -12,7 +12,6 @@ use Spatie\ResponseCache\Attributes\NoCache;
 use Spatie\ResponseCache\Configuration\CacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissedEvent;
 use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
-use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,7 +70,7 @@ class CacheResponse extends BaseCacheMiddleware
 
         $response = $next($request);
 
-        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+        $cacheKey = $this->responseCache->cacheKeyFor($request);
 
         if ($this->responseCache->shouldCache($request, $response)) {
             $request->attributes->set($this->pendingCacheAttribute, [
@@ -131,10 +130,10 @@ class CacheResponse extends BaseCacheMiddleware
 
     protected function getCachedResponse(Request $request, array $tags): ?Response
     {
-        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+        $cacheKey = $this->responseCache->cacheKeyFor($request);
 
         try {
-            $response = $this->responseCache->getCachedResponseFor($request, $tags);
+            $response = $this->responseCache->getCachedResponseFor($request, $tags, $cacheKey);
         } catch (Throwable $exception) {
             report("Could not serve cached response: {$exception->getMessage()}");
 
@@ -165,6 +164,7 @@ class CacheResponse extends BaseCacheMiddleware
         $cachedResponse = clone $response;
 
         $cachedResponse->headers->remove(config('responsecache.debug.cache_status_header_name'));
+        $cachedResponse->headers->remove('Set-Cookie');
 
         $this->addCacheTimeHeader($cachedResponse);
 

@@ -87,7 +87,7 @@ return [
 
     'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,
 
-    'serializer' => \Spatie\ResponseCache\Serializers\JsonSerializer::class,
+    'serializer' => \Spatie\ResponseCache\Serializers\RawBodySerializer::class,
 
     'replacers' => [
         \Spatie\ResponseCache\Replacers\CsrfTokenReplacer::class,

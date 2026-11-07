@@ -13,10 +13,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseCacheMiddleware
 {
+    protected ?array $replacerClasses = null;
+
+    protected Collection $replacers;
+
     protected function getReplacers(): Collection
     {
-        return collect(config('responsecache.replacers'))
-            ->map(fn (string $replacerClass) => app($replacerClass));
+        $replacerClasses = config('responsecache.replacers', []);
+
+        if ($this->replacerClasses !== $replacerClasses) {
+            $this->replacerClasses = $replacerClasses;
+            $this->replacers = collect($replacerClasses)->map(fn (string $replacerClass) => app($replacerClass));
+        }
+
+        return $this->replacers;
     }
 
     protected function getAttributeFromRequest(Request $request): Cache|FlexibleCache|NoCache|null

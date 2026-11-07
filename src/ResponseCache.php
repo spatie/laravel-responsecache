@@ -124,9 +124,14 @@ class ResponseCache
             : false;
     }
 
-    public function getCachedResponseFor(Request $request, array $tags = []): ?Response
+    public function getCachedResponseFor(Request $request, array $tags = [], ?string $cacheKey = null): ?Response
     {
-        return $this->taggedCache($tags)->get($this->hasher->getHashFor($request));
+        return $this->taggedCache($tags)->get($cacheKey ?? $this->cacheKeyFor($request));
+    }
+
+    public function cacheKeyFor(Request $request): string
+    {
+        return $this->hasher->getHashFor($request);
     }
 
     public function clear(array $tags = []): bool
