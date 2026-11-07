@@ -30,6 +30,10 @@ The visitor who triggers the cache miss still receives their cookies. Cached hit
 
 If a page sets a cookie that every visitor needs, set it in a middleware that runs outside the response cache middleware, or exclude that route from caching.
 
+### Stale ETags are removed from cached responses
+
+When a replacer changes a response before it's cached, for example by swapping the CSRF token for a placeholder, a stored `ETag` header is removed. That `ETag` described the original body, not the page later visitors receive. Responses that no replacer changed keep their `ETag`.
+
 ### `getCachedResponseFor()` accepts a cache key
 
 `ResponseCache::getCachedResponseFor()` has a new optional `$cacheKey` parameter, so the middleware only hashes a request once per cache hit. If you extend `ResponseCache` and override this method, update its signature:
