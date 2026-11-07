@@ -22,22 +22,27 @@ class CsrfTokenReplacer implements Replacer
             return;
         }
 
-        if (! str_contains($content, $csrfToken)) {
+        $parts = explode($csrfToken, $content);
+
+        if (count($parts) === 1) {
             return;
         }
 
-        $response->setContent(str_replace(
-            $csrfToken,
-            $this->replacementString,
-            $content,
-        ));
+        $response->setContent(implode($this->replacementString, $parts));
     }
 
     public function replaceInCachedResponse(Response $response): void
     {
         $content = $response->getContent();
 
-        if (! $content || ! str_contains($content, $this->replacementString)) {
+        if (! $content) {
+            return;
+        }
+
+        // explode + implode is several times faster than str_replace on large HTML pages.
+        $parts = explode($this->replacementString, $content);
+
+        if (count($parts) === 1) {
             return;
         }
 
@@ -47,10 +52,6 @@ class CsrfTokenReplacer implements Replacer
             return;
         }
 
-        $response->setContent(str_replace(
-            $this->replacementString,
-            $csrfToken,
-            $content,
-        ));
+        $response->setContent(implode($csrfToken, $parts));
     }
 }
