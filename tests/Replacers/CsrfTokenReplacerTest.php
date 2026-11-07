@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Response;
 use Spatie\ResponseCache\Replacers\CsrfTokenReplacer;
 
 it('will refresh csrf token on cached response', function () {
@@ -31,7 +32,7 @@ it('replaces every csrf token with a placeholder and back', function () {
     session()->regenerateToken();
     $token = csrf_token();
     $html = "{$token}<meta content=\"{$token}\"><input value=\"{$token}\">{$token}";
-    $response = new Illuminate\Http\Response($html);
+    $response = new Response($html);
     $replacer = new CsrfTokenReplacer;
 
     $replacer->prepareResponseToCache($response);
@@ -45,7 +46,7 @@ it('replaces every csrf token with a placeholder and back', function () {
 });
 
 it('leaves responses without a csrf token or placeholder untouched', function () {
-    $response = new Illuminate\Http\Response('<p>No token here</p>');
+    $response = new Response('<p>No token here</p>');
     $replacer = new CsrfTokenReplacer;
 
     $replacer->prepareResponseToCache($response);
