@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Spatie\ResponseCache\Attributes\Cache;
 use Spatie\ResponseCache\Attributes\FlexibleCache;
 use Spatie\ResponseCache\Attributes\NoCache;
+use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\Support\AttributeReader;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +28,18 @@ abstract class BaseCacheMiddleware
         }
 
         return $this->replacers;
+    }
+
+    protected function prepareResponseToCache(Response $response): void
+    {
+        $content = $response->getContent();
+
+        $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($response));
+
+        // An ETag describes the exact body it was computed for, so it's invalid once a replacer changed that body.
+        if ($response->getContent() !== $content) {
+            $response->headers->remove('ETag');
+        }
     }
 
     protected function getAttributeFromRequest(Request $request): Cache|FlexibleCache|NoCache|null

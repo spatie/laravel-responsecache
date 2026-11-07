@@ -227,7 +227,7 @@ class CacheResponse extends BaseCacheMiddleware
 
         $this->addCacheTimeHeader($cachedResponse);
 
-        $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
+        $this->prepareResponseToCache($cachedResponse);
 
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }

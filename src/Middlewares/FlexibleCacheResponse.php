@@ -85,7 +85,7 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
                     $this->addCacheTimeHeader($cachedResponse);
 
-                    $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
+                    $this->prepareResponseToCache($cachedResponse);
 
                     return $cachedResponse;
                 },
