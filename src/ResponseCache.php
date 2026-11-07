@@ -3,6 +3,7 @@
 namespace Spatie\ResponseCache;
 
 use Closure;
+use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheItemSelector\CacheItemSelector;
 use Spatie\ResponseCache\CacheProfiles\CacheProfile;
@@ -28,6 +29,16 @@ class ResponseCache
     public function enabled(Request $request): bool
     {
         return $this->cacheProfile->enabled($request);
+    }
+
+    public function shouldCacheRequest(Request $request): bool
+    {
+        return $this->cacheProfile->shouldCacheRequest($request);
+    }
+
+    public function lockFor(Request $request, int $seconds): ?Lock
+    {
+        return $this->cache->lock('responsecache-lock-'.$this->cacheKeyFor($request), $seconds);
     }
 
     public function shouldCache(Request $request, Response $response): bool

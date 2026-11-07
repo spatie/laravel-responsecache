@@ -4,6 +4,9 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Carbon\CarbonInterval;
 use Closure;
+use Illuminate\Cache\Lock as CacheLock;
+use Illuminate\Contracts\Cache\Lock;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Spatie\ResponseCache\Attributes\Cache;
@@ -20,6 +23,8 @@ use Throwable;
 class CacheResponse extends BaseCacheMiddleware
 {
     protected string $pendingCacheAttribute = '_response_cache.pending';
+
+    protected string $lockAttribute = '_response_cache.lock';
 
     public function __construct(
         protected ResponseCache $responseCache,
@@ -68,7 +73,19 @@ class CacheResponse extends BaseCacheMiddleware
             return $cachedResponse;
         }
 
-        $response = $next($request);
+        if ($this->acquireLock($request) && $cachedResponse = $this->getCachedResponse($request, $tags)) {
+            $this->releaseLock($request);
+
+            return $cachedResponse;
+        }
+
+        try {
+            $response = $next($request);
+        } catch (Throwable $exception) {
+            $this->releaseLock($request);
+
+            throw $exception;
+        }
 
         $cacheKey = $this->responseCache->cacheKeyFor($request);
 
@@ -80,6 +97,8 @@ class CacheResponse extends BaseCacheMiddleware
                 'statusCode' => $response->getStatusCode(),
                 'mediaType' => $this->getMediaType($response),
             ]);
+        } else {
+            $this->releaseLock($request);
         }
 
         $response = $this->addDebugHeaders($response, false, $cacheKey);
@@ -91,21 +110,61 @@ class CacheResponse extends BaseCacheMiddleware
 
     public function terminate(Request $request, Response $response): void
     {
-        $pending = $request->attributes->get($this->pendingCacheAttribute);
+        try {
+            $pending = $request->attributes->get($this->pendingCacheAttribute);
 
-        if (! $pending) {
-            return;
+            if (! $pending) {
+                return;
+            }
+
+            if ($this->differsFromApprovedResponse($response, $pending)) {
+                return;
+            }
+
+            if (isset($pending['cacheKey'])) {
+                $request->attributes->set('responsecache.cacheKey', $pending['cacheKey']);
+            }
+
+            $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
+        } finally {
+            $this->releaseLock($request);
+        }
+    }
+
+    protected function acquireLock(Request $request): ?Lock
+    {
+        if (! config('responsecache.lock.enabled')
+            || $request->attributes->has($this->lockAttribute)
+            || ! $this->responseCache->shouldCacheRequest($request)
+        ) {
+            return null;
         }
 
-        if ($this->differsFromApprovedResponse($response, $pending)) {
-            return;
+        $lock = $this->responseCache->lockFor($request, (int) config('responsecache.lock.lifetime_in_seconds', 10));
+
+        if (! $lock) {
+            return null;
         }
 
-        if (isset($pending['cacheKey'])) {
-            $request->attributes->set('responsecache.cacheKey', $pending['cacheKey']);
+        if ($lock instanceof CacheLock) {
+            $lock->betweenBlockedAttemptsSleepFor(50);
         }
 
-        $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
+        try {
+            $lock->block((int) config('responsecache.lock.wait_in_seconds', 5));
+        } catch (LockTimeoutException) {
+            return null;
+        }
+
+        $request->attributes->set($this->lockAttribute, $lock);
+
+        return $lock;
+    }
+
+    protected function releaseLock(Request $request): void
+    {
+        $request->attributes->get($this->lockAttribute)?->release();
+        $request->attributes->remove($this->lockAttribute);
     }
 
     protected function differsFromApprovedResponse(Response $response, array $pending): bool

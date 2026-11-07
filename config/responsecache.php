@@ -56,6 +56,28 @@ return [
         'store' => env('RESPONSE_CACHE_MINIMUM_REQUESTS_STORE'),
     ],
 
+    'lock' => [
+        /*
+         * When a page isn't cached yet, let only one request render
+         * it. Concurrent requests for the same page wait and then
+         * serve the cached response. Requires a cache store that
+         * supports atomic locks.
+         */
+        'enabled' => (bool) env('RESPONSE_CACHE_LOCK', false),
+
+        /*
+         * The maximum number of seconds a lock is held, in case the
+         * request holding it never finishes.
+         */
+        'lifetime_in_seconds' => (int) env('RESPONSE_CACHE_LOCK_LIFETIME', 10),
+
+        /*
+         * The maximum number of seconds a request waits for the lock.
+         * After that, it renders the page itself.
+         */
+        'wait_in_seconds' => (int) env('RESPONSE_CACHE_LOCK_WAIT', 5),
+    ],
+
     'bypass' => [
         /*
          * The header name that will force a bypass of the cache.

@@ -5,6 +5,8 @@ namespace Spatie\ResponseCache;
 use Closure;
 use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
+use Illuminate\Contracts\Cache\Lock;
+use Illuminate\Contracts\Cache\LockProvider;
 use Spatie\ResponseCache\Serializers\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,6 +17,13 @@ class ResponseCacheRepository
         protected Repository $cache,
     ) {
         //
+    }
+
+    public function lock(string $name, int $seconds): ?Lock
+    {
+        $store = $this->cache->getStore();
+
+        return $store instanceof LockProvider ? $store->lock($name, $seconds) : null;
     }
 
     public function put(string $key, Response $response, int $seconds): void
