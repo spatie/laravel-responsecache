@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Spatie\ResponseCache\Attributes\Cache;
+use Spatie\ResponseCache\Attributes\FlexibleCache;
+use Spatie\ResponseCache\Attributes\NoCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
+use Spatie\ResponseCache\Support\AttributeReader;
 use Spatie\ResponseCache\Test\TestClasses\ClassLevelCacheInvokableController;
 use Spatie\ResponseCache\Test\TestClasses\InvokableCacheController;
 use Spatie\ResponseCache\Test\TestClasses\InvokableNoCacheController;
@@ -39,4 +43,16 @@ it('still reads attributes from an invokable controller registered with an expli
 
     assertRegularResponse($this->get('/invokable-explicit'));
     assertCachedResponse($this->get('/invokable-explicit'));
+});
+
+it('returns a fresh attribute instance for every lookup of the same action', function () {
+    $attributeClasses = [Cache::class, FlexibleCache::class, NoCache::class];
+
+    $first = AttributeReader::getFirstAttribute(InvokableCacheController::class, $attributeClasses);
+    $first->lifetime = 1;
+
+    $second = AttributeReader::getFirstAttribute(InvokableCacheController::class, $attributeClasses);
+
+    expect($second)->not->toBe($first)
+        ->and($second->lifetime)->toBe(300);
 });
