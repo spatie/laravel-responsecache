@@ -64,7 +64,9 @@ RESPONSE_CACHE_LOCK_WAIT=5
 RESPONSE_CACHE_LOCK_LIFETIME=10
 ```
 
-Only requests whose response could be cached take the lock, so form submissions and other uncacheable requests are never delayed. This setting applies to the `CacheResponse` middleware. Flexible caching already serves stale responses while it refreshes them.
+Only requests whose response could be cached take the lock, so form submissions and other uncacheable requests are never delayed.
+
+This setting applies to the `CacheResponse` middleware. With [flexible caching](/docs/laravel-responsecache/v8/basic-usage/flexible-caching), only one request refreshes a stale response while others are served the stale one. A page that isn't cached at all is still rendered by every concurrent request.
 
 If you published the config file before this option existed, add the `lock` section from the package's config file to enable it.
 

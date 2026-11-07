@@ -32,3 +32,5 @@ Then register your custom hasher in the config file.
 
 'hasher' => \App\Hashers\CustomHasher::class,
 ```
+
+The package may reuse one instance of your hasher for several requests, for example in tests or under Laravel Octane. Use the `$request` passed to `getHashFor`, and don't store request data in the constructor.

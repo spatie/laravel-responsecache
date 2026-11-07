@@ -54,6 +54,18 @@ return [
         'tag' => env('RESPONSE_CACHE_TAG', ''),
     ],
 
+    'minimum_requests' => [
+        'count' => (int) env('RESPONSE_CACHE_MINIMUM_REQUESTS', 1),
+        'lifetime_in_seconds' => (int) env('RESPONSE_CACHE_MINIMUM_REQUESTS_LIFETIME', 60 * 60 * 24),
+        'store' => env('RESPONSE_CACHE_MINIMUM_REQUESTS_STORE'),
+    ],
+
+    'lock' => [
+        'enabled' => (bool) env('RESPONSE_CACHE_LOCK', false),
+        'lifetime_in_seconds' => (int) env('RESPONSE_CACHE_LOCK_LIFETIME', 10),
+        'wait_in_seconds' => (int) env('RESPONSE_CACHE_LOCK_WAIT', 5),
+    ],
+
     'bypass' => [
         'header_name' => env('CACHE_BYPASS_HEADER_NAME'),
         'header_value' => env('CACHE_BYPASS_HEADER_VALUE'),

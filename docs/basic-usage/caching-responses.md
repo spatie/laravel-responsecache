@@ -86,3 +86,11 @@ class ShowPostsController
 
 Route::get('posts', ShowPostsController::class);
 ```
+
+## Cookies
+
+Cookies are never stored in the cache. A cookie your app sets belongs to the visitor whose request was cached, so replaying it to other visitors could leak their session or other data.
+
+The visitor whose request gets cached still receives their cookies as usual. Visitors who are served the cached response receive only the cookies your middleware sets for them, such as the session and `XSRF-TOKEN` cookies of Laravel's `web` middleware group.
+
+If every visitor of a cached page needs a cookie, set it in a middleware that runs before the response cache middleware, or prevent caching for that route.
