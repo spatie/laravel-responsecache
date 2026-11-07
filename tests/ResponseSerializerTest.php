@@ -4,6 +4,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use Spatie\ResponseCache\Exceptions\CouldNotUnserialize;
+use Spatie\ResponseCache\Serializers\JsonSerializer;
 use Spatie\ResponseCache\Serializers\Serializer;
 use Spatie\ResponseCache\Test\Serializers\TestSerializer;
 
@@ -74,3 +75,26 @@ it('can customize serialize and unserialize a response', function () {
 it('throws an exception when something else than a response is unserialized', function () {
     app(Serializer::class)->unserialize('b:0;');
 })->throws(CouldNotUnserialize::class);
+
+it('can unserialize a response stored with escaped slashes and unicode', function () {
+    $content = '<a href="/path">Café</a>';
+
+    $storedEntry = json_encode([
+        'type' => 'normal',
+        'status' => 200,
+        'headers' => ['content-type' => ['text/html; charset=UTF-8']],
+        'content' => $content,
+    ]);
+
+    $unserializedResponse = app(Serializer::class)->unserialize($storedEntry);
+
+    assertEquals($content, $unserializedResponse->getContent());
+});
+
+it('serializes a response as json without escaping slashes and unicode', function () {
+    $content = '<a href="/path">Café</a>';
+
+    $serializedResponse = (new JsonSerializer)->serialize(new Response($content));
+
+    assertTrue(str_contains($serializedResponse, json_encode($content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)));
+});

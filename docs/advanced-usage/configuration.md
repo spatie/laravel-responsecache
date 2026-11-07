@@ -45,6 +45,31 @@ The counters live on the response cache store. When that store evicts entries un
 RESPONSE_CACHE_MINIMUM_REQUESTS_STORE=redis
 ```
 
+## Preventing cache stampedes
+
+When a popular page expires, many requests can arrive before it's cached again. Each of them then runs your controller and renders the same page.
+
+You can let only one request render the page. Concurrent requests for the same page wait, and then serve the response that request cached.
+
+```env
+RESPONSE_CACHE_LOCK=true
+```
+
+This requires a cache store that supports [atomic locks](https://laravel.com/docs/12.x/cache#atomic-locks), such as Redis, Memcached, DynamoDB, the database or the file store. With other stores the setting has no effect.
+
+A request only waits for a limited time. After that it renders the page itself, so a slow page never makes other requests fail. Locks also expire, in case the request holding one never finishes.
+
+```env
+RESPONSE_CACHE_LOCK_WAIT=5
+RESPONSE_CACHE_LOCK_LIFETIME=10
+```
+
+Only requests whose response could be cached take the lock, so form submissions and other uncacheable requests are never delayed.
+
+This setting applies to the `CacheResponse` middleware. With [flexible caching](/docs/laravel-responsecache/v8/basic-usage/flexible-caching), only one request refreshes a stale response while others are served the stale one. A page that isn't cached at all is still rendered by every concurrent request.
+
+If you published the config file before this option existed, add the `lock` section from the package's config file to enable it.
+
 ## Disabling the cache
 
 You can disable response caching entirely:

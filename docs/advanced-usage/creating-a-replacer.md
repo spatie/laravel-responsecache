@@ -67,3 +67,5 @@ Then register your replacer in the config file.
     \App\Replacers\UserNameReplacer::class,
 ],
 ```
+
+The package may reuse one instance of your replacer for several requests, for example in tests or under Laravel Octane. Look up per-request values, like the user's name above, inside the replacer's methods instead of storing them in its constructor.

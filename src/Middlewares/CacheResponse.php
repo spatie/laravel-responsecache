@@ -4,6 +4,9 @@ namespace Spatie\ResponseCache\Middlewares;
 
 use Carbon\CarbonInterval;
 use Closure;
+use Illuminate\Cache\Lock as CacheLock;
+use Illuminate\Contracts\Cache\Lock;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Spatie\ResponseCache\Attributes\Cache;
@@ -12,7 +15,6 @@ use Spatie\ResponseCache\Attributes\NoCache;
 use Spatie\ResponseCache\Configuration\CacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissedEvent;
 use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
-use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +23,8 @@ use Throwable;
 class CacheResponse extends BaseCacheMiddleware
 {
     protected string $pendingCacheAttribute = '_response_cache.pending';
+
+    protected string $lockAttribute = '_response_cache.lock';
 
     public function __construct(
         protected ResponseCache $responseCache,
@@ -69,9 +73,21 @@ class CacheResponse extends BaseCacheMiddleware
             return $cachedResponse;
         }
 
-        $response = $next($request);
+        if ($this->acquireLock($request) && $cachedResponse = $this->getCachedResponse($request, $tags)) {
+            $this->releaseLock($request);
 
-        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+            return $cachedResponse;
+        }
+
+        try {
+            $response = $next($request);
+        } catch (Throwable $exception) {
+            $this->releaseLock($request);
+
+            throw $exception;
+        }
+
+        $cacheKey = $this->responseCache->cacheKeyFor($request);
 
         if ($this->responseCache->shouldCache($request, $response)) {
             $request->attributes->set($this->pendingCacheAttribute, [
@@ -81,6 +97,8 @@ class CacheResponse extends BaseCacheMiddleware
                 'statusCode' => $response->getStatusCode(),
                 'mediaType' => $this->getMediaType($response),
             ]);
+        } else {
+            $this->releaseLock($request);
         }
 
         $response = $this->addDebugHeaders($response, false, $cacheKey);
@@ -92,21 +110,61 @@ class CacheResponse extends BaseCacheMiddleware
 
     public function terminate(Request $request, Response $response): void
     {
-        $pending = $request->attributes->get($this->pendingCacheAttribute);
+        try {
+            $pending = $request->attributes->get($this->pendingCacheAttribute);
 
-        if (! $pending) {
-            return;
+            if (! $pending) {
+                return;
+            }
+
+            if ($this->differsFromApprovedResponse($response, $pending)) {
+                return;
+            }
+
+            if (isset($pending['cacheKey'])) {
+                $request->attributes->set('responsecache.cacheKey', $pending['cacheKey']);
+            }
+
+            $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
+        } finally {
+            $this->releaseLock($request);
+        }
+    }
+
+    protected function acquireLock(Request $request): ?Lock
+    {
+        if (! config('responsecache.lock.enabled')
+            || $request->attributes->has($this->lockAttribute)
+            || ! $this->responseCache->shouldCacheRequest($request)
+        ) {
+            return null;
         }
 
-        if ($this->differsFromApprovedResponse($response, $pending)) {
-            return;
+        $lock = $this->responseCache->lockFor($request, (int) config('responsecache.lock.lifetime_in_seconds', 10));
+
+        if (! $lock) {
+            return null;
         }
 
-        if (isset($pending['cacheKey'])) {
-            $request->attributes->set('responsecache.cacheKey', $pending['cacheKey']);
+        if ($lock instanceof CacheLock) {
+            $lock->betweenBlockedAttemptsSleepFor(50);
         }
 
-        $this->cacheResponse($request, $response, $pending['lifetime'], $pending['tags']);
+        try {
+            $lock->block((int) config('responsecache.lock.wait_in_seconds', 5));
+        } catch (LockTimeoutException) {
+            return null;
+        }
+
+        $request->attributes->set($this->lockAttribute, $lock);
+
+        return $lock;
+    }
+
+    protected function releaseLock(Request $request): void
+    {
+        $request->attributes->get($this->lockAttribute)?->release();
+        $request->attributes->remove($this->lockAttribute);
     }
 
     protected function differsFromApprovedResponse(Response $response, array $pending): bool
@@ -131,10 +189,10 @@ class CacheResponse extends BaseCacheMiddleware
 
     protected function getCachedResponse(Request $request, array $tags): ?Response
     {
-        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+        $cacheKey = $this->responseCache->cacheKeyFor($request);
 
         try {
-            $response = $this->responseCache->getCachedResponseFor($request, $tags);
+            $response = $this->responseCache->getCachedResponseFor($request, $tags, $cacheKey);
         } catch (Throwable $exception) {
             report("Could not serve cached response: {$exception->getMessage()}");
 
@@ -165,10 +223,11 @@ class CacheResponse extends BaseCacheMiddleware
         $cachedResponse = clone $response;
 
         $cachedResponse->headers->remove(config('responsecache.debug.cache_status_header_name'));
+        $cachedResponse->headers->remove('Set-Cookie');
 
         $this->addCacheTimeHeader($cachedResponse);
 
-        $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
+        $this->prepareResponseToCache($cachedResponse);
 
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }

@@ -2,6 +2,54 @@
 
 Because there are many breaking changes an upgrade is not that easy. There are many edge cases this guide does not cover. We accept PRs to improve this guide.
 
+## 9.0.0
+
+Laravel ResponseCache v9 makes serving cached responses considerably faster. Most applications can upgrade without code changes.
+
+### New default serializer
+
+The default serializer is now `RawBodySerializer`. It stores the status code and headers as a small JSON header, followed by the raw response body. Before, the whole response was JSON-encoded, so every cache hit had to decode the escaped body.
+
+You don't need to clear your cache when upgrading, because `RawBodySerializer` can still read entries written by `JsonSerializer`. If you downgrade to v8 afterwards, clear your cache, because v8 can't read the new format.
+
+If you published the config file, update the serializer to get the faster format:
+
+```php
+// config/responsecache.php
+
+'serializer' => \Spatie\ResponseCache\Serializers\RawBodySerializer::class,
+```
+
+`JsonSerializer` is still available if you need every cache entry to be valid JSON.
+
+### Cookies are no longer stored in cached responses
+
+`Set-Cookie` headers are removed from responses before they're cached. Before, a cached response replayed the cookies of the visitor who triggered the cache miss, such as their session cookie or a cookie your controller set, to every visitor who got that cached page.
+
+The visitor who triggers the cache miss still receives their cookies. Cached hits only carry the cookies that your middleware adds for the current visitor, such as the session and `XSRF-TOKEN` cookies in the `web` group.
+
+If a page sets a cookie that every visitor needs, set it in a middleware that runs outside the response cache middleware, or exclude that route from caching.
+
+### Stale ETags are removed from cached responses
+
+When a replacer changes a response before it's cached, for example by swapping the CSRF token for a placeholder, a stored `ETag` header is removed. That `ETag` described the original body, not the page later visitors receive. Responses that no replacer changed keep their `ETag`.
+
+### `getCachedResponseFor()` accepts a cache key
+
+`ResponseCache::getCachedResponseFor()` has a new optional `$cacheKey` parameter, so the middleware only hashes a request once per cache hit. If you extend `ResponseCache` and override this method, update its signature:
+
+```php
+public function getCachedResponseFor(Request $request, array $tags = [], ?string $cacheKey = null): ?Response
+```
+
+The middleware now gets cache keys from the new `ResponseCache::cacheKeyFor()` method, which uses the hasher that `ResponseCache` was built with, instead of resolving `RequestHasher` from the container on every request.
+
+### Middleware and replacers are resolved once
+
+`FlexibleCacheResponse` is now registered as a singleton, like `CacheResponse` already was. Replacers are resolved once and reused, until the `responsecache.replacers` config changes.
+
+Your cache profile, hasher, serializer and replacers may therefore be reused across requests. Don't store request state in their constructors (for example by injecting the `Request` or the authenticated user). Use the `$request` passed to their methods, or resolve request state inside those methods, as the built-in classes do.
+
 ## 8.0.0
 
 Laravel ResponseCache v8 modernizes the package for PHP 8.4+ and Laravel 12+.

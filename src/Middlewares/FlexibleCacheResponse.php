@@ -11,7 +11,6 @@ use Spatie\ResponseCache\Configuration\FlexibleCacheConfiguration;
 use Spatie\ResponseCache\Events\CacheMissedEvent;
 use Spatie\ResponseCache\Events\ResponseCacheHitEvent;
 use Spatie\ResponseCache\Exceptions\SkipCacheException;
-use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Replacers\Replacer;
 use Spatie\ResponseCache\ResponseCache;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,16 +63,17 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
     protected function handleFlexibleCache(Request $request, Closure $next, array $flexibleTime, array $tags): Response
     {
-        $cacheKey = app(RequestHasher::class)->getHashFor($request);
+        $cacheKey = $this->responseCache->cacheKeyFor($request);
         $wasMiss = false;
+        $freshResponse = null;
 
         try {
             $response = $this->responseCache->flexible(
                 $cacheKey,
                 [$flexibleTime[0], $flexibleTime[1]],
-                function () use ($request, $next, &$wasMiss) {
+                function () use ($request, $next, &$wasMiss, &$freshResponse) {
                     $wasMiss = true;
-                    $response = $next($request);
+                    $response = $freshResponse = $next($request);
 
                     if (! $this->responseCache->shouldCache($request, $response)) {
                         throw new SkipCacheException($response);
@@ -81,9 +81,11 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
                     $cachedResponse = clone $response;
 
+                    $cachedResponse->headers->remove('Set-Cookie');
+
                     $this->addCacheTimeHeader($cachedResponse);
 
-                    $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
+                    $this->prepareResponseToCache($cachedResponse);
 
                     return $cachedResponse;
                 },
@@ -101,6 +103,10 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
         $response = $this->addDebugHeaders($response, ! $wasMiss, $cacheKey, $ageInSeconds);
 
         if ($wasMiss) {
+            foreach ($freshResponse?->headers->getCookies() ?? [] as $cookie) {
+                $response->headers->setCookie($cookie);
+            }
+
             event(new CacheMissedEvent($request));
 
             return $response;

@@ -3,7 +3,7 @@
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Spatie\ResponseCache\Hasher\DefaultHasher;
 use Spatie\ResponseCache\Replacers\CsrfTokenReplacer;
-use Spatie\ResponseCache\Serializers\JsonSerializer;
+use Spatie\ResponseCache\Serializers\RawBodySerializer;
 
 return [
     /*
@@ -54,6 +54,28 @@ return [
          * empty to use the response cache store above.
          */
         'store' => env('RESPONSE_CACHE_MINIMUM_REQUESTS_STORE'),
+    ],
+
+    'lock' => [
+        /*
+         * When a page isn't cached yet, let only one request render
+         * it. Concurrent requests for the same page wait and then
+         * serve the cached response. Requires a cache store that
+         * supports atomic locks.
+         */
+        'enabled' => (bool) env('RESPONSE_CACHE_LOCK', false),
+
+        /*
+         * The maximum number of seconds a lock is held, in case the
+         * request holding it never finishes.
+         */
+        'lifetime_in_seconds' => (int) env('RESPONSE_CACHE_LOCK_LIFETIME', 10),
+
+        /*
+         * The maximum number of seconds a request waits for the lock.
+         * After that, it renders the page itself.
+         */
+        'wait_in_seconds' => (int) env('RESPONSE_CACHE_LOCK_WAIT', 5),
     ],
 
     'bypass' => [
@@ -144,7 +166,7 @@ return [
     /*
      * This class is responsible for serializing responses.
      */
-    'serializer' => JsonSerializer::class,
+    'serializer' => RawBodySerializer::class,
 
     /*
      * Here you may define the replacers that will replace

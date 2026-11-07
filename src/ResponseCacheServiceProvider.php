@@ -10,6 +10,7 @@ use Spatie\ResponseCache\CacheProfiles\CacheProfile;
 use Spatie\ResponseCache\Commands\ClearCommand;
 use Spatie\ResponseCache\Hasher\RequestHasher;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
+use Spatie\ResponseCache\Middlewares\FlexibleCacheResponse;
 use Spatie\ResponseCache\Serializers\Serializer;
 
 class ResponseCacheServiceProvider extends PackageServiceProvider
@@ -27,6 +28,7 @@ class ResponseCacheServiceProvider extends PackageServiceProvider
     public function packageBooted()
     {
         $this->app->singleton(CacheResponse::class);
+        $this->app->singleton(FlexibleCacheResponse::class);
 
         $this->app->bind(CacheProfile::class, function (Container $app) {
             return $app->make(config('responsecache.cache_profile'));

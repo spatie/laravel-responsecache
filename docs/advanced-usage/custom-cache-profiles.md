@@ -54,3 +54,5 @@ Then register your custom profile in the config file.
 ```
 
 The `useCacheNameSuffix` method is used to differentiate cache entries between users. By default, it returns the authenticated user's ID, meaning each logged-in user gets their own cache. Return an empty string if you want all users to share the same cache.
+
+The package may reuse one instance of your cache profile for several requests, for example in tests or under Laravel Octane. Use the `$request` passed to each method, and don't store request data such as the request or the authenticated user in the constructor.
