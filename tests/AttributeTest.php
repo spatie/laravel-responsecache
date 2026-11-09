@@ -7,6 +7,7 @@ use Spatie\ResponseCache\Attributes\NoCache;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Support\AttributeReader;
 use Spatie\ResponseCache\Test\TestClasses\ClassLevelCacheInvokableController;
+use Spatie\ResponseCache\Test\TestClasses\ContextualCacheController;
 use Spatie\ResponseCache\Test\TestClasses\InvokableCacheController;
 use Spatie\ResponseCache\Test\TestClasses\InvokableNoCacheController;
 
@@ -55,4 +56,46 @@ it('returns a fresh attribute instance for every lookup of the same action', fun
 
     expect($second)->not->toBe($first)
         ->and($second->lifetime)->toBe(300);
+});
+
+it('reads the current constructor context on every attribute lookup', function () {
+    config()->set('responsecache.test_lifetime', 37);
+
+    $first = AttributeReader::getFirstAttribute(ContextualCacheController::class, [Cache::class]);
+
+    config()->set('responsecache.test_lifetime', 83);
+
+    $second = AttributeReader::getFirstAttribute(ContextualCacheController::class, [Cache::class]);
+
+    expect($first->lifetime)->toBe(37)
+        ->and($second->lifetime)->toBe(83);
+});
+
+it('does not share nested attribute state between lookups', function () {
+    $first = AttributeReader::getFirstAttribute(ContextualCacheController::class, [Cache::class]);
+    $first->state->value = 'changed';
+
+    $second = AttributeReader::getFirstAttribute(ContextualCacheController::class, [Cache::class]);
+
+    expect($second->state->value)->toBe('original');
+});
+
+it('can read an attribute that cannot be cloned', function () {
+    $action = ContextualCacheController::class.'@uncloneable';
+
+    $first = AttributeReader::getFirstAttribute($action, [Cache::class]);
+    $second = AttributeReader::getFirstAttribute($action, [Cache::class]);
+
+    expect($second)->not->toBe($first)
+        ->and($second->lifetime)->toBe(37);
+});
+
+it('can read attributes after a previously missing controller becomes available', function () {
+    $action = 'LateLoadedCacheController';
+
+    expect(AttributeReader::getFirstAttribute($action, [Cache::class]))->toBeNull();
+
+    class_alias(InvokableCacheController::class, $action);
+
+    expect(AttributeReader::getFirstAttribute($action, [Cache::class])->lifetime)->toBe(300);
 });

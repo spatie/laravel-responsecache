@@ -2,7 +2,8 @@
 
 namespace Spatie\ResponseCache\Support;
 
-use Spatie\Attributes\Attributes;
+use ReflectionAttribute;
+use ReflectionClass;
 
 class AttributeReader
 {
@@ -17,44 +18,42 @@ class AttributeReader
      */
     public static function getFirstAttribute(string $action, array $attributeClasses): ?object
     {
-        $key = $action.'|'.implode(',', $attributeClasses);
-
-        if (! array_key_exists($key, static::$resolved)) {
-            static::$resolved[$key] = static::resolveFirstAttribute($action, $attributeClasses);
-        }
-
-        $attribute = static::$resolved[$key];
-
-        return $attribute ? clone $attribute : null;
-    }
-
-    protected static function resolveFirstAttribute(string $action, array $attributeClasses): ?object
-    {
         [$controller, $method] = static::parseAction($action);
 
-        if (! $controller || ! $method) {
+        if (! $controller || ! $method || ! class_exists($controller)) {
             return null;
         }
 
-        if (! class_exists($controller)) {
-            return null;
+        $key = static::class.'|'.$action.'|'.implode(',', $attributeClasses);
+
+        if (! array_key_exists($key, static::$resolved)) {
+            static::$resolved[$key] = static::resolveFirstAttribute($controller, $method, $attributeClasses);
         }
+
+        return static::$resolved[$key]?->newInstance();
+    }
+
+    protected static function resolveFirstAttribute(string $controller, string $method, array $attributeClasses): ?ReflectionAttribute
+    {
+        $reflection = new ReflectionClass($controller);
 
         // Check method-level attributes first (they take precedence)
-        foreach ($attributeClasses as $attributeClass) {
-            $attribute = Attributes::onMethod($controller, $method, $attributeClass);
+        if ($reflection->hasMethod($method)) {
+            foreach ($attributeClasses as $attributeClass) {
+                $attributes = $reflection->getMethod($method)->getAttributes($attributeClass, ReflectionAttribute::IS_INSTANCEOF);
 
-            if ($attribute) {
-                return $attribute;
+                if ($attributes !== []) {
+                    return $attributes[0];
+                }
             }
         }
 
         // Then check class-level attributes
         foreach ($attributeClasses as $attributeClass) {
-            $attribute = Attributes::get($controller, $attributeClass);
+            $attributes = $reflection->getAttributes($attributeClass, ReflectionAttribute::IS_INSTANCEOF);
 
-            if ($attribute) {
-                return $attribute;
+            if ($attributes !== []) {
+                return $attributes[0];
             }
         }
 
