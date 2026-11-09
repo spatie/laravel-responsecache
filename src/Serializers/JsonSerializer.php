@@ -27,7 +27,7 @@ class JsonSerializer implements Serializer
                 : $response->getContent(),
         ];
 
-        return json_encode($data, JSON_THROW_ON_ERROR);
+        return json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     public function unserialize(string $serializedResponse): Response

@@ -74,3 +74,35 @@ it('can customize serialize and unserialize a response', function () {
 it('throws an exception when something else than a response is unserialized', function () {
     app(Serializer::class)->unserialize('b:0;');
 })->throws(CouldNotUnserialize::class);
+
+it('can unserialize a response stored with escaped slashes and unicode', function () {
+    $content = '<a href="/path">Café</a>';
+
+    $storedEntry = json_encode([
+        'type' => 'normal',
+        'status' => 200,
+        'headers' => ['content-type' => ['text/html; charset=UTF-8']],
+        'content' => $content,
+    ]);
+
+    $unserializedResponse = app(Serializer::class)->unserialize($storedEntry);
+
+    assertEquals($content, $unserializedResponse->getContent());
+});
+
+it('serializes a response without escaping slashes and unicode', function (string $content) {
+    $serializer = app(Serializer::class);
+    $serializedResponse = $serializer->serialize(new Response($content, 207, ['X-Values' => ['left', 'right']]));
+
+    assertTrue(str_contains($serializedResponse, json_encode($content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)));
+
+    $response = $serializer->unserialize($serializedResponse);
+
+    expect($response->getContent())->toBe($content)
+        ->and($response->getStatusCode())->toBe(207)
+        ->and($response->headers->all('X-Values'))->toBe(['left', 'right']);
+})->with([
+    '<a href="/path">Café</a>',
+    "literal \\u00e9 and \\/ — 日本語 😀 </script>\n\t\0\u{2028}\u{2029}",
+    '',
+]);
