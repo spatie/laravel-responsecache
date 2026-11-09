@@ -2,6 +2,28 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.6.2 - 2026-11-09
+
+### What changed
+
+- Cached pages no longer send a previous visitor's cookies to the next visitor. The visitor who first caches the page still receives their cookies. This works with regular and flexible caching, including pages already in the cache.
+- Fix outdated ETags when a replacer changes a page, such as when inserting the current visitor's CSRF token. An ETag tells the browser which version of a page it has. Removing an outdated one lets Laravel send the updated page instead of telling the browser to reuse an older copy.
+- Add practical examples showing where to set cookies and how to order the ETag and response cache middleware.
+
+### Before updating
+
+No config changes or cache clear are needed. The package API and cache format stay the same.
+
+If you set cookies in a controller and need them on every request, move that code to middleware registered before the response cache middleware, or stop caching that route. Controllers don't run on cache hits. Laravel's usual session and CSRF cookies continue to work.
+
+If you use `cache.headers:etag`, register it before the response cache middleware so Laravel can calculate an ETag for the updated page. If your application runs on several servers, update all of them; older servers keep the old behavior until they are updated.
+
+See the [upgrade guide](https://github.com/spatie/laravel-responsecache/blob/8.6.2/UPGRADING.md#862) and [cookie examples](https://github.com/spatie/laravel-responsecache/blob/8.6.2/docs/basic-usage/caching-responses.md#cookies).
+
+Thanks to @sajjadhossainshohag for raising these issues in #537. The v9 serializer, performance, and locking changes are not part of this release.
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.6.1...8.6.2
+
 ## 8.6.1 - 2026-11-09
 
 ### What has changed
