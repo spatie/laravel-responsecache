@@ -2,6 +2,17 @@
 
 Because there are many breaking changes an upgrade is not that easy. There are many edge cases this guide does not cover. We accept PRs to improve this guide.
 
+## 8.6.2
+
+This update fixes how cached pages handle cookies and ETags. You don't need to change your config or clear your response cache. The cache format and package API stay the same.
+
+Check these two things in your application:
+
+1. **Cookies set by controllers.** The middleware no longer saves cookies with a cached page or sends those cookies to later visitors. The first visitor still receives their cookies. If a cookie needs to be set on every request, move that code to middleware registered before the response cache middleware, or stop caching that route. Laravel's usual session and CSRF cookies continue to work.
+2. **ETags on cached pages.** An ETag tells the browser which version of a page it has. If a replacer changes the page, for example to insert a CSRF token, the middleware now removes the old ETag. If you use ETags, register `cache.headers:etag` before the response cache middleware so Laravel can calculate one for the updated page.
+
+The updated middleware also handles pages that are already in the cache. If your application runs on several servers, update all of them. Servers still running the older version keep the old behavior until they are updated.
+
 ## 8.0.0
 
 Laravel ResponseCache v8 modernizes the package for PHP 8.4+ and Laravel 12+.

@@ -151,7 +151,14 @@ class CacheResponse extends BaseCacheMiddleware
 
         $response = $this->addDebugHeaders($response, true, $cacheKey, $ageInSeconds);
 
+        $response->headers->remove('Set-Cookie');
+        $content = $response->getContent();
+
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->replaceInCachedResponse($response));
+
+        if ($response->getContent() !== $content) {
+            $response->headers->remove('ETag');
+        }
 
         return $response;
     }
@@ -168,7 +175,15 @@ class CacheResponse extends BaseCacheMiddleware
 
         $this->addCacheTimeHeader($cachedResponse);
 
+        $content = $cachedResponse->getContent();
+
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
+
+        if ($cachedResponse->getContent() !== $content) {
+            $cachedResponse->headers->remove('ETag');
+        }
+
+        $cachedResponse->headers->remove('Set-Cookie');
 
         $this->responseCache->cacheResponse($request, $cachedResponse, $lifetimeInSeconds, $tags);
     }

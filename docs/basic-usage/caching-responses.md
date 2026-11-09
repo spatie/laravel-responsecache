@@ -86,3 +86,89 @@ class ShowPostsController
 
 Route::get('posts', ShowPostsController::class);
 ```
+
+## Cookies
+
+Cookies belong to a visitor, not to a cached page. For example, a page should not send one visitor's cart cookie to everyone else who opens it.
+
+`CacheResponse` and `FlexibleCacheResponse` leave cookies out of the cached response. They also remove cookies from pages cached before this fix. The visitor whose request first caches the page still receives any cookies set by the controller.
+
+On later requests, the package serves the cached page without running the controller. If you need to set a cookie on every request, set it in a separate middleware and register it before the response cache middleware. You can also choose not to cache that route.
+
+For example, this middleware updates a `last_visit` cookie on every request, even when the page comes from the cache:
+
+```php
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class SetLastVisitCookie
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $response = $next($request);
+
+        $response->headers->setCookie(cookie('last_visit', now()->toIso8601String(), 60));
+
+        return $response;
+    }
+}
+```
+
+Register it before `CacheResponse`:
+
+```php
+use App\Http\Middleware\SetLastVisitCookie;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
+
+Route::get('/posts', [PostController::class, 'index'])
+    ->middleware([SetLastVisitCookie::class, CacheResponse::for(minutes(10))]);
+```
+
+The cookie is added after `$next($request)` returns. This means the middleware adds it to both newly rendered and cached pages. If `CacheResponse` is already in your `web` middleware group, register `SetLastVisitCookie` before it in that group instead of adding `CacheResponse` to the route again.
+
+With Laravel's usual `web` middleware setup, session and CSRF cookies continue to work. Middleware and replacers can still add cookies for the current visitor.
+
+These rules apply when using the middleware. If you call the response cache API directly to store a response, its cookies are stored too.
+
+For example, this direct call stores the `last_visit` cookie along with the page:
+
+```php
+use Spatie\ResponseCache\Facades\ResponseCache;
+
+$response = response('Hello')->cookie('last_visit', now()->toIso8601String(), 60);
+
+ResponseCache::cacheResponse(request(), $response);
+```
+
+To leave cookies out when using this API, remove them from the copy you store. Keep the original response so the current visitor still receives their cookie:
+
+```php
+$responseToCache = clone $response;
+$responseToCache->headers->remove('Set-Cookie');
+
+ResponseCache::cacheResponse(request(), $responseToCache);
+
+return $response;
+```
+
+## ETags and replacers
+
+An `ETag` tells the browser which version of a page it has. The browser can send it back on the next request to ask whether it needs to download the page again.
+
+Replacers can change a cached page before sending it to a visitor. For example, the CSRF replacer inserts the current visitor's token. The old ETag may no longer match that page, so the middleware removes it whenever a replacer changes the page's content. This also works for pages cached before the fix. If the content stays the same, the ETag stays too.
+
+If you want to use ETags, register Laravel's `cache.headers:etag` middleware before the response cache middleware:
+
+```php
+Route::get('/posts', [PostController::class, 'index'])
+    ->middleware(['cache.headers:etag', CacheResponse::for(minutes(10))]);
+```
+
+Laravel processes the response in the reverse middleware order. Listing `cache.headers:etag` first lets it calculate the ETag after the package has finished updating the page.
+
+If `CacheResponse` is already in your `web` middleware group, add `cache.headers:etag` before it in that group instead. You don't need to add `CacheResponse` to the route again.
+
+Do not add `public` or `max_age` to pages containing CSRF tokens or other visitor-specific content. These settings can let browsers or proxies reuse a page without asking your application for an updated one.
