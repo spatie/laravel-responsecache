@@ -131,8 +131,6 @@ class CacheResponse extends BaseCacheMiddleware
 
     protected function getCachedResponse(Request $request, array $tags): ?Response
     {
-        $cacheKey = app(RequestHasher::class)->getHashFor($request);
-
         try {
             $response = $this->responseCache->getCachedResponseFor($request, $tags);
         } catch (Throwable $exception) {
@@ -148,6 +146,10 @@ class CacheResponse extends BaseCacheMiddleware
         $ageInSeconds = $this->getAgeInSeconds($response);
 
         event(new ResponseCacheHitEvent($request, $ageInSeconds, $tags));
+
+        $cacheKey = config('responsecache.debug.enabled') && config('app.debug')
+            ? app(RequestHasher::class)->getHashFor($request)
+            : '';
 
         $response = $this->addDebugHeaders($response, true, $cacheKey, $ageInSeconds);
 
