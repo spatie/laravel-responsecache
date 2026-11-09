@@ -2,6 +2,14 @@
 
 Because there are many breaking changes an upgrade is not that easy. There are many edge cases this guide does not cover. We accept PRs to improve this guide.
 
+## Unreleased v8 fixes
+
+The response cache middleware no longer stores or replays `Set-Cookie` headers. The visitor who triggers a cache miss still receives their cookies. If your application relied on a cached controller response setting a cookie for every visitor, move that cookie to middleware outside the response cache middleware, or exclude the route from caching.
+
+The middleware also removes an `ETag` when a replacer changes the body, including when reading an existing entry. Place `cache.headers:etag` outside the response cache middleware if you need a validator for each visitor's final response.
+
+These fixes keep the existing JSON format, cache keys, method signatures, and object lifetimes. Existing entries are handled on read, so no cache flush is required once all application instances run the updated middleware. During a rolling deployment, instances still running older code retain the old behavior.
+
 ## 8.0.0
 
 Laravel ResponseCache v8 modernizes the package for PHP 8.4+ and Laravel 12+.

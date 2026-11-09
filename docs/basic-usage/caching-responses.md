@@ -86,3 +86,28 @@ class ShowPostsController
 
 Route::get('posts', ShowPostsController::class);
 ```
+
+## Cookies
+
+`CacheResponse` and `FlexibleCacheResponse` do not store `Set-Cookie` headers. They also remove stored cookies when serving existing entries, so a cached response cannot overwrite the current visitor's cookies with those of an earlier visitor.
+
+The visitor who triggers a cache miss still receives the cookies set by the controller. On cache hits, outer middleware and replacers can add cookies for the current visitor. With Laravel's usual `web` middleware order, session and `XSRF-TOKEN` cookies continue to be set for the current visitor.
+
+If every visitor needs a cookie, set it in middleware that wraps the response cache middleware, or exclude the route from response caching. A controller does not run on cache hits.
+
+This handling belongs to the middleware. Direct calls to the response cache API still serialize the response you provide.
+
+## ETags and replacers
+
+An `ETag` describes a response body. When a replacer changes the body, such as when replacing a CSRF token, the middleware removes the stored `ETag`. This applies when writing entries and when serving existing ones. ETags are preserved when replacers leave the body unchanged.
+
+To generate a validator for the body each visitor receives, place Laravel's `cache.headers:etag` middleware outside the response cache middleware:
+
+```php
+Route::get('/posts', [PostController::class, 'index'])
+    ->middleware(['cache.headers:etag', CacheResponse::for(minutes(10))]);
+```
+
+The order above matters: `cache.headers` must process the response after the replacers run. If `CacheResponse` is already registered in your `web` group, place `cache.headers:etag` before it in that group rather than adding another response cache middleware to the route.
+
+Do not use `public` or `max_age` for pages containing CSRF tokens or other visitor-specific data. Those options can allow a browser or proxy to reuse a page without contacting the application.

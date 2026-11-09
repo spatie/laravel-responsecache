@@ -66,14 +66,15 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
     {
         $cacheKey = app(RequestHasher::class)->getHashFor($request);
         $wasMiss = false;
+        $freshResponse = null;
 
         try {
             $response = $this->responseCache->flexible(
                 $cacheKey,
                 [$flexibleTime[0], $flexibleTime[1]],
-                function () use ($request, $next, &$wasMiss) {
+                function () use ($request, $next, &$wasMiss, &$freshResponse) {
                     $wasMiss = true;
-                    $response = $next($request);
+                    $response = $freshResponse = $next($request);
 
                     if (! $this->responseCache->shouldCache($request, $response)) {
                         throw new SkipCacheException($response);
@@ -83,7 +84,15 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
 
                     $this->addCacheTimeHeader($cachedResponse);
 
+                    $content = $cachedResponse->getContent();
+
                     $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->prepareResponseToCache($cachedResponse));
+
+                    if ($cachedResponse->getContent() !== $content) {
+                        $cachedResponse->headers->remove('ETag');
+                    }
+
+                    $cachedResponse->headers->remove('Set-Cookie');
 
                     return $cachedResponse;
                 },
@@ -95,12 +104,23 @@ class FlexibleCacheResponse extends BaseCacheMiddleware
             return $e->response;
         }
 
+        $response->headers->remove('Set-Cookie');
+        $content = $response->getContent();
+
         $this->getReplacers()->each(fn (Replacer $replacer) => $replacer->replaceInCachedResponse($response));
+
+        if ($response->getContent() !== $content) {
+            $response->headers->remove('ETag');
+        }
 
         $ageInSeconds = $this->getAgeInSeconds($response);
         $response = $this->addDebugHeaders($response, ! $wasMiss, $cacheKey, $ageInSeconds);
 
         if ($wasMiss) {
+            foreach ($freshResponse->headers->getCookies() as $cookie) {
+                $response->headers->setCookie($cookie);
+            }
+
             event(new CacheMissedEvent($request));
 
             return $response;
