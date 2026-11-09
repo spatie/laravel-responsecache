@@ -2,6 +2,21 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.6.1 - 2026-11-09
+
+### What has changed
+
+- Store JSON cache entries without escaping slashes or Unicode, reducing unnecessary encoding while preserving the existing decoded cache format.
+- Memoize controller attribute reflection metadata while constructing a fresh attribute for each lookup. Custom constructor context, nested mutable state, and attributes that cannot be cloned remain supported.
+- Retry attribute lookup when a previously unavailable controller becomes available.
+- Add regression coverage for attribute lifetime and state isolation, and round trips of Unicode, literal escapes, empty bodies, status codes, and multi-value headers.
+
+Existing JSON cache entries remain readable in both upgrade and downgrade directions; no cache flush is required. No public method signatures or supported PHP/Laravel versions changed. This release does not include the separate v9 changes proposed in #537.
+
+Thanks to @sajjadhossainshohag for the original optimization in #536.
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.6.0...8.6.1
+
 ## 8.6.0 - 2026-10-19
 
 ### What is new
