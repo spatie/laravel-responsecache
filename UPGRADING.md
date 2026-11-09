@@ -2,13 +2,16 @@
 
 Because there are many breaking changes an upgrade is not that easy. There are many edge cases this guide does not cover. We accept PRs to improve this guide.
 
-## Unreleased v8 fixes
+## 8.6.2
 
-The response cache middleware no longer stores or replays `Set-Cookie` headers. The visitor who triggers a cache miss still receives their cookies. If your application relied on a cached controller response setting a cookie for every visitor, move that cookie to middleware outside the response cache middleware, or exclude the route from caching.
+This update fixes how cached pages handle cookies and ETags. You don't need to change your config or clear your response cache. The cache format and package API stay the same.
 
-The middleware also removes an `ETag` when a replacer changes the body, including when reading an existing entry. Place `cache.headers:etag` outside the response cache middleware if you need a validator for each visitor's final response.
+Check these two things in your application:
 
-These fixes keep the existing JSON format, cache keys, method signatures, and object lifetimes. Existing entries are handled on read, so no cache flush is required once all application instances run the updated middleware. During a rolling deployment, instances still running older code retain the old behavior.
+1. **Cookies set by controllers.** The middleware no longer saves cookies with a cached page or sends those cookies to later visitors. The first visitor still receives their cookies. If a cookie needs to be set on every request, move that code to middleware registered before the response cache middleware, or stop caching that route. Laravel's usual session and CSRF cookies continue to work.
+2. **ETags on cached pages.** An ETag tells the browser which version of a page it has. If a replacer changes the page, for example to insert a CSRF token, the middleware now removes the old ETag. If you use ETags, register `cache.headers:etag` before the response cache middleware so Laravel can calculate one for the updated page.
+
+The updated middleware also handles pages that are already in the cache. If your application runs on several servers, update all of them. Servers still running the older version keep the old behavior until they are updated.
 
 ## 8.0.0
 
