@@ -40,17 +40,20 @@ it('replaces every csrf token with a placeholder and back', function () {
     expect($response->getContent())->not->toContain($token)
         ->and(substr_count($response->getContent(), '<laravel-responsecache-csrf-token-here>'))->toBe(4);
 
+    session()->regenerateToken();
+    $newToken = csrf_token();
+
     $replacer->replaceInCachedResponse($response);
 
-    expect($response->getContent())->toBe($html);
+    expect($response->getContent())->toBe("{$newToken}<meta content=\"{$newToken}\"><input value=\"{$newToken}\">{$newToken}");
 });
 
-it('leaves responses without a csrf token or placeholder untouched', function () {
-    $response = new Response('<p>No token here</p>');
+it('leaves responses without a csrf token or placeholder untouched', function (string $content) {
+    $response = new Response($content);
     $replacer = new CsrfTokenReplacer;
 
     $replacer->prepareResponseToCache($response);
     $replacer->replaceInCachedResponse($response);
 
-    expect($response->getContent())->toBe('<p>No token here</p>');
-});
+    expect($response->getContent())->toBe($content);
+})->with(['<p>No token here</p>', '', '0']);

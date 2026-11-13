@@ -29,6 +29,32 @@ class ReplaceVisitorCookie implements Replacer
     }
 }
 
+class CacheResponseWithCustomKeyHeader extends CacheResponse
+{
+    protected function addDebugHeaders(Response $response, bool $isHit, string $cacheKey, ?int $ageInSeconds = null): Response
+    {
+        $response = parent::addDebugHeaders($response, $isHit, $cacheKey, $ageInSeconds);
+        $response->headers->set('X-Custom-Cache-Key', $cacheKey);
+
+        return $response;
+    }
+}
+
+it('passes the cache key to custom debug headers even when the built-in key header is disabled', function (bool $debugEnabled, bool $appDebug) {
+    config()->set('responsecache.debug.enabled', $debugEnabled);
+    config()->set('app.debug', $appDebug);
+
+    Route::get('/custom-key-header', fn () => 'cached page')->middleware(CacheResponseWithCustomKeyHeader::class);
+    $cacheKey = app(RequestHasher::class)->getHashFor(Request::create('/custom-key-header'));
+
+    $this->get('/custom-key-header')->assertHeader('X-Custom-Cache-Key', $cacheKey);
+    $this->get('/custom-key-header')->assertHeader('X-Custom-Cache-Key', $cacheKey);
+})->with([
+    'debug headers disabled' => [false, true],
+    'app debug disabled' => [true, false],
+    'debug headers enabled' => [true, true],
+]);
+
 dataset('response cache middleware', [
     'regular' => CacheResponse::class,
     'flexible' => FlexibleCacheResponse::for(lifetime: 60, grace: 60),

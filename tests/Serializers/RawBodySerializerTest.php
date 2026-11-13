@@ -11,14 +11,14 @@ beforeEach(function () {
 });
 
 it('round trips a response', function (string $content) {
-    $response = new Response($content, 201, ['X-Custom' => 'a/b é']);
+    $response = new Response($content, 201, ['X-Custom' => ['a/b é', 'second value']]);
 
     $unserialized = $this->serializer->unserialize($this->serializer->serialize($response));
 
     expect($unserialized)->toBeInstanceOf(Response::class)
         ->and($unserialized->getContent())->toBe($content)
         ->and($unserialized->getStatusCode())->toBe(201)
-        ->and($unserialized->headers->get('X-Custom'))->toBe('a/b é');
+        ->and($unserialized->headers->all('X-Custom'))->toBe(['a/b é', 'second value']);
 })->with([
     'html' => '<a href="/path">Café “quoted”</a>',
     'json starting with a brace' => '{"title":"A \"quoted\" title","url":"/posts/1"}',
@@ -36,12 +36,17 @@ it('stores the body without escaping it', function () {
 });
 
 it('round trips a file response', function () {
-    $response = new BinaryFileResponse(__FILE__, 200);
+    $response = new BinaryFileResponse(__FILE__, 206);
+    $response->headers->set('Cache-Control', 'private, max-age=60');
+    $response->headers->set('Content-Disposition', 'attachment; filename="example.php"');
+    $response->headers->set('X-Values', ['left', 'right']);
 
     $unserialized = $this->serializer->unserialize($this->serializer->serialize($response));
 
     expect($unserialized)->toBeInstanceOf(BinaryFileResponse::class)
-        ->and($unserialized->getFile()->getPathname())->toBe(__FILE__);
+        ->and($unserialized->getFile()->getPathname())->toBe(__FILE__)
+        ->and($unserialized->getStatusCode())->toBe(206)
+        ->and($unserialized->headers->all())->toBe($response->headers->all());
 });
 
 it('reads entries written by the json serializer', function () {

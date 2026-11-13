@@ -47,19 +47,13 @@ class RawBodySerializer implements Serializer
 
         $content = substr($serializedResponse, $separator + 1);
 
-        return match (ResponseType::tryFrom($metadata['type'])) {
-            ResponseType::Normal => new IlluminateResponse($content, $metadata['status'], $metadata['headers']),
-            ResponseType::File => $this->fileResponse($content, $metadata['status'], $metadata['headers']),
+        $response = match (ResponseType::tryFrom($metadata['type'])) {
+            ResponseType::Normal => new IlluminateResponse($content, $metadata['status']),
+            ResponseType::File => new BinaryFileResponse($content, $metadata['status']),
             null => throw CouldNotUnserialize::serializedResponse($serializedResponse),
         };
-    }
 
-    protected function fileResponse(string $path, int $status, array $headers): BinaryFileResponse
-    {
-        $response = new BinaryFileResponse($path, $status);
-
-        // The constructor marks the response public, so stored headers must be applied afterwards to win.
-        foreach ($headers as $name => $values) {
+        foreach ($metadata['headers'] as $name => $values) {
             $response->headers->set($name, $values);
         }
 

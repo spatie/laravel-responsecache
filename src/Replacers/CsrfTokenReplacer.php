@@ -39,7 +39,6 @@ class CsrfTokenReplacer implements Replacer
             return;
         }
 
-        // explode + implode is several times faster than str_replace on large HTML pages.
         $parts = explode($this->replacementString, $content);
 
         if (count($parts) === 1) {
