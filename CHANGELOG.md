@@ -2,6 +2,30 @@
 
 All notable changes to `laravel-responsecache` will be documented in this file.
 
+## 8.7.0 - 2026-11-13
+
+### What's new
+
+- Add an opt-in `RawBodySerializer` that stores response bodies without JSON escaping or decoding. It supports non-UTF-8 bodies and reads existing `JsonSerializer` entries. `JsonSerializer` remains the default.
+- Speed up CSRF token replacement in cached responses by avoiding repeated scans of the response body.
+- Add coverage for regenerated CSRF tokens, multi-value headers, private file-response headers and custom debug-header hooks.
+
+Independent review measurements on PHP 8.4 and Laravel 13 found about 4–10% less cache-hit time for synthetic 35 KB HTML with file and SQLite cache stores. Results depend on the application and cache store.
+
+### Before enabling raw-body serialization
+
+No configuration changes or cache clear are required when updating with the default serializer. Existing method signatures, cache keys and debug-header hook behavior are unchanged.
+
+To opt in, set `responsecache.serializer` to `Spatie\ResponseCache\Serializers\RawBodySerializer::class`.
+
+Raw-body serialization reads existing JSON entries, but `JsonSerializer` cannot read raw-body entries. Clear the response cache when switching back. During rolling deployments, coordinate the serializer switch across processes that share the response cache, or use separate cache namespaces.
+
+See the [serializer documentation](https://github.com/spatie/laravel-responsecache/blob/8.7.0/docs/advanced-usage/customizing-the-serializer.md).
+
+Thanks to @sajjadhossainshohag for the contribution in #539. The proposed hashing shortcut was removed during review to preserve custom debug-header behavior.
+
+**Full Changelog**: https://github.com/spatie/laravel-responsecache/compare/8.6.2...8.7.0
+
 ## 8.6.2 - 2026-11-09
 
 ### What changed
